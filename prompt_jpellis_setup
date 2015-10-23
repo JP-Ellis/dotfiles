@@ -1,0 +1,273 @@
+################################################################################
+# ZSH theme
+# Designed by Joshua Ellis
+#
+# The theme style is based on the 'agnoster' theme:
+#     https://gist.github.com/agnoster/3712874
+# and uses elements found in various other zsh themes.
+################################################################################
+
+# Dependencies
+########################################
+
+pmodload 'helper'
+
+
+# Variables
+########################################
+
+L_CURRENT_BG='NONE'
+R_CURRENT_BG='NONE'
+
+L_SEGMENT_SEPARATOR=''
+R_SEGMENT_SEPARATOR=''
+
+
+# Prompt Building Functions
+########################################
+
+# Add a segment to the left
+#
+# Takes two arguments, background and foreground. Both can be omitted,
+# rendering default background/foreground.
+function prompt_lsegment {
+    local bg fg
+    [[ -n $1 ]] && bg="%K{$1}" || bg="%k"
+    [[ -n $2 ]] && fg="%F{$2}" || fg="%f"
+    if [[ $L_CURRENT_BG != 'NONE' && $1 != $L_CURRENT_BG ]]; then
+        echo -n " %{$bg%F{$L_CURRENT_BG}%}$L_SEGMENT_SEPARATOR%{$fg%} "
+    else
+        echo -n "%{$bg%}%{$fg%} "
+    fi
+    L_CURRENT_BG=$1
+    [[ -n $3 ]] && print -Pn $3
+}
+
+# Add a segment to the right
+#
+# Takes two arguments, background and foreground. Both can be omitted,
+# rendering default background/foreground.
+function prompt_rsegment {
+    local bg fg
+    [[ -n $1 ]] && bg="%K{$1}" || bg="%k"
+    [[ -n $2 ]] && fg="%F{$2}" || fg="%f"
+    if [[ $1 != $R_CURRENT_BG ]]; then
+        echo -n " %{%F{$1}%}$R_SEGMENT_SEPARATOR%{$fg%}%{$bg%} "
+    else
+        echo -n "%{$bg%}%{$fg%} "
+    fi
+    R_CURRENT_BG=$1
+    [[ -n $3 ]] && print -Pn $3
+}
+
+# End the prompt, closing any open segments
+function prompt_end {
+    if [[ -n $L_CURRENT_BG ]]; then
+        echo -n " %{%k%F{$L_CURRENT_BG}%}$L_SEGMENT_SEPARATOR"
+    else
+        echo -n "%{%k%}"
+    fi
+    echo -n "%{%f%}"
+    L_CURRENT_BG=''
+}
+
+
+# Components
+########################################
+
+# Check for exit status, elevated rights, and background processes
+function prompt_status {
+    # This first segment checks for:
+    # - The previous exit code with %(1?)
+    # - Elevated properties with %(!)
+    # - At least n background jobs with %(nj)
+
+    local symbols
+    symbols=()
+    local bg_jobs=$(jobs -l | wc -l)
+
+    [[ $retval != 0 ]] && symbols+="%{%F{red}%}✘"
+    [[ $bg_jobs == 1 ]] && symbols+="%{%F{cyan}%}⚙"
+    [[ $bg_jobs > 1 ]] && symbols+="%{%F{cyan}%}${bg_jobs}⚙"
+    [[ $UID == 0 || $EUID == 0 ]] && symbols+="%{%F{yellow}%}⚡"
+
+    if [[ -n "$symbols" ]]; then
+        _prompt_status=" $symbols"
+    else
+        _prompt_status=""
+    fi
+}
+
+# Add the context information only if not the default user
+function prompt_context {
+    local user=`whoami`
+
+    if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CONNECTION" ]]; then
+        _prompt_context='%{%F{blue}%}%n%{%F{red}%}@%{%F{green}%}%M'
+    else
+        _prompt_context=''
+    fi
+}
+
+# Display a short pwd
+function prompt_pwd {
+  local pwd="${PWD/#$HOME/~}"
+
+  if [[ "$pwd" == (#m)[/~] ]]; then
+      _prompt_pwd="$MATCH"
+      unset MATCH
+  else
+      _prompt_pwd="${${${(@j:/:M)${(@s:/:)pwd}##.#?}:h}%/}/${pwd:t}"
+  fi
+}
+
+# Display some git info
+function prompt_git {
+    if $git_status; then
+        if [[ -n ${git_info[status]} ]]; then
+            _prompt_git='${(e)git_info[prompt]} ${git_info[status]}'
+        else
+            _prompt_git='${(e)git_info[prompt]}'
+        fi
+    else
+        _prompt_git=''
+    fi
+}
+
+# Information about other version control
+function prompt_vcs {
+    if [[ -n $vcs_info_msg_0_ ]]; then
+        _prompt_vcs='$vcs_info_msg_0_'
+    else
+        _prompt_vcs=''
+    fi
+}
+
+# Python environment
+function prompt_pyenv {
+    if $python_status; then
+        if [[ -n $python_info[virtualenv] && $VIRTUAL_ENV_DISABLE_PROMPT -ne 0 ]]; then
+            _prompt_pyenv="🐍 :$python_info[virtualenv]"
+        else
+            _prompt_pyenv=''
+        fi
+    else
+        _prompt_pyenv=''
+    fi
+}
+
+# RVM
+function prompt_rvm {
+    if [[ $ruby_status == 0 ]]; then
+        if [[ -n $(rvm-prompt g) ]]; then
+            _prompt_rvm='💎 :$(rvm-prompt u g)'
+        else
+            _prompt_rvm=''
+        fi
+    else
+        _prompt_rvm=''
+    fi
+}
+
+# Print the time
+function prompt_time {
+    _prompt_time='%T'
+}
+
+# Putting it together
+########################################
+
+function build_lprompt {
+    retval=$?
+    ## Using `$_prompt_status` doesn't work as it zsh fails to properly count
+    ## characters; instead, we add $_prompt_status manual in "PROMPT" and add
+    ## an empty segment here when $_prompt_status is not empty.
+    # [[ -n $_prompt_status ]] && prompt_lsegment black default $_prompt_status
+    [[ -n $_prompt_status ]] && prompt_lsegment black default ""
+    [[ -n $_prompt_context ]] && prompt_lsegment black default $_prompt_context
+    [[ -n $_prompt_pwd ]] && prompt_lsegment blue black $_prompt_pwd
+    # [[ -n $_prompt_pyenv ]] && prompt_lsegment green black $_prompt_pyenv
+    # [[ -n $_prompt_rvm ]] && prompt_lsegment green black $_prompt_rvm
+    [[ -n $_prompt_git ]] && prompt_lsegment red black $_prompt_git
+    [[ -n $_prompt_vcs ]] && prompt_lsegment red black $_prompt_vcs
+
+    prompt_end
+}
+
+function build_rprompt {
+    # [[ -n $_prompt_time ]] && prompt_rsegment default default $_prompt_time
+    [[ -n $_prompt_pyenv ]] && prompt_rsegment green black $_prompt_pyenv
+    [[ -n $_prompt_rvm ]] && prompt_rsegment green black $_prompt_rvm
+    # [[ -n $_prompt_git ]] && prompt_rsegment red black $_prompt_git
+    # [[ -n $_prompt_vcs ]] && prompt_rsegment red black $_prompt_vcs
+}
+
+function prompt_jpellis_precmd {
+    # Must catch the exit code now
+    retval=$?
+
+    setopt LOCAL_OPTIONS
+    # unsetopt XTRACE KSH_ARRAYS
+
+    # Get Git repository information.
+    if (( $+functions[git-info] )); then
+        git_status=git-info
+    fi
+
+    # Get Ruby information.  Unfortunately ruby-info always returns 0
+    # so can't use the same check as with git-info.
+    if (( $+commands[rvm-prompt] )); then
+        ruby_status=0
+    fi
+
+    # Get Python information.  Unfortunately python-info always
+    # returns 0 so can't use the same check as with git-info.
+    if (( $+functions[python-info] )); then
+        python_status=python-info
+    fi
+
+    vcs_info 'prompt'
+
+    CURRENT_BG='NONE'
+
+    # Format all the relevant parts
+    prompt_status
+    prompt_context
+    prompt_pwd
+    prompt_git
+    prompt_time
+    prompt_pyenv
+    prompt_rvm
+    prompt_vcs
+}
+
+function prompt_jpellis_setup {
+    # Load required functions.
+    autoload -Uz add-zsh-hook
+    autoload -Uz vcs_info
+
+    prompt_opts=(cr percent subst)
+
+    # Add hook for calling git-info before each command
+    # add-zsh-hook preexec prompt_jpellis_preexec
+    add-zsh-hook precmd prompt_jpellis_precmd
+
+    zstyle ':vcs_info:*' enable cvs bzr hg svn
+    zstyle ':vcs_info:*:prompt:*' check-for-changes true
+    zstyle ':vcs_info:*:prompt:*' unstagedstr "%F{yellow}●%f"
+    zstyle ':vcs_info:*:prompt:*' stagedstr "%F{green}●%f"
+    zstyle ':vcs_info:*:prompt:*' actionformats "%a"
+    zstyle ':vcs_info:*:prompt:*' formats "%s%b%u%c"
+    # zstyle ':vcs_info:*:prompt:*' nvcsformats   ""
+
+    # Define prompts.
+    PROMPT='%{%f%b%k%}%{%K{black}%}$_prompt_status$(build_lprompt) '
+    RPROMPT='$(build_rprompt)%f'
+    SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
+}
+
+prompt_jpellis_setup "$@"
+
+# Local Variables:
+# mode: sh
+# End:

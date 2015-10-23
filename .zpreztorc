@@ -1,0 +1,240 @@
+#
+# Sets Prezto options.
+#
+
+############################################################
+# General Options
+############################################################
+
+# Set case-sensitivity for completion, history lookup, etc.
+#zstyle ':prezto:*:*' case-sensitive 'yes'
+
+# Color output (auto set to 'no' on dumb terminals).
+zstyle ':prezto:*:*' color 'yes'
+
+# Set the Zsh modules to load (man zshmodules).
+#zstyle ':prezto:load' zmodule 'attr' 'stat'
+
+# Set the Zsh functions to load (man zshcontrib).
+#zstyle ':prezto:load' zfunction 'zargs' 'zmv'
+
+# Set the Prezto modules to load (browse modules).
+# The order matters:
+# - environment must be first
+# - gnu-utility must come before utility
+# - completion must come after utility
+# - history-substring-search must come after syntax-highlighting
+# - prompt should be last
+zstyle ':prezto:load' pmodule \
+    'environment' \
+    'archive' \
+    'command-not-found' \
+    'gnu-utility' \
+    'utility' \
+    'completion' \
+    'editor' \
+    'git' \
+    'gpg' \
+    'history' \
+    'pacman' \
+    'python' \
+    'rsync' \
+    'ruby' \
+    'spectrum' \
+    'syntax-highlighting' \
+    'terminal' \
+    'history-substring-search' \
+    'prompt'
+
+    # 'ssh' \
+
+############################################################
+# Module options
+############################################################
+
+# Environment
+########################################
+
+
+# Archive
+########################################
+# Provides:
+# `lsarchive` to list the content of one or more archives.
+# `unarchive` to extract the content of one or more archives.
+
+
+# Command Not Found
+########################################
+# Requires `command-not-found` package.
+
+
+# Completion
+########################################
+
+
+# Directory
+########################################
+# Sets directory options and defines directory aliases:
+# `d`  Prints the directory stack
+# `1` ... `9`  Change to the nth directory in the stack
+
+# Don't want to automatically change to the directory
+unsetopt AUTO_CD
+# Automatically push to the directory stack on cd
+setopt AUTO_PUSHD
+# Ignore duplicates in stack
+setopt PUSHD_IGNORE_DUPS
+# Don't print stack after `pushd` and `popd`
+setopt PUSHD_SILENT
+# Don't go straight to home if pushd has no argument
+unsetopt PUSHD_TO_HOME
+# Do not overwrite existing files with > and >>, instead use >! and >>!
+setopt CLOBBER
+
+
+# Editor
+########################################
+
+# Set the key mapping style to 'emacs' or 'vi'.
+zstyle ':prezto:module:editor' key-bindings 'emacs'
+
+# Auto convert .... to ../..
+zstyle ':prezto:module:editor' dot-expansion 'yes'
+
+# Indicatorsr for the various modes
+zstyle ':prezto:module:editor:info:keymap:primary' format '%B%F{blue}❯%f%b'
+zstyle ':prezto:module:editor:info:keymap:primary:insert' format 'I'
+zstyle ':prezto:module:editor:info:keymap:primary:overwrite' format '%F{red}♺%f'
+zstyle ':prezto:module:editor:info:keymap:alternate' format '%B%F{red}❮%f%b'
+zstyle ':prezto:module:editor:info:completing' format '%B%F{red}...%f%b'
+
+
+# Git
+########################################
+
+# Speed up git-status by changing how submodules are to be included.
+# They can be ignored when they are 'dirty', 'untracked', 'all', or
+# 'none'.
+zstyle ':prezto:module:git:status:ignore' submodules 'all'
+
+zstyle ':prezto:module:git:info:action' format '! %s'
+zstyle ':prezto:module:git:info:added' format '✚'
+zstyle ':prezto:module:git:info:ahead' format '⬆'
+zstyle ':prezto:module:git:info:behind' format '⬇'
+zstyle ':prezto:module:git:info:branch' format ' %b'
+zstyle ':prezto:module:git:info:commit' format '➦ %.7c'
+zstyle ':prezto:module:git:info:deleted' format '✖'
+zstyle ':prezto:module:git:info:modified' format '✱'
+zstyle ':prezto:module:git:info:position' format '%p'
+zstyle ':prezto:module:git:info:renamed' format '➙'
+zstyle ':prezto:module:git:info:stashed' format 's'
+zstyle ':prezto:module:git:info:unmerged' format '═'
+zstyle ':prezto:module:git:info:untracked' format '?'
+zstyle ':prezto:module:git:info:keys' format \
+    'prompt' '$(coalesce "%b" "%p" "%c")%s' \
+    'status' '%A%B%S%a%d%m%r%U%u'
+
+
+
+# GPG
+########################################
+
+
+# History
+########################################
+
+
+# History Substring Search
+########################################
+
+# Change the colour of particular searches
+#zstyle ':prezto:module:history-substring-search:color' found ''
+#zstyle ':prezto:module:history-substring-search:color' not-found ''
+#zstyle ':prezto:module:history-substring-search' globbing-flags ''
+
+
+# Pacman
+########################################
+
+# Set the Pacman frontend.
+zstyle ':prezto:module:pacman' frontend 'yaourt'
+
+
+# Prompt
+########################################
+
+# Set the prompt theme to load.
+DEFAULT_USER="josh"
+zstyle ':prezto:module:prompt' theme 'jpellis'
+
+
+# Python
+########################################
+
+zstyle ':prezto:module:python:info:virtualenv' format '%v'
+
+
+# Rsync
+########################################
+# Provides the following commands
+# `rsync-copy`
+# `rsync-move`
+# `rsync-update`
+# `rsync-synchronize`
+
+
+# Ruby
+########################################
+
+zstyle ':prezto:module:ruby:info:version' format '%v'
+
+
+# Spectrum
+########################################
+
+
+# SSH
+########################################
+
+# Set the SSH identities to load into the agent.
+zstyle ':prezto:module:ssh:load' identities 'id_rsa' 'id_github' 'id_bitbucket'
+
+
+# Syntax Highlighting
+########################################
+
+# Set syntax highlighters.  Possible options are
+# - main
+# - brackets
+# - pattern
+# - cursor
+# - root
+zstyle ':prezto:module:syntax-highlighting' highlighters \
+  'main' \
+  'brackets' \
+  'pattern' \
+  'root'
+
+# Set syntax highlighting styles.
+# zstyle ':prezto:module:syntax-highlighting' styles \
+#   'builtin' 'bg=blue' \
+#   'command' 'bg=blue' \
+#   'function' 'bg=blue'
+
+
+# Terminal
+########################################
+
+# Auto set the tab and window titles.
+zstyle ':prezto:module:terminal' auto-title 'yes'
+
+# Set the window title format.
+zstyle ':prezto:module:terminal:window-title' format '%n@%m: %s'
+
+# Set the tab title format.
+zstyle ':prezto:module:terminal:tab-title' format '%m: %s'
+
+
+# Utility
+########################################
+# Provides many useful aliases.
