@@ -75,12 +75,12 @@ fi
 
 # Clone spacemacs if it hasn't been done already.
 if [ ! -d "$HOME/.emacs.d" ]; then
-    git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d "$HOME/.emacs.d"
+    git clone --branch develop https://github.com/syl20bnr/spacemacs ~/.emacs.d
 else
     if yes_or_no "~/.emacs.d already exists.  Replace with spacemacs (a backup will be made)?" N ; then
         mv "$HOME/.emacs.d" "$HOME/.emacs.d/backup"
         mv "$HOME/.emacs" "$HOME/.emacs.backup" 2>/dev/null
-        git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d "$HOME/.emacs.d"
+        git clone --branch develop https://github.com/syl20bnr/spacemacs ~/.emacs.d
     fi
 fi
 
