@@ -54,25 +54,20 @@ our %tikzexternalflag = ();
 $pdflatex = 'internal tikzpdflatex -shell-escape -synctex=1 %O %S %B';
 
 sub tikzpdflatex {
-    our %tikzexternalflag;
-
+    our %externalflag;
     my $n = scalar(@_);
     my @args = @_[0 .. $n - 2];
     my $base = $_[$n - 1];
 
     system 'lualatex', @args;
-
-    # If pdflatex did not succeed, exit with the error code.
+    # Exit with error on failure
     if ($? != 0) {
         return $?
     }
-
-    if (-e "$base.makefile") {
-        # system "$make -j8 -f $base.makefile";
-
-        if (!defined $tikzexternalflag->{$base}) {
-            $externalflag->{$base} = 1;
-            system "$make -j8 -f $base.makefile";
+    if ( !defined $externalflag->{$base} ) {
+        $externalflag->{$base} = 1;
+        if ( -e "$base.makefile" ) {
+            system ("$make -j8 -f $base.makefile");
         }
     }
     return $?;
