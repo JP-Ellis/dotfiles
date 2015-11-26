@@ -1,0 +1,46 @@
+! Xft.dpi:        224  ! Actual DPI... too big though
+Xft.dpi:        160
+Xft.autohint:   0
+Xft.lcdfilter:  lcddefault
+Xft.hintstyle:  hintfull
+Xft.hinting:    1
+Xft.antialias:  1
+Xft.rgba:       rgb
+
+! Rofi settings
+! Font to use
+rofi.font:                           Roboto 18
+! Terminal to use
+rofi.terminal:                       termite
+! Ssh client to use
+rofi.ssh-client:                     ssh
+! Ssh command to execute
+rofi.ssh-command:                    {terminal} -e {ssh-client} {host}
+! Run command to execute
+rofi.run-command:                    {cmd}
+! Command to get extra run targets
+rofi.run-list-command:
+! Run command to execute that runs in shell
+rofi.run-shell-command:              {terminal} -e {cmd}
+! Disable history in run/ssh
+rofi.disable-history:                false
+! Use levenshtein sorting
+rofi.levenshtein-sort:               true
+! Set case-sensitivity
+rofi.case-sensitive:                 false
+! Enable sidebar-mode
+rofi.sidebar-mode:                   false
+! Set lazy filter limit
+rofi.lazy-filter-limit:              15000
+! Enable auto select mode
+rofi.auto-select:                    false
+! Parse hosts file for ssh mode
+rofi.parse-hosts:                    true
+! Parse known_hosts file for ssh mode
+rofi.parse-known-hosts:              true
+! Set the modi to combine in combi mode
+rofi.combi-modi:                     window,run
+! Do a more fuzzy matching
+rofi.fuzzy:                          true
+! Tokenize input string
+rofi.tokenize:                       true
