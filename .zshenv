@@ -1,64 +1,37 @@
 ################################################################################
-#
-# Defines environment variables.
-#
+## Defines environment variables.
 ################################################################################
 
-# Source .profile
-[[ -e $HOME/.profile ]] && source $HOME/.profile
+## Source .profile
+[[ -e "$HOME/.profile" ]] && source "$HOME/.profile"
 
-# Paths
+## Paths
 ################################################################################
 
-# Set the the list of directories that cd searches.
-# cdpath=(
-#   $cdpath
-# )
-
-# Tie together the variables (-T), and export the scalar (-x) whilst removing duplicates (-U).  Note that $PATH need not be tied and exported.
-typeset -U path
+## Tie together the variables (-T), and export the scalar (-x) whilst removing
+## duplicates (-U).  Note that $PATH need not be tied and exported.
 typeset -xTU LD_LIBRARY_PATH ld_library_path
 typeset -xTU RUST_SRC_PATH rust_src_path
 
-path=(
-    ~/.local/bin
-    $path
-    /usr/local/{bin,sbin}
-)
-
 rust_src_path=(
-    ~/src/rust/rust/src
+    $HOME/src/rust/rust/src
 )
 
-ld_library_path=(
-    ~/.local/lib
-    $LD_LIBRARY_PATH
-)
+## Update various paths if they exist.
+[[ -d "$HOME/.local/bin" ]] && path=( "$HOME/.local/bin" $path )
+[[ -d "$HOME/.local/sbin" ]] && path=( "$HOME/.local/sbin" $path )
 
+[[ -d "$HOME/.local/lib" ]] && ld_library_path=( "$HOME/.local/lib" $LD_LIBRARY_PATH )
 
-# Editors
+## Applications
 ################################################################################
 
 export EDITOR='emacsclient -t'
 export VISUAL='emacsclient -c -a emacs'
 export PAGER='less'
-
-
-# Browser
-################################################################################
-
 export BROWSER='chrome'
 
-
-# Language
-################################################################################
-
-if [[ -z "$LANG" ]]; then
-  export LANG='en_AU.UTF-8'
-fi
-
-
-# Temporary Files
+## Temporary Files
 ################################################################################
 
 if [[ ! -d "$TMPDIR" ]]; then
