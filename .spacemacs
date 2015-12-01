@@ -39,7 +39,9 @@ values."
      spell-checking
      syntax-checking
      unimpaired
-     version-control
+     (version-control :variables
+                      version-control-diff-tool 'git-gutter
+                      version-control-global-margin t)
      ycmd
      ;; Languages
      c-c++
@@ -243,6 +245,10 @@ user code here.  The exception is org related code, which should be placed in
   ;; LaTeX configuration
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq TeX-electric-sub-and-superscript t)
+
+  ;; Ycmd
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (set-variable 'ycmd-server-command '("python2" "/home/josh/src/ycmd/ycmd"))
 
   ;; Org configuration
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
