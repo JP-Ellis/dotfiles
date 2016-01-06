@@ -16,7 +16,7 @@ setopt EXTENDED_GLOB
 ################################################################################
 ## Python Virtual Env
 ################################################################################
-## Autoloid a python virtual env if .pyvenv is present in the directory.
+## Autoload a python virtual env if .pyvenv is present in the directory.
 ##
 ## By default, the presence of .venv will look for `pyvenv/bin/activate` in
 ## order to load the python virtualenv, but this can be customized by setting
@@ -63,6 +63,26 @@ function check_python_virtualenv {
 }
 
 add-zsh-hook chpwd check_python_virtualenv
+
+################################################################################
+## Multirust Path updating
+################################################################################
+## Update the $PATH variable, adding the appropriate multirust path on a
+## per-project basis
+
+function multirust_path {
+    local mrinfo
+    mrinfo=$(multirust show-override)
+    if echo $mrinfo | grep "override toolchain" &>/dev/null; then
+        mrpath=$(echo $mrinfo | sed -n -e "s/.*location: \(.*\)/\1/p")/cargo/bin
+        [[ -d $mrpath ]] && export PATH=$mrpath:$PATH
+    else
+        path=(${(@)path:#$mrpath})
+    fi
+
+}
+
+add-zsh-hook chpwd multirust_path
 
 ################################################################################
 ## Miscellaneous
