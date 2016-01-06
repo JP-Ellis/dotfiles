@@ -12,6 +12,7 @@
 ## duplicates (-U).  Note that $PATH need not be tied and exported.
 typeset -xTU LD_LIBRARY_PATH ld_library_path
 typeset -xTU RUST_SRC_PATH rust_src_path
+typeset -U path
 
 rust_src_path=(
     $HOME/src/rust/rust/src
