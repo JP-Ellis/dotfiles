@@ -260,6 +260,8 @@ user code here.  The exception is org related code, which should be placed in
                       :html-background "Transparent"
                       :html-scale 2.0
                       :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
+  (setq org-file-apps '(("\\.x?html?\\'" . system)
+                        ("\\.pdf\\'" . system)))
 
   ;; Rust mode
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -279,8 +281,13 @@ layers configuration. You are free to put any user code."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Enable multiple cursors globally.
   (global-evil-mc-mode)
+
   ;; Prefer double spaces after lines
   (setq sentence-end-double-space t)
+
+  ;; Setup the browser
+  (setq browse-url-browser-function 'browse-url-generic
+        browse-url-generic-program "chrome")
 
   ;; Latex
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
