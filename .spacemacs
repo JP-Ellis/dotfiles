@@ -24,6 +24,7 @@ values."
      chrome
      (colors :variables
              colors-enable-rainbow-identifiers t)
+     command-log
      cscope
      finance
      floobits
@@ -36,6 +37,8 @@ values."
      search-engine
      semantic
      shell
+     ;; spacemacs-helm
+     spacemacs-ivy
      spell-checking
      syntax-checking
      unimpaired
@@ -52,7 +55,9 @@ values."
      ipython-notebook
      javascript
      (latex :variables
-            latex-build-command "LatexMk")
+            latex-build-command "LatexMk"
+            latex-enable-folding t
+            latex-enable-auto-fill t)
      lua
      markdown
      python
@@ -62,7 +67,7 @@ values."
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
-   ;; packages then consider to create a layer, you can also put the
+   ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '()
    ;; A list of packages and/or extensions that will not be install and loaded.
@@ -84,8 +89,15 @@ values."
    ;; If non nil ELPA repositories are contacted via HTTPS whenever it's
    ;; possible. Set it to nil if you have no way to use HTTPS in your
    ;; environment, otherwise it is strongly recommended to let it set to t.
+   ;; This variable has no effect if Emacs is launched with the parameter
+   ;; `--insecure' which forces the value of this variable to nil.
    ;; (default t)
    dotspacemacs-elpa-https t
+   ;; Maximum allowed time in seconds to contact an ELPA repository.
+   dotspacemacs-elpa-timeout 5
+   ;; If non nil then spacemacs will check for updates at startup
+   ;; when the current branch is not `develop'. (default t)
+   dotspacemacs-check-for-update t
    ;; One of `vim', `emacs' or `hybrid'. Evil is always enabled but if the
    ;; variable is `emacs' then the `holy-mode' is enabled at startup. `hybrid'
    ;; uses emacs key bindings for vim's insert mode, but otherwise leaves evil
@@ -107,20 +119,22 @@ values."
    ;; Number of recent files to show in the startup buffer. Ignored if
    ;; `dotspacemacs-startup-lists' doesn't include `recents'. (default 5)
    dotspacemacs-startup-recent-list-size 5
+   ;; Default major mode of the scratch buffer (default `text-mode')
+   dotspacemacs-scratch-mode 'text-mode
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(solarized-dark
                          solarized-light)
-   ;; If non nil the cursor color matches the state color.
+   ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro"
+   dotspacemacs-default-font '("Inconsolata\\-g for Powerline"
                                :size 13
                                :weight normal
                                :width normal
-                               :powerline-scale 1.0)
+                               :powerline-scale 1.1)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -132,13 +146,21 @@ values."
    ;; Major mode leader key accessible in `emacs state' and `insert state'.
    ;; (default "C-M-m)
    dotspacemacs-major-mode-emacs-leader-key "C-M-m"
-   ;; The command key used for Evil commands (ex-commands) and
-   ;; Emacs commands (M-x).
-   ;; By default the command key is `:' so ex-commands are executed like in Vim
-   ;; with `:' and Emacs commands are executed with `<leader> :'.
-   dotspacemacs-command-key ":"
-   ;; If non nil `Y' is remapped to `y$'. (default t)
-   dotspacemacs-remap-Y-to-y$ t
+   ;; The key used for Emacs commands (M-x) (after pressing on the leader key).
+   ;; (default "SPC")
+   dotspacemacs-emacs-command-key "SPC"
+   ;; These variables control whether separate commands are bound in the GUI to
+   ;; the key pairs C-i, TAB and C-m, RET.
+   ;; Setting it to a non-nil value, allows for separate commands under <C-i>
+   ;; and TAB or <C-m> and RET.
+   ;; In the terminal, these pairs are generally indistinguishable, so this only
+   ;; works in the GUI. (default nil)
+   dotspacemacs-distinguish-gui-tab nil
+   ;; If non nil `Y' is remapped to `y$' in Evil states. (default nil)
+   dotspacemacs-remap-Y-to-y$ nil
+   ;; If non nil, inverse the meaning of `g' in `:substitute' Evil ex-command.
+   ;; (default nil)
+   dotspacemacs-ex-substitute-global nil
    ;; Name of the default layout (default "Default")
    dotspacemacs-default-layout-name "Default"
    ;; If non nil the default layout name is displayed in the mode-line.
@@ -227,17 +249,19 @@ values."
    ;; specified with an installed package.
    ;; Not used for now. (default nil)
    dotspacemacs-default-package-repository nil
-   ;; Delete whitespace while saving buffer. Possible values are `all',
-   ;; `trailing', `changed' or `nil'. Default is `changed' (cleanup whitespace
-   ;; on changed lines) (default 'changed)
-   dotspacemacs-whitespace-cleanup 'changed
+   ;; Delete whitespace while saving buffer. Possible values are `all'
+   ;; to aggressively delete empty line and long sequences of whitespace,
+   ;; `trailing' to delete only the whitespace at end of lines, `changed'to
+   ;; delete only whitespace for changed lines or `nil' to disable cleanup.
+   ;; (default nil)
+   dotspacemacs-whitespace-cleanup nil
    ))
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
-It is called immediately after `dotspacemacs/init'.  You are free to put almost any
-user code here.  The exception is org related code, which should be placed in
-`dotspacemacs/user-config'."
+It is called immediately after `dotspacemacs/init'.  You are free to put almost
+any user code here.  The exception is org related code, which should be placed
+in `dotspacemacs/user-config'."
   ;; exec-path-from-shell
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq exec-path-from-shell-arguments '("-l"))
@@ -260,8 +284,6 @@ user code here.  The exception is org related code, which should be placed in
                       :html-background "Transparent"
                       :html-scale 2.0
                       :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
-  (setq org-file-apps '(("\\.x?html?\\'" . system)
-                        ("\\.pdf\\'" . system)))
 
   ;; Rust mode
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -288,6 +310,14 @@ layers configuration. You are free to put any user code."
   ;; Setup the browser
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "chrome")
+
+  ;; Web-Mode
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (setq web-mode-enable-current-element-highlight t
+        web-mode-enable-element-content-fontification t
+        web-mode-enable-element-tag-fontification t
+        web-mode-markup-indent-offset 2
+        web-mode-code-indent-offset 2)
 
   ;; Latex
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -327,6 +357,29 @@ layers configuration. You are free to put any user code."
                             (TeX-current-line)
                             (TeX-current-file-name-master-relative))))
       (start-process "zathura-synctex" zathura-launch-buf "zathura" "--synctex-forward" synctex pdfname)))
+
+  ;; Set master bibliography location
+  (setq reftex-default-bibliography '("~/Papers/references.bib"))
+
+  ;; Bibtex
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; see org-ref for use of these variables
+  (setq org-ref-default-bibliography '("~/Papers/references.bib")
+        helm-bibtex-bibliography '("~/Papers/references.bib")
+        org-ref-pdf-directory "~/Papers/"
+        helm-bibtex-library-path "~/Papers/"
+        helm-bibtex-pdf-open-function (lambda (fpath) (start-process "zathura" "*helm-bibtex-zathura*" "/usr/bin/zathura" fpath))
+        org-ref-open-pdf-function (lambda (fpath) (start-process "zathura" "*helm-bibtex-zathura*" "/usr/bin/zathura" fpath))
+        helm-bibtex-notes-path "~/Papers/notes.org"
+        org-ref-bibliography-notes "~/Papers/notes.org")
+
+  ;; Org Mode
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (with-eval-after-load 'org
+    (setq org-file-apps '(("\\.pdf::\\(\\d+\\)\\'" . "zathura -P %1 %s")
+                          ("\\.pdf\\'" . "zathura %s"))
+          org-latex-pdf-process '("latexmk %f")))
+
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -336,7 +389,7 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
