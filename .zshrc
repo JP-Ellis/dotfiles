@@ -70,19 +70,21 @@ add-zsh-hook chpwd check_python_virtualenv
 ## Update the $PATH variable, adding the appropriate multirust path on a
 ## per-project basis
 
-function multirust_path {
-    local mrinfo
-    mrinfo=$(multirust show-override)
-    if echo $mrinfo | grep "override toolchain" &>/dev/null; then
-        mrpath=$(echo $mrinfo | sed -n -e "s/.*location: \(.*\)/\1/p")/cargo/bin
-        [[ -d $mrpath ]] && export PATH=$mrpath:$PATH
-    else
-        path=(${(@)path:#$mrpath})
-    fi
+if (( $+commands[multirust] )); then
+    function multirust_path {
+        local mrinfo
+        mrinfo=$(multirust show-override)
+        if echo $mrinfo | grep "override toolchain" &>/dev/null; then
+            mrpath=$(echo $mrinfo | sed -n -e "s/.*location: \(.*\)/\1/p")/cargo/bin
+            [[ -d $mrpath ]] && export PATH=$mrpath:$PATH
+        else
+            path=(${(@)path:#$mrpath})
+        fi
 
-}
+    }
 
-add-zsh-hook chpwd multirust_path
+    add-zsh-hook chpwd multirust_path
+fi
 
 ################################################################################
 ## Miscellaneous
