@@ -37,8 +37,7 @@ values."
      search-engine
      semantic
      shell
-     ;; spacemacs-helm
-     spacemacs-ivy
+     spacemacs-helm
      spell-checking
      syntax-checking
      unimpaired
