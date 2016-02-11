@@ -11,6 +11,9 @@ values."
    ;; `+distribution'. For now available distributions are `spacemacs-base'
    ;; or `spacemacs'. (default 'spacemacs)
    dotspacemacs-distribution 'spacemacs
+   ;; If non-nil layers with lazy install support are lazy installed.
+   ;; (default nil)
+   dotspacemacs-enable-lazy-installation nil
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path '()
@@ -62,7 +65,8 @@ values."
      python
      ruby
      (rust :variables
-           rust-enable-racer t)
+           rust-enable-racer t
+           rust-enable-rustfmt-on-save t)
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -112,7 +116,7 @@ values."
    ;; If the value is nil then no banner is displayed. (default 'official)
    dotspacemacs-startup-banner 'official
    ;; List of items to show in the startup buffer. If nil it is disabled.
-   ;; Possible values are: `recents' `bookmarks' `projects'.
+   ;; Possible values are: `recents' `bookmarks' `projects' `agenda' `todos'.
    ;; (default '(recents projects))
    dotspacemacs-startup-lists '(recents projects)
    ;; Number of recent files to show in the startup buffer. Ignored if
@@ -189,7 +193,7 @@ values."
    dotspacemacs-helm-position 'bottom
    ;; If non nil the paste micro-state is enabled. When enabled pressing `p`
    ;; several times cycle between the kill ring content. (default nil)
-   dotspacemacs-enable-paste-micro-state t
+   dotspacemacs-enable-paste-transient-state t
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
    ;; the commands bound to the current keystroke sequence. (default 0.4)
    dotspacemacs-which-key-delay 0.4
@@ -220,11 +224,15 @@ values."
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
    dotspacemacs-inactive-transparency 90
+   ;; If non nil show the titles of transient states. (default t)
+   dotspacemacs-show-transient-state-title t
+   ;; If non nil show the color guide hint for transient state keys. (default t)
+   dotspacemacs-show-transient-state-color-guide t
    ;; If non nil unicode symbols are displayed in the mode line. (default t)
    dotspacemacs-mode-line-unicode-symbols t
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
-   ;; scrolling overrides the default behavior of Emacs which recenters the
-   ;; point when it reaches the top or bottom of the screen. (default t)
+   ;; scrolling overrides the default behavior of Emacs which recenters point
+   ;; when it reaches the top or bottom of the screen. (default t)
    dotspacemacs-smooth-scrolling t
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
@@ -268,6 +276,13 @@ in `dotspacemacs/user-config'."
   ;; LaTeX configuration
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq TeX-electric-sub-and-superscript t)
+  (setq LaTeX-math-list '((?\C-n "partial" "Misc Symbol" 8706)))
+
+  ;; BibTeX Configuration
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (setq bibtex-align-at-equal-sign t
+        bibtex-autoadd-commas t
+        bibtex-comma-after-last-field t)
 
   ;; Ycmd
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -291,7 +306,7 @@ in `dotspacemacs/user-config'."
 
   ;; Magit
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq magit-commit-arguments '("--signoff"))
+  (setq magit-commit-arguments '("--signoff" "--gpg-sign=Joshua Ellis <josh@jpellis.me>"))
   )
 
 (defun dotspacemacs/user-config ()
@@ -324,38 +339,48 @@ layers configuration. You are free to put any user code."
   (add-hook 'TeX-mode-hook
             '(lambda ()
                (add-to-list 'TeX-view-program-list
-                            '("Zathura" zathura-forward-search))
+                            '("Zathura"
+                              ("zathura "
+                               (mode-io-correlate " --synctex-forward %n:0:%b -x \"emacsclient +%{line} %{input}\" ")
+                               " %o")
+                              "zathura"))
                (add-to-list 'TeX-view-program-selection
                             '(output-pdf "Zathura"))))
-  (setq zathura-procs ())
-  (defun zathura-forward-search ()
-    ;; Open the compiled pdf in Zathura with synctex. This is complicated since
-    ;; 1) Zathura refuses to acknowledge Synctex directive if the pdf is not
-    ;; already opened
-    ;; 2) This means we have to bookkeep open Zathura processes ourselves: first
-    ;; open a new pdf from the beginning, if it is not already open. Then call
-    ;; Zathura again with the synctex directive.
-    (interactive)
-    (let* ((zathura-launch-buf (get-buffer-create "*Zathura Output*"))
-           (pdfname (TeX-master-file "pdf"))
-           (zatentry (assoc pdfname zathura-procs))
-           (zatproc (if (and zatentry (process-live-p (cdr zatentry)))
-                        (cdr zatentry)
-                      (progn
-                        (let ((proc (progn (message "Launching Zathura")
-                                           (start-process "zathura-launch"
-                                                          zathura-launch-buf "zathura"
-                                                          "-x" "emacsclient +%{line} %{input}" pdfname))))
-                          (when zatentry
-                            (setq zathura-procs (delq zatentry zathura-procs)))
-                          (add-to-list 'zathura-procs (cons pdfname proc))
-                          (set-process-query-on-exit-flag proc nil)
-                          proc))))
-           (pid (process-id zatproc))
-           (synctex (format "%s:0:%s"
-                            (TeX-current-line)
-                            (TeX-current-file-name-master-relative))))
-      (start-process "zathura-synctex" zathura-launch-buf "zathura" "--synctex-forward" synctex pdfname)))
+  ;; (add-hook 'TeX-mode-hook
+  ;;           '(lambda ()
+  ;;              (add-to-list 'TeX-view-program-list
+  ;;                           '("Zathura" zathura-forward-search))
+  ;;              (add-to-list 'TeX-view-program-selection
+  ;;                           '(output-pdf "Zathura"))))
+  ;; (setq zathura-procs ())
+  ;; (defun zathura-forward-search ()
+  ;;   ;; Open the compiled pdf in Zathura with synctex. This is complicated since
+  ;;   ;; 1) Zathura refuses to acknowledge Synctex directive if the pdf is not
+  ;;   ;; already opened
+  ;;   ;; 2) This means we have to bookkeep open Zathura processes ourselves: first
+  ;;   ;; open a new pdf from the beginning, if it is not already open. Then call
+  ;;   ;; Zathura again with the synctex directive.
+  ;;   (interactive)
+  ;;   (let* ((zathura-launch-buf (get-buffer-create "*Zathura Output*"))
+  ;;          (pdfname (TeX-master-file "pdf"))
+  ;;          (zatentry (assoc pdfname zathura-procs))
+  ;;          (zatproc (if (and zatentry (process-live-p (cdr zatentry)))
+  ;;                       (cdr zatentry)
+  ;;                     (progn
+  ;;                       (let ((proc (progn (message "Launching Zathura")
+  ;;                                          (start-process "zathura-launch"
+  ;;                                                         zathura-launch-buf "zathura"
+  ;;                                                         "-x" "emacsclient +%{line} %{input}" pdfname))))
+  ;;                         (when zatentry
+  ;;                           (setq zathura-procs (delq zatentry zathura-procs)))
+  ;;                         (add-to-list 'zathura-procs (cons pdfname proc))
+  ;;                         (set-process-query-on-exit-flag proc nil)
+  ;;                         proc))))
+  ;;          (pid (process-id zatproc))
+  ;;          (synctex (format "%s:0:%s"
+  ;;                           (TeX-current-line)
+  ;;                           (TeX-current-file-name-master-relative))))
+  ;;     (start-process "zathura-synctex" zathura-launch-buf "zathura" "--synctex-forward" synctex pdfname)))
 
   ;; Set master bibliography location
   (setq reftex-default-bibliography '("~/Papers/references.bib"))
@@ -364,12 +389,8 @@ layers configuration. You are free to put any user code."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; see org-ref for use of these variables
   (setq org-ref-default-bibliography '("~/Papers/references.bib")
-        helm-bibtex-bibliography '("~/Papers/references.bib")
         org-ref-pdf-directory "~/Papers/"
-        helm-bibtex-library-path "~/Papers/"
-        helm-bibtex-pdf-open-function (lambda (fpath) (start-process "zathura" "*helm-bibtex-zathura*" "/usr/bin/zathura" fpath))
         org-ref-open-pdf-function (lambda (fpath) (start-process "zathura" "*helm-bibtex-zathura*" "/usr/bin/zathura" fpath))
-        helm-bibtex-notes-path "~/Papers/notes.org"
         org-ref-bibliography-notes "~/Papers/notes.org")
 
   ;; Org Mode
@@ -388,7 +409,7 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-)
+ )
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
