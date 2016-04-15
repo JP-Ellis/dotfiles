@@ -65,8 +65,7 @@ values."
      python
      ruby
      (rust :variables
-           rust-enable-racer t
-           rust-enable-rustfmt-on-save t)
+           rust-enable-racer t)
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -301,6 +300,7 @@ in `dotspacemacs/user-config'."
 
   ;; Rust mode
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (setq rust-format-on-save t)
   (setq racer-rust-src-path "~/src/rust/rust/src")
   (setq racer-cmd "/usr/bin/racer")
 
