@@ -408,6 +408,41 @@ layers configuration. You are free to put any user code."
   ;; Wolfram mode
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq wolfram-indent 2)
+
+  ;; Neotree
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (setq neo-hidden-regexp-list '(
+                                 ;; Hidden files
+                                 "^\\."
+                                 ;; Backups/Temporary file
+                                 "~$"
+                                 "^#.*#$"
+                                 ;; Python compiled
+                                 "\\.pyc$"
+                                 ;; Emacs compiled
+                                 "\\.elc$"
+                                 ;; LaTeX temporary files
+                                 "\\.aux$"
+                                 "\\.bbl$"
+                                 "\\.bcf$"
+                                 "\\.blg$"
+                                 "\\.fdb_latexmk$"
+                                 "\\.fls$"
+                                 "\\.glg$"
+                                 "\\.glo$"
+                                 "\\.gls$"
+                                 "\\.ist$"
+                                 "\\.log$"
+                                 "\\.nav"
+                                 "\\.out$"
+                                 "\\.run\\.xml$"
+                                 "\\.snm"
+                                 "\\.synctex\\.gz$"
+                                 "\\.synctex\\.gz\\(busy\\)$"
+                                 "\\.toc$"
+                                 "\\.unq$"
+                                 ))
+
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
