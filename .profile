@@ -11,5 +11,3 @@ if [[ -n "$XDG_RUNTIME_DIR" ]]; then
         ssh-add -l | grep "${keyfile:s/.pub//}" &>/dev/null || ssh-add ${keyfile:s/.pub//} &>/dev/null
     done
 fi
-
-export PATH="$HOME/.cargo/bin:$PATH"

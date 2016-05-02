@@ -11,12 +11,7 @@
 ## Tie together the variables (-T), and export the scalar (-x) whilst removing
 ## duplicates (-U).  Note that $PATH need not be tied and exported.
 typeset -xTU LD_LIBRARY_PATH ld_library_path
-typeset -xTU RUST_SRC_PATH rust_src_path
 typeset -U path
-
-rust_src_path=(
-    $HOME/src/rust/rust/src
-)
 
 ## Update various paths if they exist.
 [[ -d "$HOME/.local/bin" ]] && path=( "$HOME/.local/bin" $path )
@@ -43,4 +38,12 @@ fi
 TMPPREFIX="${TMPDIR%/}/zsh"
 if [[ ! -d "$TMPPREFIX" ]]; then
   mkdir -p "$TMPPREFIX"
+fi
+
+## Caro / Rust
+################################################################################
+
+if (( $+commands[rustc] )); then
+    [[ -d "$HOME/src/rust/rust/src" ]] && export RUST_SRC_PATH="$HOME/src/rust/rust/src"
+    [[ -d "$HOME/.cargo" ]] && export CARGO_HOME="$HOME/.cargo"
 fi
