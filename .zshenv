@@ -11,13 +11,15 @@
 ## Tie together the variables (-T), and export the scalar (-x) whilst removing
 ## duplicates (-U).  Note that $PATH need not be tied and exported.
 typeset -xTU LD_LIBRARY_PATH ld_library_path
+typeset -xTU CPATH cpath
 typeset -U path
 
 ## Update various paths if they exist.
 [[ -d "$HOME/.local/bin" ]] && path=( "$HOME/.local/bin" $path )
 [[ -d "$HOME/.local/sbin" ]] && path=( "$HOME/.local/sbin" $path )
 
-[[ -d "$HOME/.local/lib" ]] && ld_library_path=( "$HOME/.local/lib" $LD_LIBRARY_PATH )
+[[ -d "$HOME/.local/lib" ]] && ld_library_path=( "$HOME/.local/lib" $ld_library_path )
+[[ -d "$HOME/.local/include" ]] && cpath=( "$HOME/.local/include" $cpath )
 
 ## Applications
 ################################################################################
