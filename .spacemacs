@@ -405,6 +405,9 @@ layers configuration. You are free to put any user code."
                           ("\\.pdf\\'" . "zathura %s"))
           org-latex-pdf-process '("latexmk %f")))
 
+  ;; Wolfram mode
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (setq wolfram-indent 2)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
