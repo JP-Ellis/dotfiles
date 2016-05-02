@@ -49,6 +49,7 @@ values."
                       version-control-global-margin t)
      ycmd
      ;; Languages
+     bibtex
      c-c++
      django
      emacs-lisp
