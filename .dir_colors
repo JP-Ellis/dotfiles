@@ -44,9 +44,10 @@
 COLOR tty
 
 # Below, there should be one TERM entry for each termtype that is colorizable
+TERM Eterm
 TERM ansi
-TERM color_xterm
 TERM color-xterm
+TERM color_xterm
 TERM con132x25
 TERM con132x30
 TERM con132x43
@@ -63,7 +64,6 @@ TERM cygwin
 TERM dtterm
 TERM dvtm
 TERM dvtm-256color
-TERM Eterm
 TERM eterm-color
 TERM fbterm
 TERM gnome
@@ -84,33 +84,33 @@ TERM rxvt-256color
 TERM rxvt-cygwin
 TERM rxvt-cygwin-native
 TERM rxvt-unicode
-TERM rxvt-unicode256
 TERM rxvt-unicode-256color
+TERM rxvt-unicode256
 TERM screen
 TERM screen-16color
 TERM screen-16color-bce
-TERM screen-16color-s
 TERM screen-16color-bce-s
+TERM screen-16color-s
 TERM screen-256color
 TERM screen-256color-bce
-TERM screen-256color-s
 TERM screen-256color-bce-s
+TERM screen-256color-s
 TERM screen-bce
 TERM screen-w
 TERM screen.linux
 TERM screen.xterm-new
 TERM st
-TERM st-meta
 TERM st-256color
+TERM st-meta
 TERM st-meta-256color
 TERM vt100
 TERM xterm
-TERM xterm-new
 TERM xterm-16color
 TERM xterm-256color
 TERM xterm-88color
 TERM xterm-color
 TERM xterm-debian
+TERM xterm-new
 TERM xterm-termite
 
 # EIGHTBIT, followed by '1' for on, '0' for off. (8-bit output)
