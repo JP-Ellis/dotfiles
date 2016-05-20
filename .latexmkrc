@@ -12,6 +12,7 @@ $max_repeat = 9;
 
 # Add auxlock to the cleanup list
 push @generated_exts, 'auxlock', 'synctex.gz';
+push @generated_exts, 'nav', 'snm';
 
 # Provide support for Glossaries
 ################################################################################
