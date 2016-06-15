@@ -146,8 +146,11 @@ bindsym $mod+button10 move container to workspace prev_on_output
 bindsym $mod+button11 move container to workspace next_on_output
 
 # Lock screen
-exec screensaver &
+exec --no-startup-id screensaver
 bindsym $mod+Ctrl+l exec "xautolock -locknow"
+
+# Mega sync
+exec --no-startup-id megasync
 
 
 # Function keys
@@ -172,7 +175,8 @@ bindsym XF86AudioPlay               exec playerctl play-pause
 # Startup
 exec --no-startup-id i3-msg "workspace 10; exec termite"
 exec --no-startup-id i3-msg "workspace 2; exec emacs"
-exec --no-startup-id i3-msg "workspace 1; exec chrome"     # Chrome is a bit... weird
+exec --no-startup-id i3-msg "workspace 1; exec \"sleep 5; chrome\""     # Chrome is a bit... weird
 
+# PDF Presenter Console
 assign [title="pdfpc - presentation"] 2
 assign [title="pdfpc - presenter"] 1
