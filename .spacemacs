@@ -28,57 +28,204 @@ values."
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path '()
-   ;; List of configuration layers to load. If it is the symbol `all' instead
-   ;; of a list then all discovered layers will be installed.
+   ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     ;; Packages
-     auto-completion
-     evil-snipe
-     chrome
-     (colors :variables
-             colors-enable-rainbow-identifiers t)
-     command-log
-     cscope
-     finance
-     floobits
-     git
-     github
-     gtags
-     (org :variables
-          org-enable-github-support t)
-     prodigy
-     search-engine
-     semantic
-     shell
-     spacemacs-helm
+     ;;;; Chat
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; erc
+     ;; jabber
+     ;; rcirc
+     ;; slack
+
+     ;;;; Checkers
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      spell-checking
      syntax-checking
-     unimpaired
-     (version-control :variables
-                      version-control-diff-tool 'git-gutter
-                      version-control-global-margin t)
-     ycmd
-     ;; Languages
-     bibtex
-     c-c++
+
+     ;;;; Completion
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     (auto-completion :variables
+                      auto-completion-return-key-behaviour nil
+                      auto-completion-tab-key-behaviour 'complete
+                      auto-completion-enable-snippets-in-popup t
+                      auto-completion-enable-help-tooltip t
+                      auto-completion-enable-sort-by-usage t)
+     helm
+     ;; ivy
+
+     ;;;; Emacs
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; better-defaults
+     ibuffer
+     (org :variables
+          org-enable-github-support t)
+     semantic
+     ;; smex
+     typography
+
+     ;;;; Email
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; gnus
+     ;; mu4e
+
+     ;;;; Frameworks
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      django
+     ;; react
+     ;; ruby-on-rails
+
+     ;;;; Fun
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     emoji
+     games
+     ;; selectric
+     xkcd
+
+     ;;;; International
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; chinese
+
+     ;;;; Keyboard Layouts
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; bepo
+
+     ;;;; Lang
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; agda
+     ;; asciidoc
+     asm
+     ;; autohotkey
+     bibtex
+     (c-c++ :variables
+            c-c++-enable-clang-support t)
+     ;; clojure
+     ;; common-lisp
+     ;; csharp
+     csv
+     ;; d
+     ;; elixir
+     ;; elm
      emacs-lisp
+     ;; erlang
+     ;; ess
      extra-langs
+     ;; faust
+     ;; fsharp
+     ;; go
+     ;; graphviz
+     ;; haskell
      html
+     ;; idris
      ipython-notebook
+     ;; java
      javascript
      (latex :variables
             latex-build-command "LatexMk"
+            latex-enable-auto-fill t
             latex-enable-folding t
-            latex-enable-auto-fill t)
+            )
      lua
      markdown
+     ;; nim
+     ;; ocaml
+     ;; octave
+     ;; php
+     ;; plantuml
+     ;; purescript
      python
-     ruby
-     (rust :variables
-           rust-enable-racer t)
+     ;; racket
+     ;; ruby
+     rust
+     ;; scala
+     ;; scheme
+     shell-scripts
+     ;; sml
+     ;; sql
+     ;; swift
+     ;; typescript
+     ;; vimscript
+     ;; windows-scripts
      yaml
+
+     ;;;; OS
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; nixos
+     ;; osx
+
+     ;;;; Pair Programming
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     floobits
+
+     ;;;; Source Control
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     git
+     github
+     ;; perforce
+     (version-control :variables
+                      version-control-global-margin t)
+
+     ;;;; Tags
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; cscope
+     gtags
+
+     ;;;; Themes
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     (colors :variables
+             colors-colorize-identifiers 'variables)
+     ;; themes-megapack
+     ;; theming
+
+     ;;;; Tools
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; ansible
+     ;; cfengine
+     chrome
+     ;; command-log
+     ;; dash
+     ;; deft
+     ;; fasd
+     finance
+     ;; geolocation
+     imenu-list
+     ;; nginx
+     ;; pandoc
+     pdf-tools
+     ;; prodigy
+     ;; puppet
+     ;; ranger
+     restclient
+     ;; salt
+     ;; shell
+     speed-reading
+     systemd
+     ;; terraform
+     ;; tmux
+     ;; vagrant
+     ycmd
+
+     ;;;; Vim
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     evil-cleverparens
+     ;; evil-commentary
+     evil-snipe
+     ;; vim-empty-lines
+     ;; vim-powerline
+     ;; vinegar
+
+     ;;;; Web Services
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; elfeed
+     ;; evernote
+     search-engine
+     ;; spotify
+     ;; twitter
+     ;; wakatime
+
+     ;;;; Other
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; rebox
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
