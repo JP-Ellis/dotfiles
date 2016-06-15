@@ -483,7 +483,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq rust-format-on-save t)
   (setq racer-rust-src-path "~/src/rust/rust/src")
-  (setq racer-cmd "/usr/bin/racer")
+  (setq racer-cmd "~/.cargo/bin/racer")
 
   ;; Magit
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
