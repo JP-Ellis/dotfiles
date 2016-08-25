@@ -60,7 +60,7 @@ values."
      ibuffer
      (org :variables
           org-enable-github-support t)
-     semantic
+     ;; semantic
      ;; smex
      typography
 
@@ -133,7 +133,8 @@ values."
      ;; php
      ;; plantuml
      ;; purescript
-     python
+     (python :variables
+             python-sort-imports-on-save t)
      ;; racket
      ;; ruby
      rust
@@ -155,7 +156,7 @@ values."
 
      ;;;; Pair Programming
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-     floobits
+     ;; floobits
 
      ;;;; Source Control
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -168,12 +169,12 @@ values."
      ;;;; Tags
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; cscope
-     gtags
+     ;; gtags
 
      ;;;; Themes
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      (colors :variables
-             colors-colorize-identifiers 'variables)
+             colors-colorize-identifiers 'all)
      ;; themes-megapack
      ;; theming
 
@@ -232,6 +233,8 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '()
+   ;; A list of packages that cannot be updated.
+   dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; Defines the behaviour of Spacemacs when downloading packages.
@@ -280,13 +283,13 @@ values."
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
    dotspacemacs-startup-banner 'official
-   ;; List of items to show in the startup buffer. If nil it is disabled.
-   ;; Possible values are: `recents' `bookmarks' `projects' `agenda' `todos'.
-   ;; (default '(recents projects))
-   dotspacemacs-startup-lists '(recents projects)
-   ;; Number of recent files to show in the startup buffer. Ignored if
-   ;; `dotspacemacs-startup-lists' doesn't include `recents'. (default 5)
-   dotspacemacs-startup-recent-list-size 5
+   ;; List of items to show in startup buffer or an association list of of
+   ;; the form `(list-type . list-size)`. If nil it is disabled.
+   ;; Possible values for list-type are:
+   ;; `recents' `bookmarks' `projects' `agenda' `todos'."
+   dotspacemacs-startup-lists '((todos . 5)
+                                (projects . 5)
+                                (recents . 10))
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
    ;; List of themes, the first of the list is loaded when spacemacs starts.
@@ -418,11 +421,11 @@ values."
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc…
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
-   dotspacemacs-smart-closing-parenthesis t
+   dotspacemacs-smart-closing-parenthesis nil
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
-   dotspacemacs-highlight-delimiters 'all
+   dotspacemacs-highlight-delimiters 'current
    ;; If non nil advises quit functions to keep server open when quitting.
    ;; (default nil)
    dotspacemacs-persistent-server nil
@@ -439,7 +442,7 @@ values."
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup nil
+   dotspacemacs-whitespace-cleanup 'changed
    ))
 
 (defun dotspacemacs/user-init ()
@@ -467,6 +470,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; Ycmd
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (set-variable 'ycmd-server-command '("python2" "/home/josh/src/ycmd/ycmd"))
+  ;; (setq ycmd-force-semantic-completion t)
 
   ;; Org configuration
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -509,6 +513,10 @@ you should place your code here."
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "chrome")
 
+  ;; Smartparens
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (setq sp-highlight-pair-overlay nil)
+
   ;; Web-Mode
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq web-mode-enable-current-element-highlight t
@@ -522,49 +530,8 @@ you should place your code here."
   ;; Use Zathura as the PDF viewer
   (add-hook 'TeX-mode-hook
             '(lambda ()
-               (add-to-list 'TeX-view-program-list
-                            '("Zathura"
-                              ("zathura "
-                               (mode-io-correlate " --synctex-forward %n:0:'%b' -x \"emacsclient +%{line} '%{input}'\" ")
-                               " %o")
-                              "zathura"))
                (add-to-list 'TeX-view-program-selection
                             '(output-pdf "Zathura"))))
-  ;; (add-hook 'TeX-mode-hook
-  ;;           '(lambda ()
-  ;;              (add-to-list 'TeX-view-program-list
-  ;;                           '("Zathura" zathura-forward-search))
-  ;;              (add-to-list 'TeX-view-program-selection
-  ;;                           '(output-pdf "Zathura"))))
-  ;; (setq zathura-procs ())
-  ;; (defun zathura-forward-search ()
-  ;;   ;; Open the compiled pdf in Zathura with synctex. This is complicated since
-  ;;   ;; 1) Zathura refuses to acknowledge Synctex directive if the pdf is not
-  ;;   ;; already opened
-  ;;   ;; 2) This means we have to bookkeep open Zathura processes ourselves: first
-  ;;   ;; open a new pdf from the beginning, if it is not already open. Then call
-  ;;   ;; Zathura again with the synctex directive.
-  ;;   (interactive)
-  ;;   (let* ((zathura-launch-buf (get-buffer-create "*Zathura Output*"))
-  ;;          (pdfname (TeX-master-file "pdf"))
-  ;;          (zatentry (assoc pdfname zathura-procs))
-  ;;          (zatproc (if (and zatentry (process-live-p (cdr zatentry)))
-  ;;                       (cdr zatentry)
-  ;;                     (progn
-  ;;                       (let ((proc (progn (message "Launching Zathura")
-  ;;                                          (start-process "zathura-launch"
-  ;;                                                         zathura-launch-buf "zathura"
-  ;;                                                         "-x" "emacsclient +%{line} %{input}" pdfname))))
-  ;;                         (when zatentry
-  ;;                           (setq zathura-procs (delq zatentry zathura-procs)))
-  ;;                         (add-to-list 'zathura-procs (cons pdfname proc))
-  ;;                         (set-process-query-on-exit-flag proc nil)
-  ;;                         proc))))
-  ;;          (pid (process-id zatproc))
-  ;;          (synctex (format "%s:0:%s"
-  ;;                           (TeX-current-line)
-  ;;                           (TeX-current-file-name-master-relative))))
-  ;;     (start-process "zathura-synctex" zathura-launch-buf "zathura" "--synctex-forward" synctex pdfname)))
 
   ;; Set master bibliography location
   (setq reftex-default-bibliography '("~/Papers/references.bib"))
