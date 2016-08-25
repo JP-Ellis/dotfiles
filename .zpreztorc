@@ -34,7 +34,6 @@ zstyle ':prezto:load' pmodule \
     'completion' \
     'editor' \
     'git' \
-    'gpg' \
     'history' \
     'pacman' \
     'python' \
@@ -46,6 +45,7 @@ zstyle ':prezto:load' pmodule \
     'history-substring-search' \
     'prompt'
 
+    # 'gpg' \
     # 'ssh' \
 
 ############################################################
