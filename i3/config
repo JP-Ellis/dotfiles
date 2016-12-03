@@ -150,10 +150,6 @@ bindsym $mod+button11 move container to workspace next_on_output
 exec --no-startup-id screensaver
 bindsym $mod+Ctrl+l exec "xautolock -locknow"
 
-# Mega sync
-exec --no-startup-id megasync
-
-
 # Function keys
 bindsym XF86MonBrightnessDown       exec xbacklight -dec 5
 bindsym XF86MonBrightnessUp         exec xbacklight -inc 5
