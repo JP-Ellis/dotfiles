@@ -54,3 +54,8 @@ if (( $+commands[rustc] )); then
     [[ -d "/usr/local/src/rust" ]] && export RUST_SRC_PATH="/usr/local/src/rust"
     [[ -d "$HOME/.cargo" ]] && export CARGO_HOME="$HOME/.cargo"
 fi
+
+## GPG-Agent
+################################################################################
+
+[[ -S "$(gpgconf --list-dirs | sed -n 's|agent-socket:||p').ssh" ]] && export SSH_AUTH_SOCK="$(gpgconf --list-dirs | sed -n 's|agent-socket:||p').ssh"
