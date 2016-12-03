@@ -70,7 +70,7 @@ sub tikzpdflatex {
     if ( !defined $externalflag->{$base} ) {
         $externalflag->{$base} = 1;
         if ( -e "$base.makefile" ) {
-            system ("$make -j8 -f $base.makefile");
+            system ("$make -j\$(nproc) -f $base.makefile");
         }
     }
     return $?;
