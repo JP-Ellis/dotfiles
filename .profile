@@ -1,3 +1,8 @@
+if [[ ! -d "$TMPDIR" ]]; then
+    export TMPDIR="/tmp/$USER"
+    mkdir -p -m 700 "$TMPDIR"
+fi
+
 # Add ~/.local/bin to $PATH
 [[ -d $HOME/.local/bin ]] && export PATH=$HOME/.local/bin:$PATH
 
