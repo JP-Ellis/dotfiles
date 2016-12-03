@@ -28,8 +28,8 @@ typeset -U path
 ## Applications
 ################################################################################
 
-export EDITOR='emacsclient -t'
-export VISUAL='emacsclient -c -a emacs'
+export EDITOR='ec'
+export VISUAL='ec'
 export PAGER='less'
 export BROWSER='chrome'
 
