@@ -75,6 +75,20 @@ alias cd=cdls
 alias open=xdg-open
 
 ## Set the default Less options.
-## Mouse-wheel scrolling has been disabled by -X (disable screen clearing).
-## Remove -X and -F (exit if the content fits on one screen) to enable it.
+## Mouse-wheel scrolling has been disabled by `--no-init` (disable screen clearing).
+## Remove `--no-init` and `--quit-if-one-screen` to enable it.
 export LESS='-F -g -i -M -R -S -w -X -z-4'
+export LESS=(
+    --quit-if-one-screen
+    --hilite-search
+    --ignore-case
+    --jump-target=.5
+    --LONG-PROMPT
+    --RAW-CONTROL-CHARS
+    --squeeze-blank-lines
+    --chop-long-lines
+    --hilite-unread
+    --no-init
+    --window=-4
+    --shift=.33
+)
