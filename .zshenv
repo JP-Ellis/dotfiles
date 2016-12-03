@@ -21,6 +21,10 @@ typeset -U path
 [[ -d "$HOME/.local/lib" ]] && ld_library_path=( "$HOME/.local/lib" $ld_library_path )
 [[ -d "$HOME/.local/include" ]] && cpath=( "$HOME/.local/include" $cpath )
 
+# Multirust support
+[[ -d $HOME/.cargo/bin ]] && export PATH=$HOME/.cargo/bin:$PATH
+
+
 ## Applications
 ################################################################################
 
@@ -46,6 +50,7 @@ fi
 ################################################################################
 
 if (( $+commands[rustc] )); then
-    [[ -d "$HOME/src/rust/rust/src" ]] && export RUST_SRC_PATH="$HOME/src/rust/rust/src"
+    [[ -d "/usr/src/rust" ]] && export RUST_SRC_PATH="/usr/src/rust"
+    [[ -d "/usr/local/src/rust" ]] && export RUST_SRC_PATH="/usr/local/src/rust"
     [[ -d "$HOME/.cargo" ]] && export CARGO_HOME="$HOME/.cargo"
 fi
