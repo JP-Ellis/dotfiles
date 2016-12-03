@@ -24,6 +24,7 @@ zstyle ':prezto:*:*' color 'yes'
 # - gnu-utility must come before utility
 # - completion must come after utility
 # - history-substring-search must come after syntax-highlighting
+# - autosuggestions must come after history-substring
 # - prompt should be last
 zstyle ':prezto:load' pmodule \
     'environment' \
@@ -164,7 +165,6 @@ zstyle ':prezto:module:pacman' frontend 'yaourt'
 ########################################
 
 # Set the prompt theme to load.
-DEFAULT_USER="josh"
 zstyle ':prezto:module:prompt' theme 'jpellis'
 
 
@@ -197,7 +197,7 @@ zstyle ':prezto:module:ruby:info:version' format '%v'
 ########################################
 
 # Set the SSH identities to load into the agent.
-zstyle ':prezto:module:ssh:load' identities 'id_rsa' 'id_github' 'id_bitbucket'
+# zstyle ':prezto:module:ssh:load' identities 'id_rsa'
 
 
 # Syntax Highlighting
