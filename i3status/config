@@ -1,0 +1,65 @@
+general {
+    output_format   = "i3bar"
+    colors          = true
+    interval        = 5
+}
+
+## Set the ordering of all the elements
+# order += "ipv6"
+# order += "run_watch DHCP"
+# order += "run_watch VPN"
+order += "wireless wlp3s0"
+order += "disk /"
+order += "disk /home/"
+order += "battery 0"
+order += "cpu_temperature 0"
+order += "load"
+order += "tztime local"
+order += "tztime utc"
+order += "volume master"
+
+wireless wlp3s0 {
+    format_up   = "%essid [%ip] %quality @ %frequency"
+    format_down = "W: down"
+}
+
+battery 0 {
+    format          = "%status %percentage %remaining %emptytime"
+    path            = "/sys/class/power_supply/BAT0/uevent"
+    low_threshold   = 15
+    integer_battery_capacity = true
+    hide_seconds    = true
+}
+
+tztime local {
+    format = "%Y-%m-%d %H:%M:%S"
+}
+
+tztime utc {
+    format      = "%H:%M:%S %Z"
+    timezone    = "UTC"
+}
+
+load {
+    format = "%1min"
+}
+
+cpu_temperature 0 {
+    format  = "%degrees °C"
+    path    = "/sys/devices/platform/coretemp.0/hwmon/hwmon1/temp1_input"
+}
+
+disk "/home/" {
+    format = "H: %free"
+}
+
+disk "/" {
+    format = "R: %free"
+}
+
+volume master {
+    format  = "♪ %volume"
+    device  = "default"
+    mixer   = "Master"
+    mixer_idx = 0
+}

@@ -42,9 +42,10 @@ declare -a files=(
     ".zshrc"
 )
 declare -a config_dirs=(
-    "i3"
-    "termite"
     "dunst"
+    "i3"
+    "i3status"
+    "termite"
 )
 
 # Link all the config files
