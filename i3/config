@@ -147,7 +147,6 @@ bindsym $mod+button10 move container to workspace prev_on_output
 bindsym $mod+button11 move container to workspace next_on_output
 
 # Lock screen
-exec --no-startup-id screensaver
 bindsym $mod+Ctrl+l exec "xautolock -locknow"
 
 # Function keys
