@@ -300,6 +300,8 @@ values."
    dotspacemacs-startup-lists '((todos . 5)
                                 (projects . 5)
                                 (recents . 10))
+   ;; True if the home buffer should respond to resize events.
+   dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
    ;; List of themes, the first of the list is loaded when spacemacs starts.
