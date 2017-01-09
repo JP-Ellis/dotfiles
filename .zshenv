@@ -50,8 +50,8 @@ fi
 ################################################################################
 
 if (( $+commands[rustc] )); then
-    [[ -d "/usr/src/rust" ]] && export RUST_SRC_PATH="/usr/src/rust"
-    [[ -d "/usr/local/src/rust" ]] && export RUST_SRC_PATH="/usr/local/src/rust"
+    [[ -d "/usr/src/rust/src" ]] && export RUST_SRC_PATH="/usr/src/rust/src"
+    [[ -d "/usr/local/src/rust/src" ]] && export RUST_SRC_PATH="/usr/local/src/rust/src"
     [[ -d "$HOME/.cargo" ]] && export CARGO_HOME="$HOME/.cargo"
 fi
 
