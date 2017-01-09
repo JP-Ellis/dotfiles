@@ -150,12 +150,12 @@ bindsym $mod+button11 move container to workspace next_on_output
 bindsym $mod+Ctrl+l exec "xautolock -locknow"
 
 # Function keys
-bindsym XF86MonBrightnessDown       exec xbacklight -dec 5
-bindsym XF86MonBrightnessUp         exec xbacklight -inc 5
-bindsym Shift+XF86MonBrightnessDown exec xbacklight -set 1
-bindsym Shift+XF86MonBrightnessUp   exec xbacklight -set 100
-bindsym Ctrl+XF86MonBrightnessDown  exec xbacklight -dec 1
-bindsym Ctrl+XF86MonBrightnessUp    exec xbacklight -inc 1
+bindsym XF86MonBrightnessDown       exec light -U 5
+bindsym XF86MonBrightnessUp         exec light -A 5
+bindsym Shift+XF86MonBrightnessDown exec light -S $(light -c)
+bindsym Shift+XF86MonBrightnessUp   exec light -S $(light -m)
+bindsym Ctrl+XF86MonBrightnessDown  exec light -U 1
+bindsym Ctrl+XF86MonBrightnessUp    exec light -A 1
 
 bindsym XF86KbdBrightnessDown       exec kbdlight down
 bindsym XF86KbdBrightnessUp         exec kbdlight up
