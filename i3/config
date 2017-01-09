@@ -175,7 +175,7 @@ assign [title="pdfpc - presenter"] 1
 # Startup
 exec --no-startup-id i3-msg "workspace 10; exec termite"
 exec --no-startup-id i3-msg "workspace 2; exec emacs"
-exec --no-startup-id i3-msg "workspace 1; exec \"sleep 5; chrome\""     # Chrome is a bit... weird
+exec --no-startup-id i3-msg "workspace 1; exec chrome"  # Chrome is a bit... weird
 
 # For some reason, gpg-agent has to be restarted
 exec --no-startup-id systemctl --user restart gpg-agent
