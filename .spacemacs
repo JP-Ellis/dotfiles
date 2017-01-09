@@ -134,7 +134,9 @@ values."
      ;; plantuml
      ;; purescript
      (python :variables
-             python-sort-imports-on-save t)
+             python-sort-imports-on-save t
+             python-enable-yapf-format-on-save t
+             python-fill-column 120)
      ;; racket
      ruby
      rust
