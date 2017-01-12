@@ -9,11 +9,15 @@ help () {
     echo "made with the extension \`.bak\`."
 }
 
+if [[ $# -gt 0 ]]; then
+    help $0
+    exit 1
+fi
 
 # As yes or no and return true or false
 # Usage:
 # yes_or_no(<statement>, <default>)
-function yes_or_no() {
+yes_or_no() {
     while true; do
         if [ "${2:-}" = "Y" ]; then
             prompt="Y/n"
