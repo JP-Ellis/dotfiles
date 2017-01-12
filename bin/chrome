@@ -1,11 +1,11 @@
 #!/bin/zsh
 
-if $+commands[google-chrome-unstable] ; then
+if (($+commands[google-chrome-unstable])); then
     google-chrome-unstable $@
-elif $+commands[google-chrome-beta] ; then
+elif (($+commands[google-chrome-beta])); then
     google-chrome-beta $@
-elif $+commands[google-chrome-stable] ; then
+elif (($+commands[google-chrome-stable])); then
     google-chrome-stable $@
-elif $+commands[chromium] ; then
+elif (($+commands[chromium])); then
     chromium $@
 fi
