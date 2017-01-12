@@ -6,7 +6,7 @@ help () {
     echo ""
     echo "The setup script will prompt you to setup the various components.  In"
     echo "every case, if a file or directory already exists a backup will be"
-    echo "made with the extension \`.bak\`."
+    echo "made with the extension \`.bak.$RANDOM\`."
 }
 
 if [[ $# -gt 0 ]]; then
@@ -53,7 +53,7 @@ for file in ".dir_colors" ".latexmkrc" ".profile" ".spacemacs" ".Xresources"; do
     yes_or_no "Link $file into the home directory?" Y || continue
 
     if [[ -e "$HOME/$file" ]]; then
-        mv -v "$HOME/$file" "$HOME/$file.bak"
+        mv -v "$HOME/$file" "$HOME/$file.bak.$RANDOM"
     fi
     ln -vs "$(pwd)/home/$file" "$HOME/$file"
 done
@@ -63,7 +63,7 @@ for file in "pgfplots.default.tex"; do
     yes_or_no "Link $file into the config directory?" Y || continue
 
     if [[ -e "$HOME/.config/$file" ]]; then
-        mv -v "$HOME/.config/$file" "$HOME/.config/$file.bak"
+        mv -v "$HOME/.config/$file" "$HOME/.config/$file.bak.$RANDOM"
     fi
     ln -vs "$(pwd)/config/$file" "$HOME/.config/$file"
 done
@@ -76,16 +76,16 @@ for dir in $(pwd)/config/*/(.N); do
     dir="${${dir#$(pwd)/config/}%/}"
     yes_or_no "Setup $dir" Y || continue
     if [[ -e "$HOME/.config/$dir" ]]; then
-        mv -v "$HOME/.config/$dir" "$HOME/.config/$dir.bak"
+        mv -v "$HOME/.config/$dir" "$HOME/.config/$dir.bak.$RANDOM"
     fi
-    ln -vs "$(pwd)/config/$dir" "$HOME/.config/$dir.bak"
+    ln -vs "$(pwd)/config/$dir" "$HOME/.config/$dir.bak.$RANDOM"
 done
 
 for dir in $(pwd)/home/*/(.N) $(pwd)/home/.*/(.N); do
     dir="${${dir#$(pwd)/home/}%/}"
     yes_or_no "Setup $dir" Y || continue
     if [[ -e "$HOME/$dir" ]]; then
-        mv -v "$HOME/$dir" "$HOME/$dir.bak"
+        mv -v "$HOME/$dir" "$HOME/$dir.bak.$RANDOM"
     fi
     ln -vs "$(pwd)/home/$dir" "$HOME/$dir"
 done
@@ -98,7 +98,7 @@ for bin in $(pwd)/bin/*(.N); do
     bin="${bin#$(pwd)/bin/}"
     yes_or_no "Link $bin ?" || continue
     if [[ -e "$HOME/.local/bin/$bin" ]]; then
-        mv -v "$HOME/.local/bin/$bin" "$HOME/.local/bin/$bin.bak"
+        mv -v "$HOME/.local/bin/$bin" "$HOME/.local/bin/$bin.bak.$RANDOM"
     fi
     ln -vs "$(pwd)/bin/$bin" "$HOME/.local/bin/$bin"
 done
@@ -123,7 +123,7 @@ if yes_or_no "Setup ZSH?" Y; then
     # Link the files
     for file in ".zlogin" ".zlogout" ".zpreztorc" ".zprofile" ".zshenv" ".zshrc"; do
         if [[ -e "$HOME/$file" ]]; then
-            mv -v "$HOME/$file" "$HOME/$file.bak"
+            mv -v "$HOME/$file" "$HOME/$file.bak.$RANDOM"
         fi
         ln -vs  "$(pwd)/home/$file" "$HOME/$file"
     done
@@ -140,14 +140,14 @@ if yes_or_no "Setup Spacemacs?" Y; then
     if [[ ! -d "$HOME/.emacs.d" ]]; then
         git clone --branch develop https://github.com/syl20bnr/spacemacs "$HOME/.emacs.d"
     else
-        mv "$HOME/.emacs.d" "$HOME/.emacs.d.bak"
-        mv "$HOME/.emacs" "$HOME/.emacs.bak" 2>/dev/null
+        mv "$HOME/.emacs.d" "$HOME/.emacs.d.bak.$RANDOM"
+        mv "$HOME/.emacs" "$HOME/.emacs.bak.$RANDOM" 2>/dev/null
         git clone --branch develop https://github.com/syl20bnr/spacemacs ~/.emacs.d
     fi
 
     # Link the files
     if [[ -e "$HOME/.spacemacs" ]]; then
-        mv -v "$HOME/.spacemacs" "$HOME/.spacemacs.bak"
+        mv -v "$HOME/.spacemacs" "$HOME/.spacemacs.bak.$RANDOM"
     fi
     ln -vs "$(pwd)/home/.spacemacs" "$HOME/.spacemacs"
 fi
