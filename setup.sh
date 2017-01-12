@@ -72,7 +72,7 @@ done
 ## Configuration directories
 ################################################################################
 
-for dir in $(pwd)/config/*/; do
+for dir in $(pwd)/config/*/(.N); do
     dir="${${dir#$(pwd)/config/}%/}"
     yes_or_no "Setup $dir" Y || continue
     if [[ -e "$HOME/.config/$dir" ]]; then
@@ -81,8 +81,8 @@ for dir in $(pwd)/config/*/; do
     ln -vs "$(pwd)/config/$dir" "$HOME/.config/$dir.bak"
 done
 
-for dir in $(pwd)/home/*/ $(pwd)/home/.*/; do
-    dir="${${dir#$(pwd)/config/}%/}"
+for dir in $(pwd)/home/*/(.N) $(pwd)/home/.*/(.N); do
+    dir="${${dir#$(pwd)/home/}%/}"
     yes_or_no "Setup $dir" Y || continue
     if [[ -e "$HOME/$dir" ]]; then
         mv -v "$HOME/$dir" "$HOME/$dir.bak"
@@ -94,7 +94,7 @@ done
 ## Scripts
 ################################################################################
 
-for bin in $(pwd)/bin/*; do
+for bin in $(pwd)/bin/*(.N); do
     bin="${bin#$(pwd)/bin/}"
     yes_or_no "Link $bin ?" || continue
     if [[ -e "$HOME/.local/bin/$bin" ]]; then
