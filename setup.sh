@@ -1,4 +1,14 @@
-#/bin/sh
+#!/usr/bin/env zsh
+
+help () {
+    echo "Usage: $1"
+    echo "Setup all the files into the appropriate locations."
+    echo ""
+    echo "The setup script will prompt you to setup the various components.  In"
+    echo "every case, if a file or directory already exists a backup will be"
+    echo "made with the extension \`.bak\`."
+}
+
 
 # As yes or no and return true or false
 # Usage:
@@ -29,59 +39,87 @@ function yes_or_no() {
     done
 }
 
-declare -a files=(
-    ".dir_colors"
-    ".latexmkrc"
-    ".profile"
-    ".spacemacs"
-    ".zlogin"
-    ".zlogout"
-    ".zpreztorc"
-    ".zprofile"
-    ".zshenv"
-    ".zshrc"
-)
-declare -a config_dirs=(
-    "dunst"
-    "i3"
-    "i3status"
-    "termite"
-)
+## Miscellaneous individual files
+################################################################################
 
-# Link all the config files
-for file in ${files[@]}; do
-    if [ -e "$HOME/$file" ]; then
-        yes_or_no "~/$file exists already, replace it (a backup will be made)?" N || continue
-        mv "$HOME/$file" "$HOME/$file.backup"
+## Files in the home directory
+for file in ".dir_colors" ".latexmkrc" ".profile" ".spacemacs" ".Xresources"; do
+    yes_or_no "Link $file into the home directory?" Y || continue
+
+    if [[ -e "$HOME/$file" ]]; then
+        mv -v "$HOME/$file" "$HOME/$file.bak"
     fi
-    ln "$(pwd)/$file" "$HOME/$file"
-    echo "Linked ~/$file."
+    ln -vs "$(pwd)/home/$file" "$HOME/$file"
 done
 
-# Symlink all config directories
-for dir in ${config_dirs[@]}; do
-    if [ -d "$HOME/.config/$dir" ]; then
-        yes_or_no "~/.config/$dir exists already, replace it (a backup will be made)?" N || continue
-        mv "$HOME/.config/$dir" "$HOME/.config/$dir.backup"
+## Files in the config directory
+for file in "pgfplots.default.tex"; do
+    yes_or_no "Link $file into the config directory?" Y || continue
+
+    if [[ -e "$HOME/.config/$file" ]]; then
+        mv -v "$HOME/.config/$file" "$HOME/.config/$file.bak"
     fi
-    ln -s "$(pwd)/$dir" "$HOME/.config/$dir"
-    echo "Linked ~/.config/$dir."
+    ln -vs "$(pwd)/config/$file" "$HOME/.config/$file"
 done
 
-# Clone zprezto
-if [ ! -d "$HOME/.zprezto" ]; then
-    git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
-    ln -f "$(pwd)/prompt_jpellis_setup" "${ZDOTDIR:-$HOME}/.zprezto/modules/prompt/functions/prompt_jpellis_setup"
+
+## Configuration directories
+################################################################################
+
+for dir in $(pwd)/config/*/; do
+    dir="${${dir#$(pwd)/config/}%/}"
+    yes_or_no "Setup $dir" Y || continue
+    if [[ -e "$HOME/.config/$dir" ]]; then
+        mv -v "$HOME/.config/$dir" "$HOME/.config/$dir.bak"
+    fi
+    ln -vs "$(pwd)/config/$dir" "$HOME/.config/$dir.bak"
+done
+
+
+## ZSH
+################################################################################
+
+if yes_or_no "Setup ZSH?" Y; then
+    # Clone (or update) ZSH
+    if [[ ! -d "$HOME/.zprezto" ]]; then
+        echo "Cloning zprezto"
+        git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
+        ln -fvs "$(pwd)/prompt_jpellis_setup" "${ZDOTDIR:-$HOME}/.zprezto/modules/prompt/functions/prompt_jpellis_setup"
+    else
+        git -C "${ZDOTDIR:-$HOME}/.zprezto" pull --recursive
+    fi
+
+    # Make the DEFAULT_USER the current user
+    sed -i "s#DEFAULT_USER=\"josh\"#DEFAULT_USER=\"$(whoami)\"#" "$(pwd)/home/.zshrc"
+
+    # Link the files
+    for file in ".zlogin" ".zlogout" ".zpreztorc" ".zprofile" ".zshenv" ".zshrc"; do
+        if [[ -e "$HOME/$file" ]]; then
+            mv -v "$HOME/$file" "$HOME/$file.bak"
+        fi
+        ln -vs  "$(pwd)/home/$file" "$HOME/$file"
+    done
+
+    yes_or_no "Make ZSH the default shell?" Y && chsh -s $(which zsh) $(whoami)
 fi
 
-# Clone spacemacs if it hasn't been done already.
-if [ ! -d "$HOME/.emacs.d" ]; then
-    git clone --branch develop https://github.com/syl20bnr/spacemacs ~/.emacs.d
-else
-    if yes_or_no "~/.emacs.d already exists.  Replace with spacemacs (a backup will be made)?" N ; then
-        mv "$HOME/.emacs.d" "$HOME/.emacs.d.backup"
-        mv "$HOME/.emacs" "$HOME/.emacs.backup" 2>/dev/null
+
+## Spacemacs
+################################################################################
+
+if yes_or_no "Setup Spacemacs?" Y; then
+    # Clone spacemacs if it hasn't been done already.
+    if [[ ! -d "$HOME/.emacs.d" ]]; then
+        git clone --branch develop https://github.com/syl20bnr/spacemacs "$HOME/.emacs.d"
+    else
+        mv "$HOME/.emacs.d" "$HOME/.emacs.d.bak"
+        mv "$HOME/.emacs" "$HOME/.emacs.bak" 2>/dev/null
         git clone --branch develop https://github.com/syl20bnr/spacemacs ~/.emacs.d
     fi
-fi
 
+    # Link the files
+    if [[ -e "$HOME/.spacemacs" ]]; then
+        mv -v "$HOME/.spacemacs" "$HOME/.spacemacs.bak"
+    fi
+    ln -vs "$(pwd)/home/.spacemacs" "$HOME/.spacemacs"
+fi

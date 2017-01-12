@@ -1,0 +1,13 @@
+[Unit]
+Description=GPG agent
+IgnoreOnIsolate=true
+
+[Service]
+Type=forking
+Environment="GNUPGHOME=%h/.config/gnupg"
+ExecStartPre=/usr/bin/gpgconf --create-socketdir
+ExecStart=/usr/bin/gpg-agent --daemon --homedir=%h/.config/gnupg
+Restart=on-abort
+
+[Install]
+WantedBy=default.target
