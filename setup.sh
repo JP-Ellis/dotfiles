@@ -76,6 +76,19 @@ for dir in $(pwd)/config/*/; do
 done
 
 
+## Scripts
+################################################################################
+
+for bin in $(pwd)/bin/*; do
+    bin="${bin#$(pwd)/bin/}"
+    yes_or_no "Link $bin ?" || continue
+    if [[ -e "$HOME/.local/bin/$bin" ]]; then
+        mv -v "$HOME/.local/bin/$bin" "$HOME/.local/bin/$bin.bak"
+    fi
+    ln -vs "$(pwd)/bin/$bin" "$HOME/.local/bin/$bin"
+done
+
+
 ## ZSH
 ################################################################################
 

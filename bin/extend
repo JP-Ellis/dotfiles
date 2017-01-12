@@ -1,0 +1,146 @@
+#!/bin/zsh
+
+help () {
+    echo "Usage: $1 [OPTION]..."
+    echo "Attach a display and scale it smartly."
+    echo ""
+    echo "  -e, --external  Manually specify the external display."
+    echo "                  If unspecified, a connected external output will be"
+    echo "                  automatically used.  Multiple external screen can be"
+    echo "                  specified by repeating this argument."
+    echo "  -i, --internal  Manually specify the internal display."
+    echo "                  Defaults to using one of the 'eDP' displays."
+    echo "  -o, --output    Alias for '--external'."
+    echo "  -s, --scale     Fore this particular scaling factor."
+    echo "                  If unspecified, the scaling factor is calculated based on the"
+    echo "                  internal and external display's resolutions."
+    echo "  -l, --list      List the connected displays."
+    echo ""
+    echo "  -h, --help      Display this message."
+}
+
+# Get the WIDTH and HEIGHT of a particular display and return it them.
+# The display must be connected or this will fail.
+find_mode () {
+    xrandr | grep ${1} -A1 | awk '{FS="[ x]"} /^\s/{printf("%s %s", $4,$5)}'
+}
+
+DISPLAYS=($(xrandr | sed 's/^\(.*\) connected.*$/\1/p;d'))
+
+if [[ ${#DISPLAYS} -lt 2 ]]; then
+    echo "There are not enough displays connected according to xrandr." >&2
+    echo "Known displays: $DISPLAYS" >&2
+    exit 1
+fi
+
+while [ "$#" -gt 0 ]; do
+    case $1 in
+        (--external|-e)
+            shift
+            if [[ -z ${DISPLAYS[(r)$1]} ]]; then
+                echo "External display '$1' not known by xrandr." >&2
+                echo "Known displays: $DISPLAYS" >&2
+                exit 1
+            elif [[ -z ${EXTERNAL[(r)$1]} ]]; then
+                EXTERNAL+=$1
+            fi
+
+            shift
+            # Get the positioning
+            case $1 in
+                (--right-of)
+                    POS="RIGHT"
+                    ;;
+                (--left-of)
+                    POS="LEFT"
+                    ;;
+                (--above)
+                    POS="ABOVE"
+                    ;;
+                (--below)
+                    POS="BELOW"
+                    ;;
+            esac
+            ;;
+        (--internal|-i)
+            shift
+            if [[ -z ${DISPLAYS[(r)$1]} ]]; then
+                echo "Internal display '$1' not known by xrandr." >&2
+                echo "Known displays: $DISPLAYS" >&2
+                exit 1
+            else
+                INTERNAL=$1
+            fi
+            ;;
+        (--list|-l)
+            echo "Known displays: $DISPLAYS" >&2
+            exit 0
+            ;;
+        (--help|-h)
+            help ${0##*/}
+            exit 0
+            ;;
+        (*)
+            echo "Argument '$1' unknown.  Please refer to '--help' for usage information."
+            exit
+            ;;
+    esac
+    shift
+done
+
+if [[ -z $INTERNAL ]]; then
+    INTERNAL=${DISPLAYS[(r)eDP[1-9]]}
+fi
+if [[ -z $EXTERNAL ]]; then
+    EXTERNAL=${DISPLAYS[(r)(DP|HDMI)[1-9]]}
+fi
+if [[ -z $POS ]]; then
+    POS="RIGHT"
+fi
+
+# if [[ -z ${EXTERNAL[(R)$INTERNAL]} ]]; then
+#     echo "The internal display '$INTERNAL' is also present in list of external displays."
+#     echo "The external displays specified are: $EXTERNAL."
+# fi
+
+if [[ -z $INTERNAL ]]; then
+    echo "Unable to find the internal display.  You might need to manually specify it" >&2
+    echo "through the '--internal' option.  (See --help for more information)." >&2
+    echo "Known displays: $DISPLAYS" >&2
+fi
+if [[ -z $EXTERNAL ]]; then
+    echo "Unable to find the external display.  You might need to manually specify it" >&2
+    echo "through the '--internal' option.  (See --help for more information)." >&2
+    echo "Known displays: $DISPLAYS" >&2
+fi
+
+INTERNAL_MODE=($(find_mode $INTERNAL))
+EXTERNAL_MODE=($(find_mode $EXTERNAL))
+SCALE="$((${INTERNAL_MODE[1]}.0 / ${EXTERNAL_MODE[1]}.0))x$((${INTERNAL_MODE[2]}.0 / ${EXTERNAL_MODE[2]}.0))"
+
+case $POS in
+    ("ABOVE")
+        xrandr \
+            --output $INTERNAL \
+                --auto \
+                --panning "${INTERNAL_MODE[1]}x${INTERNAL_MODE[2]}+0+${INTERNAL_MODE[2]}" \
+            --output $EXTERNAL \
+                --auto \
+                --panning "${INTERNAL_MODE[1]}x${INTERNAL_MODE[2]}+0+0" \
+                --scale $SCALE \
+                --above $INTERNAL
+        ;;
+    ("BELOW")
+        echo "'--below' not yet implemented." >&2
+        exit 1
+        ;;
+    ("LEFT")
+        echo "'--left' not yet implemented." >&2
+        echo "NOT IMPLEMENTED"
+        exit 1
+        ;;
+    ("RIGHT")
+        echo "'--right' not yet implemented." >&2
+        exit 1
+        ;;
+esac

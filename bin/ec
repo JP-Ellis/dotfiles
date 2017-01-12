@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+if tty -s ; then
+    emacsclient -a '' -nw $@
+else
+    emacsclient -a '' -c $@
+fi

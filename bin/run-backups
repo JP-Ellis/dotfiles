@@ -1,0 +1,106 @@
+#!/bin/zsh
+#
+# Backup to Google Cloud
+
+## Set your passphrase for GPG
+# export PASSPHRASE=<...>
+
+DUP_OPTS=(
+    --asynchronous-upload
+    --full-if-older-than 90D
+)
+
+if [[ $# -eq 0 ]]; then
+    BACKUP_HOME=true
+    BACKUP_ETC=true
+    BACKUP_UNI=true
+else
+    while [[ $# > 0 ]]; do
+        case $1 in
+            (--home)
+                BACKUP_HOME=true
+                ;;
+            (--etc)
+                BACKUP_ETC=true
+                ;;
+            (--university)
+                BACKUP_UNI=true
+                ;;
+        esac
+        shift
+    done
+fi
+
+backup_home() {
+    ## Full home directory (excluding downloads, cache, blockchain)
+    duplicity \
+        $DUP_OPTS \
+        --exclude $HOME/Downloads \
+        --exclude $HOME/.cache \
+        --exclude /home/josh/.local/opt \
+        --exclude $HOME/.parity/906a34e69aec8c0d \
+        --exclude "$HOME/VirtualBox VMs" \
+        --exclude-regexp ".*(-ovfs|_asd)/.*"\
+        $HOME \
+        gs://jpellis-personal-backups/$(hostname)/$HOME
+
+    # The removal of old backups is done automatically by the bucket
+    # duplicity remove-all-but-n-full 8 --force gs://jpellis-personal-backups/$(hostname)/$HOME
+    duplicity remove-all-inc-of-but-n-full 2 --force gs://jpellis-personal-backups/$(hostname)/$HOME
+}
+
+backup_etc() {
+    ## Backup of system config
+    sudo -E duplicity \
+         $DUP_OPTS \
+         /etc \
+         gs://jpellis-personal-backups/$(hostname)/etc
+
+    # The removal of old backups is done automatically by the bucket
+    # sudo -E duplicity remove-all-but-n-full 8 --force gs://jpellis-personal-backups/$(hostname)/etc
+    sudo -E duplicity remove-all-inc-of-but-n-full 2 --force gs://jpellis-personal-backups/$(hostname)/etc
+}
+
+backup_uni() {
+    ## Backup of University things
+    duplicity \
+        $DUP_OPTS \
+        --full-if-older-than 30D \
+        $HOME/University \
+        rsync://baker/backups/University
+
+    duplicity remove-all-but-n-full --force 2 rsync://baker/backups/University
+    duplicity remove-all-inc-of-but-n-full --force 2 rsync://baker/backups/University
+}
+
+{
+    flock --exclusive --nonblock 3
+
+    if [[ $? -ne 0 ]]; then
+        echo "Could not obtain lock." >&2
+        exit 1
+    fi
+
+    ## Perform backups, and prune the old backups afterwards.  For backups
+    ## stored on Google Cloud, use the bucket's lifetime management to remove
+    ## old backups (though still delete old incremental backups)
+
+    if $BACKUP_ETC; then
+        backup_etc;
+    fi
+
+    if $BACKUP_HOME; then
+        backup_home;
+    fi
+
+    if $BACKUP_UNI; then
+        backup_uni;
+    fi
+
+} 3> /run/user/$(id -u)/run-backups.lock
+
+
+
+# Local Variables:
+# mode: sh
+# End:

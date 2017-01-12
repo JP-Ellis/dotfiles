@@ -1,0 +1,28 @@
+#! /bin/sh
+
+while true; do
+    netctl-auto disable-all
+    netctl-auto enable-all
+    netctl-auto switch-to $1
+
+    if [[ $? ]]; then
+        sleep 10
+    else
+        continue
+    fi
+
+    count=0
+    for _ in {1..10}; do
+        if [[ $(iwconfig wlp3s0 | sed -n "s/.*Link Quality=\([0-9]\+\)\/70.*/\1/p") -ge 50 ]]; then
+            # echo "Quality: " $(iwconfig wlp3s0 | sed -n "s/.*Link Quality=\([0-9]\+\)\/70.*/\1/p")
+            count=$(($count + 1))
+            sleep 1
+        else
+            continue
+        fi
+    done
+
+    if [[ $count -ge 10 ]]; then
+       exit 0
+    fi
+done
