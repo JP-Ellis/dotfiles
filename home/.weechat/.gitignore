@@ -1,0 +1,6 @@
+# Don't commit passphrase
+sec.passphrase
+
+# No need to track logs
+logs
+weechat.log

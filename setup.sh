@@ -79,6 +79,15 @@ for dir in $(pwd)/config/*/; do
     ln -vs "$(pwd)/config/$dir" "$HOME/.config/$dir.bak"
 done
 
+for dir in $(pwd)/home/*/ $(pwd)/home/.*/; do
+    dir="${${dir#$(pwd)/config/}%/}"
+    yes_or_no "Setup $dir" Y || continue
+    if [[ -e "$HOME/$dir" ]]; then
+        mv -v "$HOME/$dir" "$HOME/$dir.bak"
+    fi
+    ln -vs "$(pwd)/home/$dir" "$HOME/$dir"
+done
+
 
 ## Scripts
 ################################################################################
