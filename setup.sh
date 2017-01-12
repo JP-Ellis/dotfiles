@@ -30,7 +30,9 @@ yes_or_no() {
             default=
         fi
 
-        read -p "$1 [$prompt] " REPLY </dev/tty
+        REPLY=
+        local compcontext='yn:yes or no:(y n)'
+        vared -cp "$1 [$prompt] " REPLY
 
         if [ -z "$REPLY" ]; then
             REPLY=$default
