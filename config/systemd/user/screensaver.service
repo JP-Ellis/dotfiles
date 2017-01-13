@@ -5,6 +5,7 @@ Description=Screensaver
 Type=simple
 Environment=DISPLAY=:0
 ExecStart=/usr/bin/xautolock -detectsleep
+Restart=on-abort
 
 [Install]
-WantedBy=graphical.target
+WantedBy=default.target
