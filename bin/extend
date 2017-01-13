@@ -35,7 +35,7 @@ fi
 
 while [ "$#" -gt 0 ]; do
     case $1 in
-        (--external|-e)
+        (--external|-e|--output|-o)
             shift
             if [[ -z ${DISPLAYS[(r)$1]} ]]; then
                 echo "External display '$1' not known by xrandr." >&2
@@ -131,16 +131,37 @@ case $POS in
                 --above $INTERNAL
         ;;
     ("BELOW")
-        echo "'--below' not yet implemented." >&2
-        exit 1
+        xrandr \
+            --output $INTERNAL \
+                --auto \
+                --panning "${INTERNAL_MODE[1]}x${INTERNAL_MODE[2]}+0+0" \
+            --output $EXTERNAL \
+                --auto \
+                --panning "${INTERNAL_MODE[1]}x${INTERNAL_MODE[2]}+0+${EXTERNAL_MODE[2]}" \
+                --scale $SCALE \
+                --below $INTERNAL
         ;;
     ("LEFT")
-        echo "'--left' not yet implemented." >&2
-        echo "NOT IMPLEMENTED"
-        exit 1
+        xrandr \
+            --output $INTERNAL \
+                --auto \
+                --panning "${INTERNAL_MODE[1]}x${INTERNAL_MODE[2]}+0+0" \
+            --output $EXTERNAL \
+                --auto \
+                --panning "${INTERNAL_MODE[1]}x${INTERNAL_MODE[2]}+${EXTERNAL_MODE[1]}+0" \
+                --scale $SCALE \
+                --left-of $INTERNAL
         ;;
     ("RIGHT")
-        echo "'--right' not yet implemented." >&2
+        xrandr \
+            --output $INTERNAL \
+                --auto \
+                --panning "${INTERNAL_MODE[1]}x${INTERNAL_MODE[2]}+0+0" \
+            --output $EXTERNAL \
+                --auto \
+                --panning "${INTERNAL_MODE[1]}x${INTERNAL_MODE[2]}+${INTERNAL_MODE[1]}+0" \
+                --scale $SCALE \
+                --right-of $INTERNAL
         exit 1
         ;;
 esac
