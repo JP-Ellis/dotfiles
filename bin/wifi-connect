@@ -1,9 +1,31 @@
 #! /bin/sh
 
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        (--quality|-q)
+            shift
+            QUALITY=$1
+            ;;
+        (*)
+            if [[ -z "$PROFILE" ]]; then
+                PROFILE=$1
+            else
+                echo "Only one profile can be specified." >&2
+                exit 1
+            fi
+            ;;
+    esac
+    shift
+done
+
+if [[ -z "$QUALITY" ]]; then
+    QUALITY=35
+fi
+
 while true; do
     netctl-auto disable-all
     netctl-auto enable-all
-    netctl-auto switch-to $1
+    netctl-auto switch-to $PROFILE
 
     if [[ $? ]]; then
         sleep 10
@@ -13,7 +35,7 @@ while true; do
 
     count=0
     for _ in {1..10}; do
-        if [[ $(iwconfig wlp3s0 | sed -n "s/.*Link Quality=\([0-9]\+\)\/70.*/\1/p") -ge 50 ]]; then
+        if [[ $(iwconfig wlp3s0 | sed -n "s/.*Link Quality=\([0-9]\+\)\/70.*/\1/p") -ge $QUALITY ]]; then
             # echo "Quality: " $(iwconfig wlp3s0 | sed -n "s/.*Link Quality=\([0-9]\+\)\/70.*/\1/p")
             count=$(($count + 1))
             sleep 1
