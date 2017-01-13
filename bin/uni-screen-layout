@@ -1,0 +1,16 @@
+#!/bin/sh
+
+xrandr \
+    --output eDP1 \
+        --primary \
+        --mode 2560x1600 \
+        --scale 1x1 \
+        --pos 0x1600 \
+    --output HDMI1 \
+        --mode 1920x1080 \
+        --scale 1.333x1.481 \
+        --pos 0x0 \
+    --output HDMI2 \
+        --mode 1920x1080 \
+        --scale 1.333x1.481 \
+        --pos 2560x0 \
