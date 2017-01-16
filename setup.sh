@@ -94,6 +94,7 @@ done
 ## Scripts
 ################################################################################
 
+mkdir -p "$HOME/.local/bin"
 for bin in $(pwd)/bin/*(.N); do
     bin="${bin#$(pwd)/bin/}"
     yes_or_no "Link $bin ?" || continue
