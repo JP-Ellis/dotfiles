@@ -97,7 +97,7 @@ done
 mkdir -p "$HOME/.local/bin"
 for bin in $(pwd)/bin/*(.N); do
     bin="${bin#$(pwd)/bin/}"
-    yes_or_no "Link $bin ?" || continue
+    yes_or_no "Link $bin ?" Y || continue
     if [[ -e "$HOME/.local/bin/$bin" ]]; then
         mv -v "$HOME/.local/bin/$bin" "$HOME/.local/bin/$bin.bak.$RANDOM"
     fi
