@@ -55,7 +55,7 @@ for file in ".dir_colors" ".latexmkrc" ".profile" ".spacemacs" ".Xresources"; do
     if [[ -e "$HOME/$file" ]]; then
         mv -v "$HOME/$file" "$HOME/$file.bak.$RANDOM"
     fi
-    ln -vs "$(pwd)/home/$file" "$HOME/$file"
+    ln -fvs "$(pwd)/home/$file" "$HOME/$file"
 done
 
 ## Files in the config directory
@@ -65,7 +65,7 @@ for file in "pgfplots.default.tex"; do
     if [[ -e "$HOME/.config/$file" ]]; then
         mv -v "$HOME/.config/$file" "$HOME/.config/$file.bak.$RANDOM"
     fi
-    ln -vs "$(pwd)/config/$file" "$HOME/.config/$file"
+    ln -fvs "$(pwd)/config/$file" "$HOME/.config/$file"
 done
 
 
@@ -78,7 +78,7 @@ for dir in $(pwd)/config/*/(.N); do
     if [[ -e "$HOME/.config/$dir" ]]; then
         mv -v "$HOME/.config/$dir" "$HOME/.config/$dir.bak.$RANDOM"
     fi
-    ln -vs "$(pwd)/config/$dir" "$HOME/.config/$dir.bak.$RANDOM"
+    ln -fvs "$(pwd)/config/$dir" "$HOME/.config/$dir.bak.$RANDOM"
 done
 
 for dir in $(pwd)/home/*/(.N) $(pwd)/home/.*/(.N); do
@@ -87,7 +87,7 @@ for dir in $(pwd)/home/*/(.N) $(pwd)/home/.*/(.N); do
     if [[ -e "$HOME/$dir" ]]; then
         mv -v "$HOME/$dir" "$HOME/$dir.bak.$RANDOM"
     fi
-    ln -vs "$(pwd)/home/$dir" "$HOME/$dir"
+    ln -fvs "$(pwd)/home/$dir" "$HOME/$dir"
 done
 
 
@@ -100,7 +100,7 @@ for bin in $(pwd)/bin/*(.N); do
     if [[ -e "$HOME/.local/bin/$bin" ]]; then
         mv -v "$HOME/.local/bin/$bin" "$HOME/.local/bin/$bin.bak.$RANDOM"
     fi
-    ln -vs "$(pwd)/bin/$bin" "$HOME/.local/bin/$bin"
+    ln -fvs "$(pwd)/bin/$bin" "$HOME/.local/bin/$bin"
 done
 
 
@@ -125,7 +125,7 @@ if yes_or_no "Setup ZSH?" Y; then
         if [[ -e "$HOME/$file" ]]; then
             mv -v "$HOME/$file" "$HOME/$file.bak.$RANDOM"
         fi
-        ln -vs  "$(pwd)/home/$file" "$HOME/$file"
+        ln -fvs  "$(pwd)/home/$file" "$HOME/$file"
     done
 
     yes_or_no "Make ZSH the default shell?" Y && chsh -s $(which zsh) $(whoami)
@@ -149,5 +149,5 @@ if yes_or_no "Setup Spacemacs?" Y; then
     if [[ -e "$HOME/.spacemacs" ]]; then
         mv -v "$HOME/.spacemacs" "$HOME/.spacemacs.bak.$RANDOM"
     fi
-    ln -vs "$(pwd)/home/.spacemacs" "$HOME/.spacemacs"
+    ln -fvs "$(pwd)/home/.spacemacs" "$HOME/.spacemacs"
 fi
