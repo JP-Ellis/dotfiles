@@ -115,7 +115,7 @@ if yes_or_no "Setup ZSH?" Y; then
         git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
         ln -fvs "$(pwd)/prompt_jpellis_setup" "${ZDOTDIR:-$HOME}/.zprezto/modules/prompt/functions/prompt_jpellis_setup"
     else
-        git -C "${ZDOTDIR:-$HOME}/.zprezto" pull --recursive
+        git -C "${ZDOTDIR:-$HOME}/.zprezto" submodule update --init --recursive
     fi
 
     # Make the DEFAULT_USER the current user
