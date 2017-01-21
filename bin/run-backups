@@ -38,7 +38,7 @@ backup_home() {
         --exclude $HOME/Downloads \
         --exclude $HOME/.cache \
         --exclude /home/josh/.local/opt \
-        --exclude $HOME/.parity/906a34e69aec8c0d \
+        --exclude $HOME/.local/share/io.parity.ethereum/chains \
         --exclude "$HOME/VirtualBox VMs" \
         --exclude-regexp ".*(-ovfs|_asd)/.*"\
         $HOME \
