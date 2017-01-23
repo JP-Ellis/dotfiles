@@ -178,5 +178,5 @@ exec --no-startup-id i3-msg "workspace 2; exec emacs"
 exec --no-startup-id i3-msg "workspace 1; exec chrome"  # Chrome is a bit... weird
 
 # Some services need to be started *after* i3
-exec --no-startup-id systemctl --user start gpg-agent
+exec --no-startup-id systemctl --user restart gpg-agent
 exec --no-startup-id systemctl --user start screensaver
