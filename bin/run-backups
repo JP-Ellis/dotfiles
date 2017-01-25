@@ -42,11 +42,11 @@ backup_home() {
         --exclude "$HOME/VirtualBox VMs" \
         --exclude-regexp ".*(-ovfs|_asd)/.*"\
         $HOME \
-        gs://jpellis-personal-backups/$(hostname)/$HOME
+        gs://backups-os9h/$(hostname)/$HOME
 
     # The removal of old backups is done automatically by the bucket
-    # duplicity remove-all-but-n-full 8 --force gs://jpellis-personal-backups/$(hostname)/$HOME
-    duplicity remove-all-inc-of-but-n-full 2 --force gs://jpellis-personal-backups/$(hostname)/$HOME
+    # duplicity remove-all-but-n-full 8 --force gs://backups-os9h/$(hostname)/$HOME
+    duplicity remove-all-inc-of-but-n-full 2 --force gs://backups-os9h/$(hostname)/$HOME
 }
 
 backup_etc() {
@@ -54,11 +54,11 @@ backup_etc() {
     sudo -E duplicity \
          $DUP_OPTS \
          /etc \
-         gs://jpellis-personal-backups/$(hostname)/etc
+         gs://backups-os9h/$(hostname)/etc
 
     # The removal of old backups is done automatically by the bucket
-    # sudo -E duplicity remove-all-but-n-full 8 --force gs://jpellis-personal-backups/$(hostname)/etc
-    sudo -E duplicity remove-all-inc-of-but-n-full 2 --force gs://jpellis-personal-backups/$(hostname)/etc
+    # sudo -E duplicity remove-all-but-n-full 8 --force gs://backups-os9h/$(hostname)/etc
+    sudo -E duplicity remove-all-inc-of-but-n-full 2 --force gs://backups-os9h/$(hostname)/etc
 }
 
 backup_uni() {
