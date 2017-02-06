@@ -1,106 +1,362 @@
-#!/bin/zsh
-#
-# Backup to Google Cloud
+#!/usr/bin/env python3
 
-## Set your passphrase for GPG
-# export PASSPHRASE=<...>
+import argparse
+import logging
+import os.path
+import socket
+import subprocess
+import sys
 
-DUP_OPTS=(
-    --asynchronous-upload
-    --full-if-older-than 90D
-)
+try:
+    from termcolor import colored
+except ModuleNotFoundError:
+    def colored(s, *args, **kwargs):
+        return s
 
-if [[ $# -eq 0 ]]; then
-    BACKUP_HOME=true
-    BACKUP_ETC=true
-    BACKUP_UNI=true
-else
-    while [[ $# > 0 ]]; do
-        case $1 in
-            (--home)
-                BACKUP_HOME=true
-                ;;
-            (--etc)
-                BACKUP_ETC=true
-                ;;
-            (--university)
-                BACKUP_UNI=true
-                ;;
-        esac
-        shift
-    done
-fi
+logger = logging.getLogger(__name__)
+ch = logging.StreamHandler(stream=sys.stderr)
+ch.setLevel(0)
+ch.setFormatter(logging.Formatter(colored("%(levelname)s", "white") + ": " + colored("%(message)s", "blue")))
+logger.addHandler(ch)
 
-backup_home() {
-    ## Full home directory (excluding downloads, cache, blockchain)
-    duplicity \
-        $DUP_OPTS \
-        --exclude $HOME/Downloads \
-        --exclude $HOME/.cache \
-        --exclude /home/josh/.local/opt \
-        --exclude $HOME/.local/share/io.parity.ethereum/chains \
-        --exclude "$HOME/VirtualBox VMs" \
-        --exclude-regexp ".*(-ovfs|_asd)/.*"\
-        $HOME \
-        gs://backups-os9h/$(hostname)/$HOME
 
-    # The removal of old backups is done automatically by the bucket
-    # duplicity remove-all-but-n-full 8 --force gs://backups-os9h/$(hostname)/$HOME
-    duplicity remove-all-inc-of-but-n-full 2 --force gs://backups-os9h/$(hostname)/$HOME
+# Set your passphrase for GPG.  You should *NEVER* commit the passphrase!
+# PASSPHRASE="..."
+
+LOCATIONS = {
+    "home": {
+        "source": "{HOME}",
+        "destination": "gs://backups-os9h/{HOSTNAME}{SOURCE}",
+        "exclude": [
+            "{SOURCE}/Downloads",
+            "{SOURCE}/.cache",
+            "{SOURCE}/.local/opt",
+            "{SOURCE}/.local/share/io.parity.ethereum/chains",
+            "{SOURCE}/VirtualBox VMs",
+        ],
+        "options": [
+            "--full-if-older-than", "90D",
+        ],
+        "remove-all-but-n-full": False,  # Deletion of old files is handled by the bucket
+        "remove-all-inc-of-but-n-full": 2,
+    },
+    "etc": {
+        "sudo": True,
+        "source": "/etc",
+        "destination": "gs://backups-os9h/{HOSTNAME}{SOURCE}",
+        "options": [
+            "--full-if-older-than", "90D",
+        ],
+        "remove-all-but-n-full": False,  # Deletion of old files is handled by the bucket
+        "remove-all-inc-of-but-n-full": 2,
+    },
+    "uni": {
+        "source": "{HOME}/University",
+        "destination": "rsync://baker/backups/University",
+        "options": [
+            "--full-if-older-than", "30D",
+        ],
+        "remove-all-but-n-full": 2,
+        "remove-all-inc-of-but-n-full": 2,
+    },
 }
 
-backup_etc() {
-    ## Backup of system config
-    sudo -E duplicity \
-         $DUP_OPTS \
-         /etc \
-         gs://backups-os9h/$(hostname)/etc
-
-    # The removal of old backups is done automatically by the bucket
-    # sudo -E duplicity remove-all-but-n-full 8 --force gs://backups-os9h/$(hostname)/etc
-    sudo -E duplicity remove-all-inc-of-but-n-full 2 --force gs://backups-os9h/$(hostname)/etc
-}
-
-backup_uni() {
-    ## Backup of University things
-    duplicity \
-        $DUP_OPTS \
-        --full-if-older-than 30D \
-        $HOME/University \
-        rsync://baker/backups/University
-
-    duplicity remove-all-but-n-full --force 2 rsync://baker/backups/University
-    duplicity remove-all-inc-of-but-n-full --force 2 rsync://baker/backups/University
-}
-
-{
-    flock --exclusive --nonblock 3
-
-    if [[ $? -ne 0 ]]; then
-        echo "Could not obtain lock." >&2
-        exit 1
-    fi
-
-    ## Perform backups, and prune the old backups afterwards.  For backups
-    ## stored on Google Cloud, use the bucket's lifetime management to remove
-    ## old backups (though still delete old incremental backups)
-
-    if $BACKUP_ETC; then
-        backup_etc;
-    fi
-
-    if $BACKUP_HOME; then
-        backup_home;
-    fi
-
-    if $BACKUP_UNI; then
-        backup_uni;
-    fi
-
-} 3> /run/user/$(id -u)/run-backups.lock
+################################################################################
+# Arguments
+################################################################################
 
 
+class ActionNoYes(argparse.Action):
+    """
+    Argument action for a `--[no-]option` toggle.
 
-# Local Variables:
-# mode: sh
-# End:
+    Adapted from http://stackoverflow.com/a/20422915/1573761
+    """
+    def __init__(self, option_strings, dest, default=None, **kwargs):
+        if default is None:
+            raise ValueError('You must provide a default with Yes/No action')
+
+        if len(option_strings) != 1:
+            raise ValueError('Only single argument is allowed with YesNo action')
+
+        opt = option_strings[0]
+        if not opt.startswith('--'):
+            raise ValueError('Yes/No arguments must be prefixed with --')
+
+        opt = opt[2:]
+        opts = ['--' + opt, '--no-' + opt]
+        super(ActionNoYes, self).__init__(opts, dest, nargs=0, const=None,
+                                          default=default, **kwargs)
+
+    def __call__(self, parser, namespace, values, option_strings=None):
+        if option_strings.startswith('--no-'):
+            setattr(namespace, self.dest, False)
+        else:
+            setattr(namespace, self.dest, True)
+
+
+parser = argparse.ArgumentParser(description='Backup directories using Duplicity.')
+
+parser.add_argument('LOCATION', nargs='*',
+                    help="""Backup the specified directory.  This must correspond to an entry in the LOCATIONS
+                    dictionary contained within this script.""")
+parser.add_argument('-a', '--all',
+                    action='store_true',
+                    help="""Backup all pre-configured locations.""")
+parser.add_argument('-l', '--list',
+                    action='store_true',
+                    help="""List the known locations.""")
+parser.add_argument('-s', '--status',
+                    action='store_true',
+                    help="""Summarize the status of the backup repositories by printing the chains and sets found, and
+                    the number of volumes in each.""")
+
+parser.add_argument('-v', '--verbose',
+                    action='count',
+                    default=0,
+                    help="""Increase the verbosity.  Repeat for even more verbose output.""")
+parser.add_argument('-n', '--dry-run',
+                    action='store_true',
+                    help="""Run Duplicity with `--dry-run` enabled so that it calculates what would be done, but does
+                    not perform any backend actions.""")
+
+
+duplicity_group = parser.add_argument_group("Optional arguments affecting Duplicity")
+duplicity_group.add_argument('--passphrase',
+                             action='store',
+                             help="""Use the given passphrase.  It is preferred to specify this within the file by
+                             adding `PASSPHRASE=\"...\"` this this script.""")
+duplicity_group.add_argument('--async',
+                             action=ActionNoYes,
+                             default=True,
+                             help="""Enable/disable asynchronous upload""")
+duplicity_group.add_argument('-d', '--duplicity-options',
+                             action='append',
+                             nargs=argparse.REMAINDER,
+                             help="""List of extra arguments for Duplicity.  If specified, this must be placed LAST as
+                             it will consume all remaining options and arguments.""")
+
+
+################################################################################
+# Helper Functions
+################################################################################
+
+def sanitize_locations(locations: dict) -> bool:
+    """Verify that the locations dictionary is sane.
+
+    Ensures that all required keys are present, and warns about any superfluous keys in case they are due to a typo.
+
+    """
+    is_sane = True
+    required_opts = [
+        "source",
+        "destination",
+    ]
+    # If one of the optional options is not specified, the default (second element in tuple) is used.
+    optional_opts = [
+        ("sudo", False),
+        ("options", []),
+        ("include", []),
+        ("exclude", []),
+        ("remove-all-but-n-full", False),
+        ("remove-all-inc-of-but-n-full", False)
+    ]
+    all_opts = required_opts + [v[0] for v in optional_opts]
+
+    for loc, loc_opt in locations.items():
+        # Make sure all required options are there
+        for opt in required_opts:
+            if opt not in loc_opt:
+                logger.error(f"Location {loc}: Missing {opt}.")
+                is_sane = False
+
+        # For any optional option which isn't there, insert the default
+        for (opt, default) in optional_opts:
+            if opt not in loc_opt:
+                logger.info(f"Location {loc}: Adding default {opt}.")
+                loc_opt[opt] = default
+
+        # Warn about any superfluous option
+        for opt in loc_opt:
+            if opt not in all_opts:
+                logger.warning(f"Location {loc}: Unknown option '{opt}'.")
+
+        # Replace formatting keys.  Repeat 10 times as it is possible to replace with another pattern.  For example:
+        # {HOSTNAME}/{SOURCE}  -> my-computer/{HOME}/bar -> my-computer/home/foo/bar
+        for _ in range(10):
+            replacements = {
+                "DEST": loc_opt["destination"],
+                "HOME": os.path.expanduser("~"),
+                "HOSTNAME": socket.gethostname(),
+                "SOURCE": loc_opt["source"],
+            }
+            for opt in required_opts:
+                loc_opt[opt] = loc_opt[opt].format(**replacements)
+            loc_opt["include"] = [v.format(**replacements) for v in loc_opt["include"]]
+            loc_opt["exclude"] = [v.format(**replacements) for v in loc_opt["exclude"]]
+
+        # The `remove-all-*` commands use integers, but subprocess.run requires all strings, so we convert them to
+        # strings.
+        if loc_opt["remove-all-but-n-full"]:
+            loc_opt["remove-all-but-n-full"] = "{}".format(loc_opt["remove-all-but-n-full"])
+        if loc_opt["remove-all-inc-of-but-n-full"]:
+            loc_opt["remove-all-inc-of-but-n-full"] = "{}".format(loc_opt["remove-all-inc-of-but-n-full"])
+
+    return is_sane
+
+
+def list_locations(locations: dict) -> None:
+    width = {'loc': 0, 'source': 0, 'dest': 0}
+    for loc, v in locations.items():
+        width['loc'] = max(width['loc'], len(loc))
+        width['source'] = max(width['source'], len(v['source']))
+        width['dest'] = max(width['dest'], len(v['destination']))
+    for loc, v in locations.items():
+        fmt_string = colored("{loc:<{width[loc]}}", "white") \
+            + " :   " \
+            + colored("{source:<{width[source]}}", "green") \
+            + "  =>  " \
+            + colored("{dest:<{width[dest]}}", "blue")
+        print(fmt_string.format(
+            loc=loc,
+            source=v["source"],
+            dest=v["destination"],
+            width=width,
+        ))
+
+
+def collection_status(locations: dict, args) -> None:
+    for location in args.LOCATION:
+        logger.info(f"Location: {location}")
+        opts = locations[location]
+        # Construct the Duplicity command
+        cmd = []
+        if opts["sudo"]:
+            cmd += ["sudo", "-E"]
+        cmd += ["duplicity", "collection-status", opts["destination"]]
+
+        logger.debug(f"Command: {cmd}")
+        try:
+            subprocess.run(cmd, check=True)
+        except subprocess.CalledProcessError:
+            exit(1)
+
+
+def run_backups(locations: dict, args) -> None:
+    # Run all the commands
+    p_env = os.environ.copy()
+    p_env["PASSPHRASE"] = PASSPHRASE
+
+    for location in args.LOCATION:
+        logger.info(f"Location: {location}")
+        opts = locations[location]
+        # Construct the Duplicity command
+        cmd = []
+        if opts["sudo"]:
+            cmd += ["sudo", "-E"]
+
+        cmd.append("duplicity")
+
+        if args.dry_run:
+            cmd.append("--dry-run")
+
+        # Add duplicity options first, so that location-specific options take precedence
+        if args.duplicity_options:
+            cmd += args.duplicity_options[0]
+        if args.async:
+            cmd.append("--asynchronous-upload")
+        cmd += opts["options"]
+
+        # Make sure that included paths take precedence over excluded paths.  If a more complex behaviour is desired,
+        # they can be specified on `opts["options"]`.
+        for include in opts["include"]:
+            cmd += ["--include", include]
+        for exclude in opts["exclude"]:
+            cmd += ["--exclude", exclude]
+
+        cmd.append(opts["source"])
+        cmd.append(opts["destination"])
+
+        logger.debug(f"Command: {cmd}")
+        try:
+            subprocess.run(cmd, check=True, env=p_env)
+        except subprocess.CalledProcessError:
+            exit(1)
+
+        if opts["remove-all-but-n-full"]:
+            cmd = []
+            if opts["sudo"]:
+                cmd += ["sudo", "-E"]
+            cmd += ["duplicity", "remove-all-but-n-full"]
+            if not args.dry_run:
+                cmd.append("--force")
+            cmd += [opts["remove-all-but-n-full"], opts["destination"]]
+
+            logger.debug(f"Command: {cmd}")
+            try:
+                subprocess.run(cmd, check=True, env=p_env)
+            except subprocess.CalledProcessError:
+                exit(1)
+
+        if opts["remove-all-inc-of-but-n-full"]:
+            cmd = []
+            if opts["sudo"]:
+                cmd += ["sudo", "-E"]
+            cmd += ["duplicity", "remove-all-inc-of-but-n-full"]
+            if not args.dry_run:
+                cmd.append("--force")
+            cmd += [opts["remove-all-inc-of-but-n-full"], opts["destination"]]
+
+            logger.debug(f"Command: {cmd}")
+            try:
+                subprocess.run(cmd, check=True, env=p_env)
+            except subprocess.CalledProcessError:
+                exit(1)
+
+
+################################################################################
+# Main Function
+################################################################################
+
+if __name__ == "__main__":
+    # Collect all the arguments
+    args = parser.parse_args()
+    logger.setLevel(max(30 - args.verbose * 10, 1))
+
+    # First, verify that the LOCATIONS are sane
+    if not sanitize_locations(LOCATIONS):
+        logger.error("LOCATIONS is not properly formatted.")
+        exit(1)
+
+    # List everything and exit
+    if args.list:
+        list_locations(LOCATIONS)
+        exit(0)
+
+    # Check the PASSPHRASE
+    if args.passphrase:
+        logger.warning("Consider adding the PASSPHRASE to this script instead of passing it in the terminal.")
+        try:
+            PASSPHRASE
+        except NameError:
+            PASSPHRASE = args.passphrase
+        else:
+            logger.error("The passphrase was specified both in the file and in the command; only use one.")
+            exit(1)
+
+    # Check all the locations
+    if args.all and len(args.LOCATION) != 0:
+        logger.warn("Using `--all` overwrites any LOCATION specified.")
+    if args.all:
+        args.LOCATION = LOCATIONS.keys()
+    if len(args.LOCATION) == 0:
+        logger.error("No locations where specified.  Use `--help` for more information")
+        exit(1)
+
+    # Check status
+    if args.status:
+        collection_status(LOCATIONS, args)
+        exit(0)
+
+    # Run backups
+    run_backups(LOCATIONS, args)
