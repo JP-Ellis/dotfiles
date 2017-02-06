@@ -141,7 +141,7 @@ duplicity_group.add_argument('-d', '--duplicity-options',
 # Helper Functions
 ################################################################################
 
-def sanitize_locations(locations: dict) -> bool:
+def clean_locations_dict(locations: dict) -> bool:
     """Verify that the locations dictionary is sane.
 
     Ensures that all required keys are present, and warns about any superfluous keys in case they are due to a typo.
@@ -223,6 +223,19 @@ def list_locations(locations: dict) -> None:
             dest=v["destination"],
             width=width,
         ))
+
+
+def clean_locations_arg(locations: dict, to_clean: list) -> list:
+    cleaned = []
+    for location in to_clean:
+        if location not in locations:
+            logger.error(f"Unknown location {location}")
+            exit(1)
+        if locations[location]["sudo"]:
+            cleaned.insert(0, location)
+        else:
+            cleaned.append(location)
+    return cleaned
 
 
 def collection_status(locations: dict, args) -> None:
@@ -324,7 +337,7 @@ if __name__ == "__main__":
     logger.setLevel(max(30 - args.verbose * 10, 1))
 
     # First, verify that the LOCATIONS are sane
-    if not sanitize_locations(LOCATIONS):
+    if not clean_locations_dict(LOCATIONS):
         logger.error("LOCATIONS is not properly formatted.")
         exit(1)
 
@@ -344,7 +357,7 @@ if __name__ == "__main__":
             logger.error("The passphrase was specified both in the file and in the command; only use one.")
             exit(1)
 
-    # Check all the locations
+    # Sort through the locations specified
     if args.all and len(args.LOCATION) != 0:
         logger.warn("Using `--all` overwrites any LOCATION specified.")
     if args.all:
@@ -352,6 +365,8 @@ if __name__ == "__main__":
     if len(args.LOCATION) == 0:
         logger.error("No locations where specified.  Use `--help` for more information")
         exit(1)
+
+    args.LOCATION = clean_locations_arg(LOCATIONS, args.LOCATION)
 
     # Check status
     if args.status:
