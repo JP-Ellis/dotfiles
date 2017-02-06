@@ -27,7 +27,7 @@ bindsym $mod+Shift+q kill
 
 # start rofi (a program launcher)
 bindsym $mod+x exec "rofi -show run"
-bindsym $mod+d exec "rofi -show drun"
+bindsym $mod+d exec "rofi -show run"
 bindsym $mod+w exec "rofi -show window"
 
 # change focus
