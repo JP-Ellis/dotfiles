@@ -54,6 +54,12 @@ values."
      helm
      ;; ivy
 
+     ;;;; Distributions
+     ;; spacemacs
+     ;; spacemacs-base
+     ;; spacemacs-bootstrap
+     ;; spacemacs-docker
+
      ;;;; Emacs
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; better-defaults
@@ -85,6 +91,7 @@ values."
      ;;;; International
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; chinese
+     ;; keyboard-layout
 
      ;;;; Keyboard Layouts
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -151,6 +158,9 @@ values."
      ;; windows-scripts
      yaml
 
+     ;;;; misc
+     nlinum
+
      ;;;; OS
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; nixos
@@ -167,6 +177,19 @@ values."
      ;; perforce
      (version-control :variables
                       version-control-global-margin t)
+
+     ;;;; Spacemacs
+     ;; spacemacs-completion
+     ;; spacemacs-editing
+     ;; spacemacs-editing-visual
+     ;; spacemacs-evil
+     ;; spacemacs-language
+     ;; spacemacs-layouts
+     ;; spacemacs-misc
+     ;; spacemacs-org
+     ;; spacemacs-purpose
+     ;; spacemacs-ui
+     ;; spacemacs-ui-visual
 
      ;;;; Tags
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -188,6 +211,7 @@ values."
      ;; command-log
      ;; dash
      ;; deft
+     docker
      ;; fasd
      finance
      ;; geolocation
@@ -198,10 +222,12 @@ values."
      ;; prodigy
      ;; puppet
      ;; ranger
+     ;; rebox
      restclient
      ;; salt
      ;; shell
      speed-reading
+     ;; sphinx
      systemd
      ;; terraform
      ;; tmux
@@ -219,16 +245,13 @@ values."
 
      ;;;; Web Services
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; confluence
      ;; elfeed
      ;; evernote
      search-engine
      ;; spotify
      ;; twitter
      ;; wakatime
-
-     ;;;; Other
-     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-     ;; rebox
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
