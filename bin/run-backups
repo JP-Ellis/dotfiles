@@ -16,7 +16,7 @@ except ModuleNotFoundError:
 logger = logging.getLogger(__name__)
 ch = logging.StreamHandler(stream=sys.stderr)
 ch.setLevel(0)
-ch.setFormatter(logging.Formatter(colored("%(levelname)s", "white") + ": " + colored("%(message)s", "blue")))
+ch.setFormatter(logging.Formatter(colored("%(levelname)s", "white") + ": %(message)s"))
 logger.addHandler(ch)
 
 
