@@ -33,6 +33,9 @@ LOCATIONS = {
             "{SOURCE}/.local/opt",
             "{SOURCE}/.local/share/io.parity.ethereum/chains",
             "{SOURCE}/VirtualBox VMs",
+            "{SOURCE}/src/PKGBUILD/**/*.tar.xz",
+            "{SOURCE}/src/PKGBUILD/**/*.tar.gz",
+            "{SOURCE}/src/PKGBUILD/**/*.tar",
         ],
         "options": [
             "--full-if-older-than", "90D",
