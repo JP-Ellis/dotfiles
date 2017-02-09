@@ -119,7 +119,7 @@ values."
      extra-langs
      ;; faust
      ;; fsharp
-     ;; go
+     go
      ;; graphviz
      ;; haskell
      html
