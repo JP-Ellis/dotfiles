@@ -36,6 +36,7 @@ LOCATIONS = {
             "{SOURCE}/src/PKGBUILD/**/*.tar",
             "{SOURCE}/src/PKGBUILD/**/*.tar.gz",
             "{SOURCE}/src/PKGBUILD/**/*.tar.xz",
+            "{SOURCE}/src/Docker/**/*.pkg.tar.xz",
             "{SOURCE}/tmp",
         ],
         "options": [
