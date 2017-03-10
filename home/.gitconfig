@@ -1,0 +1,15 @@
+[alias]
+	lg = log \
+				--graph \
+				--abbrev-commit \
+				--decorate \
+				--date=relative \
+				--all \
+				--format=format:'%C(red)%h%C(reset) - %C(white)%s%C(reset) %C(green)(%ar)%C(reset) %C(blue)<%an>%C(reset)%C(yellow)%d%C(reset)'
+	pullall = "!f() { git pull \"$@\" && git submodule update --init --recursive; }; f"
+
+[push]
+	default = simple
+
+[core]
+	editor = emacs
