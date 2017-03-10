@@ -11,6 +11,14 @@ fi
                             && export OBJC_INCLUDE_PATH="$HOME/.local/include:$OBJC_INCLUDE_PATH"
 [ -d $HOME/.local/lib ] && export LD_LIBRARY_PATH="$HOME/.local/lib:$LD_LIBRARY_PATH"
 
+# Add directories from /scratch/$USER/local to environment
+[ -d /scratch/$USER/local/bin ] && export PATH="/scratch/$USER/local/bin:$PATH"
+[ -d /scratch/$USER/local/include ] && export CPATH="/scratch/$USER/local/include:$CPATH" \
+                                    && export C_INCLUDE_PATH="/scratch/$USER/local/include:$C_INCLUDE_PATH" \
+                                    && export CPLUS_INCLUDE_PATH="/scratch/$USER/local/include:$CPLUS_INCLUDE_PATH" \
+                                    && export OBJC_INCLUDE_PATH="/scratch/$USER/local/include:$OBJC_INCLUDE_PATH"
+[ -d /scratch/$USER/local/lib ] && export LD_LIBRARY_PATH="/scratch/$USER/local/lib:$LD_LIBRARY_PATH"
+
 # Multirust support
 [ -d $HOME/.cargo/bin ] && export PATH="$HOME/.cargo/bin:$PATH"
 
