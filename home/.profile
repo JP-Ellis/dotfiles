@@ -4,18 +4,18 @@ if [[ ! -d "$TMPDIR" ]]; then
 fi
 
 # Add directories from ~/.local to environment
-[[ -d $HOME/.local/bin ]] && export PATH=$HOME/.local/bin:$PATH
-[[ -d $HOME/.local/include ]] && export CPATH=$HOME/.local/include:$CPATH \
-                              && export C_INCLUDE_PATH=$HOME/.local/include:$C_INCLUDE_PATH \
-                              && export CPLUS_INCLUDE_PATH=$HOME/.local/include:$CPLUS_INCLUDE_PATH \
-                              && export OBJC_INCLUDE_PATH=$HOME/.local/include:$OBJC_INCLUDE_PATH
-[[ -d $HOME/.local/lib ]] && export LD_LIBRARY_PATH=$HOME/.local/lib:$LD_LIBRARY_PATH
+[[ -d $HOME/.local/bin ]] && export PATH="$HOME/.local/bin:$PATH"
+[[ -d $HOME/.local/include ]] && export CPATH="$HOME/.local/include:$CPATH" \
+                              && export C_INCLUDE_PATH="$HOME/.local/include:$C_INCLUDE_PATH" \
+                              && export CPLUS_INCLUDE_PATH="$HOME/.local/include:$CPLUS_INCLUDE_PATH" \
+                              && export OBJC_INCLUDE_PATH="$HOME/.local/include:$OBJC_INCLUDE_PATH"
+[[ -d $HOME/.local/lib ]] && export LD_LIBRARY_PATH="$HOME/.local/lib:$LD_LIBRARY_PATH"
 
 # Multirust support
-[[ -d $HOME/.cargo/bin ]] && export PATH=$HOME/.cargo/bin:$PATH
+[[ -d $HOME/.cargo/bin ]] && export PATH="$HOME/.cargo/bin:$PATH"
 
 # gpg-agent and ssh
-[[ -d $HOME/.config/gnupg ]] && export GNUPGHOME=$HOME/.config/gnupg
+[[ -d $HOME/.config/gnupg ]] && export GNUPGHOME="$HOME/.config/gnupg"
 [[ -S "/run/user/1000/gnupg/d.ktgehwewyo8sebu4d9w5kak4/S.gpg-agent.ssh" ]] && export SSH_AUTH_SOCK="/run/user/1000/gnupg/d.ktgehwewyo8sebu4d9w5kak4/S.gpg-agent.ssh"
 
 export XDG_DOWNLOAD_DIR="$TMPDIR/Downloads"
