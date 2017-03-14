@@ -121,8 +121,7 @@ if yes_or_no "Setup Spacemacs?" Y; then
     if [ ! -d "$HOME/.emacs.d" ]; then
         git clone --branch develop https://github.com/syl20bnr/spacemacs "$HOME/.emacs.d"
     else
-        mv "$HOME/.emacs.d" "$HOME/.emacs.d.bak.$RANDOM"
-        mv "$HOME/.emacs" "$HOME/.emacs.bak.$RANDOM" 2>/dev/null
+        make_backup "$HOME/.emacs.d"
         git clone --branch develop https://github.com/syl20bnr/spacemacs ~/.emacs.d
     fi
 fi
