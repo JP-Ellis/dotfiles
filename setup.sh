@@ -34,7 +34,7 @@ yes_or_no() {
 
         unset REPLY
         local compcontext='yn:yes or no:(y n)'
-        vared -cp "$1 [$prompt] " REPLY
+        vared -cp "$(tput bold)$1 [$prompt]$(tput sgr0) " REPLY
 
         if [ -z "$REPLY" ]; then
             REPLY=$default
