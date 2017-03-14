@@ -72,7 +72,7 @@ add-zsh-hook chpwd check_python_virtualenv
 alias cd=cdls
 
 ## Add a command to cd into a tmp directory
-alias cdtmp="cd $(mktemp -d)"
+alias cdtmp='cd $(mktemp -d)'
 
 ## Shorten `xdg-open` to just `open`
 alias open=xdg-open
