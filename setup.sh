@@ -18,13 +18,13 @@ fi
 
 # As yes or no and return true or false
 # Usage:
-# yes_or_no(<statement>, <default>)
+# yes_or_no <statement>, <default>
 yes_or_no() {
     while true; do
-        if [ "${2:-}" -eq "Y" ]; then
+        if [ "${2:-}" = "Y" ]; then
             prompt="Y/n"
             default=Y
-        elif [ "${2:-}" -eq "N" ]; then
+        elif [ "${2:-}" = "N" ]; then
             prompt="y/N"
             default=N
         else
@@ -74,22 +74,22 @@ make_link() {
 ## Files in the home directory
 for f in $(pwd)/home/* $(pwd)/home/.*; do
     f="$(basename "$f")"
-    yes_or_no "Link $file into the home directory?" Y || continue
-    make_link "$(pwd)/home/$file" "$HOME/$file"
+    yes_or_no "Link $f into the home directory?" Y || continue
+    make_link "$(pwd)/home/$f" "$HOME/$f"
 done
 
 mkdir -p "$HOME/.config"
 for f in $(pwd)/config/* $(pwd)/config/.*; do
     f="$(basename "$f")"
-    yes_or_no "Link $file into the .config directory?" Y || continue
-    make_link "$(pwd)/config/$file" "$HOME/.config/$file"
+    yes_or_no "Link $f into the .config directory?" Y || continue
+    make_link "$(pwd)/config/$f" "$HOME/.config/$f"
 done
 
 mkdir -p "$HOME/.local/bin"
 for f in $(pwd)/bin/* $(pwd)/bin/.*; do
     f="$(basename "$f")"
-    yes_or_no "Link $file into .local/bin" Y || continue
-    make_link "$(pwd)/bin/$file" "$HOME/.local/bin/$file"
+    yes_or_no "Link $f into .local/bin" Y || continue
+    make_link "$(pwd)/bin/$f" "$HOME/.local/bin/$f"
 done
 
 ## ZSH
