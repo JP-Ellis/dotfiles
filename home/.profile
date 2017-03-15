@@ -1,4 +1,4 @@
-if [ ! -d "$TMPDIR" ]; then
+if [ ! -d "$TMPDIR" -o "$TMPDIR" = "/tmp" ]; then
     export TMPDIR="/tmp/$USER"
     mkdir -p -m 700 "$TMPDIR"
 fi
