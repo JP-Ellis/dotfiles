@@ -66,7 +66,7 @@ values."
      ibuffer
      (org :variables
           org-enable-github-support t)
-     ;; semantic
+     semantic
      ;; smex
      typography
 
@@ -105,7 +105,9 @@ values."
      ;; autohotkey
      bibtex
      (c-c++ :variables
-            c-c++-enable-clang-support t)
+            c-c++-default-mode-for-headers 'c++-mode
+            c-c++-enable-clang-support t
+            )
      ;; clojure
      ;; common-lisp
      ;; coq
