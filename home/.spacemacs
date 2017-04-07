@@ -631,6 +631,8 @@ you should place your code here."
                                  "^#.*#$"
                                  ;; Python compiled
                                  "\\.pyc$"
+                                 ;; Temporary binary files
+                                 "\\.o$"
                                  ;; Emacs compiled
                                  "\\.elc$"
                                  ;; LaTeX temporary files
@@ -643,6 +645,9 @@ you should place your code here."
                                  "\\.glg$"
                                  "\\.glo$"
                                  "\\.gls$"
+                                 "\\.idx$"
+                                 "\\.ilg$"
+                                 "\\.ind$"
                                  "\\.ist$"
                                  "\\.log$"
                                  "\\.nav"
