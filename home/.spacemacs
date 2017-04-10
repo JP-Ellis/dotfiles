@@ -93,10 +93,6 @@ values."
      ;; chinese
      ;; keyboard-layout
 
-     ;;;; Keyboard Layouts
-     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-     ;; bepo
-
      ;;;; Lang
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; agda
@@ -121,15 +117,17 @@ values."
      ;; ess
      extra-langs
      ;; faust
+     ;; forth
      ;; fsharp
      go
-     ;; graphviz
+     graphviz
      ;; haskell
      html
      ;; idris
      ipython-notebook
      ;; java
      javascript
+     ;; jr
      (latex :variables
             latex-build-command "LatexMk"
             latex-enable-auto-fill t
@@ -142,16 +140,20 @@ values."
      ;; octave
      ;; php
      ;; plantuml
+     ;; protobuf
      ;; purescript
      (python :variables
              python-sort-imports-on-save t
              python-enable-yapf-format-on-save t
              python-fill-column 120)
      ;; racket
+     ;; rest
+     restructuredtext
      ruby
      rust
      ;; scala
      ;; scheme
+     ;; shaders
      shell-scripts
      ;; sml
      ;; sql
@@ -233,7 +235,7 @@ values."
      ;; sphinx
      systemd
      ;; terraform
-     ;; tmux
+     tmux
      ;; vagrant
      ycmd
 
