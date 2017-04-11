@@ -121,6 +121,7 @@ values."
      ;; fsharp
      go
      graphviz
+     ;; gpu
      ;; haskell
      html
      ;; idris
@@ -138,6 +139,7 @@ values."
      ;; nim
      ;; ocaml
      ;; octave
+     ;; perl6
      ;; php
      ;; plantuml
      ;; protobuf
@@ -153,7 +155,6 @@ values."
      rust
      ;; scala
      ;; scheme
-     ;; shaders
      shell-scripts
      ;; sml
      ;; sql
