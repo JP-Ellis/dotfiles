@@ -546,12 +546,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; Org configuration
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq org-format-latex-options '(:foreground default
-                                               :background default
-                                               :scale 2.0
-                                               :html-foreground "Black"
-                                               :html-background "Transparent"
-                                               :html-scale 2.0
-                                               :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
+                                   :background default
+                                   :scale 2.0
+                                   :html-foreground "Black"
+                                   :html-background "Transparent"
+                                   :html-scale 2.0
+                                   :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
         org-list-description-max-indent 5)
 
   ;; Rust mode
