@@ -558,6 +558,19 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq rust-format-on-save t)
 
+  ;; Python mode
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; Fix taken from https://emacs.stackexchange.com/q/30082
+  (with-eval-after-load 'python
+    (defun python-shell-completion-native-try ()
+      "Return non-nil if can trigger native completion."
+      (let ((python-shell-completion-native-enable t)
+            (python-shell-completion-native-output-timeout
+             python-shell-completion-native-try-output-timeout))
+        (python-shell-completion-native-get-completions
+         (get-buffer-process (current-buffer))
+         nil "_"))))
+
   ;; Magit
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq magit-commit-arguments '("--signoff" "--gpg-sign=Joshua Ellis <josh@jpellis.me>"))
