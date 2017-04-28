@@ -55,6 +55,37 @@ LOCATIONS = {
         "remove-all-but-n-full": False,  # Deletion of old files is handled by the bucket
         "remove-all-inc-of-but-n-full": 2,
     },
+    "home-hd": {
+        "source": "{HOME}",
+        "destination": "file:///media/wd-elements/backups/{HOSTNAME}{SOURCE}",
+        "exclude": [
+            "{SOURCE}/.cache",
+            "{SOURCE}/.local/opt",
+            "{SOURCE}/.local/share/io.parity.ethereum/chains",
+            "{SOURCE}/Downloads",
+            "{SOURCE}/VirtualBox VMs",
+            "{SOURCE}/src/PKGBUILD/**/*.tar",
+            "{SOURCE}/src/PKGBUILD/**/*.tar.gz",
+            "{SOURCE}/src/PKGBUILD/**/*.tar.xz",
+            "{SOURCE}/src/Docker/**/*.pkg.tar.xz",
+            "{SOURCE}/tmp",
+        ],
+        "options": [
+            "--full-if-older-than", "90D",
+        ],
+        "remove-all-but-n-full": False,  # Deletion of old files is handled by the bucket
+        "remove-all-inc-of-but-n-full": 2,
+    },
+    "etc-hd": {
+        "sudo": True,
+        "source": "/etc",
+        "destination": "file:///media/wd-elements/backups/{HOSTNAME}{SOURCE}",
+        "options": [
+            "--full-if-older-than", "90D",
+        ],
+        "remove-all-but-n-full": False,  # Deletion of old files is handled by the bucket
+        "remove-all-inc-of-but-n-full": 2,
+    },
     "uni": {
         "source": "{HOME}/University",
         "destination": "rsync://baker/backups/University",
