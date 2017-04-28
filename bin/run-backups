@@ -24,6 +24,7 @@ logger.addHandler(ch)
 # PASSPHRASE="..."
 
 LOCATIONS = {
+    "google": ["home", "etc"],
     "home": {
         "source": "{HOME}",
         "destination": "gs://backups-os9h/{HOSTNAME}{SOURCE}",
@@ -55,6 +56,7 @@ LOCATIONS = {
         "remove-all-but-n-full": False,  # Deletion of old files is handled by the bucket
         "remove-all-inc-of-but-n-full": 2,
     },
+    "hd": ["home-hd", "etc-hd"],
     "home-hd": {
         "source": "{HOME}",
         "destination": "file:///media/wd-elements/backups/{HOSTNAME}{SOURCE}",
@@ -200,6 +202,14 @@ def clean_locations_dict(locations: dict) -> bool:
     all_opts = required_opts + [v[0] for v in optional_opts]
 
     for loc, loc_opt in locations.items():
+        # If the location options is a list, it must refer to other locations
+        if isinstance(loc_opt, list):
+            for subloc in loc_opt:
+                if subloc not in locations:
+                    logger.error(f"Location {loc}: Sublocation {subloc} was not found.")
+                    is_sane = False
+            continue
+
         # Make sure all required options are there
         for opt in required_opts:
             if opt not in loc_opt:
@@ -242,23 +252,37 @@ def clean_locations_dict(locations: dict) -> bool:
 
 
 def list_locations(locations: dict) -> None:
-    width = {'loc': 0, 'source': 0, 'dest': 0}
+    width = {'loc': 0, 'source': 0, 'dest': 0, 'subloc': 0}
     for loc, v in locations.items():
         width['loc'] = max(width['loc'], len(loc))
-        width['source'] = max(width['source'], len(v['source']))
-        width['dest'] = max(width['dest'], len(v['destination']))
+        if isinstance(v, list):
+            width['subloc'] = max(width['subloc'], len(', '.join(v)))
+        else:
+            width['source'] = max(width['source'], len(v['source']))
+            width['dest'] = max(width['dest'], len(v['destination']))
+
+    subloc_fmt = colored("{loc:<{width[loc]}}", "white") \
+        + " :   " \
+        + colored("{subloc:<{width[subloc]}}", "blue")
+    loc_fmt = colored("{loc:<{width[loc]}}", "white") \
+        + " :   " \
+        + colored("{source:<{width[source]}}", "green") \
+        + "  =>  " \
+        + colored("{dest:<{width[dest]}}", "blue")
     for loc, v in locations.items():
-        fmt_string = colored("{loc:<{width[loc]}}", "white") \
-            + " :   " \
-            + colored("{source:<{width[source]}}", "green") \
-            + "  =>  " \
-            + colored("{dest:<{width[dest]}}", "blue")
-        print(fmt_string.format(
-            loc=loc,
-            source=v["source"],
-            dest=v["destination"],
-            width=width,
-        ))
+        if isinstance(v, list):
+            print(subloc_fmt.format(
+                loc=loc,
+                subloc=', '.join(v),
+                width=width,
+            ))
+        else:
+            print(loc_fmt.format(
+                loc=loc,
+                source=v["source"],
+                dest=v["destination"],
+                width=width,
+            ))
 
 
 def clean_locations_arg(locations: dict, to_clean: list) -> list:
@@ -267,10 +291,13 @@ def clean_locations_arg(locations: dict, to_clean: list) -> list:
         if location not in locations:
             logger.error(f"Unknown location {location}")
             exit(1)
-        if locations[location]["sudo"]:
-            cleaned.insert(0, location)
+        if isinstance(locations[location], list):
+            cleaned = clean_locations_arg(locations, locations[location]) + cleaned
         else:
-            cleaned.append(location)
+            if locations[location]["sudo"]:
+                cleaned.insert(0, location)
+            else:
+                cleaned.append(location)
     return cleaned
 
 
