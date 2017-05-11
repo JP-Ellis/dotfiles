@@ -6,6 +6,8 @@ import os.path
 import socket
 import subprocess
 import sys
+import typing
+from typing import List, Tuple
 
 try:
     from termcolor import colored
@@ -285,20 +287,28 @@ def list_locations(locations: dict) -> None:
             ))
 
 
-def clean_locations_arg(locations: dict, to_clean: list) -> list:
+def clean_locations_arg(locations: dict, to_clean: List[str]) -> List[str]:
+    sudo_subloc, subloc = clean_sublocations_arg(locations, to_clean)
+    return sudo_subloc + subloc
+
+
+def clean_sublocations_arg(locations: dict, to_clean: List[str]) -> Tuple[List[str], List[str]]:
+    cleaned_sudo = []
     cleaned = []
     for location in to_clean:
         if location not in locations:
             logger.error(f"Unknown location {location}")
             exit(1)
         if isinstance(locations[location], list):
-            cleaned = clean_locations_arg(locations, locations[location]) + cleaned
+            sudo_subloc, subloc = clean_sublocations_arg(locations, locations[location])
+            cleaned_sudo += sudo_subloc
+            cleaned += subloc
         else:
             if locations[location]["sudo"]:
-                cleaned.insert(0, location)
+                cleaned_sudo.append(location)
             else:
                 cleaned.append(location)
-    return cleaned
+    return cleaned_sudo, cleaned
 
 
 def collection_status(locations: dict, args) -> None:
