@@ -1,0 +1,26 @@
+#!/bin/zsh
+
+if (( ! $+commands[youtube-dl] )); then
+    echo "youtube-dl is required." >&2
+    exit 1
+fi
+
+if (( ! $+commands[mpv] )); then
+    echo "mpv is required." >&2
+    exit 1
+fi
+
+if (( $# == 0 )); then
+    echo "At least one argument is required." >&2
+    exit 1
+fi
+
+opts=( "${@[1,-2]}" )
+channel="${@[-1]}"
+url="https://twitch.tv/${channel}"
+
+format_code=$(youtube-dl --list-formats "$url" 2>/dev/null \
+          | grep 'source' \
+          | cut -d' ' -f1)
+
+mpv --ytdl-raw-options=format="$format_code" "$url"
