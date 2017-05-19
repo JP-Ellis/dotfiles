@@ -11,5 +11,10 @@
 [push]
 	default = simple
 
-[core]
-	editor = emacs
+[user]
+	email = josh@jpellis.me
+	name = JP-Ellis
+	signingkey = 8BA20FCE
+
+[github]
+	user = JP-Ellis
