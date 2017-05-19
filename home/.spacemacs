@@ -689,6 +689,8 @@ you should place your code here."
                                  "\\.pyc$"
                                  ;; Temporary binary files
                                  "\\.o$"
+                                 ;; Autoconf
+                                 "\\.lo$"
                                  ;; Emacs compiled
                                  "\\.elc$"
                                  ;; LaTeX temporary files
