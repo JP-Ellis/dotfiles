@@ -656,12 +656,12 @@ you should place your code here."
                             '(output-pdf "Zathura"))))
 
   ;; Set master bibliography location
-  (setq reftex-default-bibliography '("~/University/Research/Papers/references.bib"))
+  (setq reftex-default-bibliography '("~/University/Research/Papers/library.bib"))
 
   ;; Bibtex
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; see org-ref for use of these variables
-  (setq org-ref-default-bibliography '("~/University/Research/Papers/references.bib")
+  (setq org-ref-default-bibliography '("~/University/Research/Papers/library.bib")
         org-ref-pdf-directory "~/University/Research/Papers/"
         org-ref-open-pdf-function (lambda (fpath) (start-process "zathura" "*helm-bibtex-zathura*" "/usr/bin/zathura" fpath))
         org-ref-bibliography-notes "~/University/Research/Papers/notes.org")
