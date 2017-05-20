@@ -18,11 +18,11 @@ typeset -U path
 [[ -d "$HOME/.local/bin" ]] && path=( "$HOME/.local/bin" $path )
 [[ -d "$HOME/.local/sbin" ]] && path=( "$HOME/.local/sbin" $path )
 
-[[ -d "$HOME/.local/lib" ]] && ld_library_path=( "$HOME/.local/lib" $ld_library_path )
-[[ -d "$HOME/.local/include" ]] && cpath=( "$HOME/.local/include" $cpath )
+[[ -d "$HOME/.local/lib" ]] && ld_library_path+="$HOME/.local/lib"
+[[ -d "$HOME/.local/include" ]] && cpath+="$HOME/.local/include"
 
 # Multirust support
-[[ -d $HOME/.cargo/bin ]] && export PATH=$HOME/.cargo/bin:$PATH
+[[ -d $HOME/.cargo/bin ]] && export path=( "$HOME/.cargo/bin" $path)
 
 # Custom Rust completions
 [[ -d $HOME/.zfunc ]] && fpath+="$HOME/.zfunc"
