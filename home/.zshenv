@@ -24,6 +24,9 @@ typeset -U path
 # Multirust support
 [[ -d $HOME/.cargo/bin ]] && export PATH=$HOME/.cargo/bin:$PATH
 
+# Custom Rust completions
+[[ -d $HOME/.zfunc ]] && fpath+="$HOME/.zfunc"
+
 
 ## Applications
 ################################################################################
