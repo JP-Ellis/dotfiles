@@ -1,22 +1,38 @@
 #!/bin/zsh
 
 help () {
-    echo "Usage: $1 [OPTION]..."
-    echo "Attach a display and scale it smartly."
-    echo ""
-    echo "  -e, --external  Manually specify the external display."
-    echo "                  If unspecified, a connected external output will be"
-    echo "                  automatically used.  Multiple external screen can be"
-    echo "                  specified by repeating this argument."
-    echo "  -i, --internal  Manually specify the internal display."
-    echo "                  Defaults to using one of the 'eDP' displays."
-    echo "  -o, --output    Alias for '--external'."
-    echo "  -s, --scale     Fore this particular scaling factor."
-    echo "                  If unspecified, the scaling factor is calculated based on the"
-    echo "                  internal and external display's resolutions."
-    echo "  -l, --list      List the connected displays."
-    echo ""
-    echo "  -h, --help      Display this message."
+    fmt --uniform-spacing --width=$COLUMNS <<EOF
+Usage: $1 [OPTION]...
+Attach a display and scale it smartly.
+
+  -e, --external
+
+      Manually specify the external display.  If unspecified, a connected
+      external output will be automatically used.  Multiple external screen can
+      be specified by repeating this argument.
+
+  -i, --internal
+
+      Manually specify the internal display.  Defaults to using one of the 'eDP'
+      displays.
+
+  -o, --output
+
+      Alias for '--external'.
+
+  -s, --scale
+
+      For this particular scaling factor.  If unspecified, the scaling factor is
+      calculated based on the internal and external display's resolutions.
+
+  -l, --list
+
+      List the connected displays.
+
+  -h, --help
+
+      Display this message.
+EOF
 }
 
 # Get the WIDTH and HEIGHT of a particular display and return it them.
