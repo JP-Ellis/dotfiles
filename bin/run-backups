@@ -292,6 +292,8 @@ def list_locations(locations: dict) -> None:
 
 def clean_locations_arg(locations: dict, to_clean: List[str]) -> List[str]:
     sudo_subloc, subloc = clean_sublocations_arg(locations, to_clean)
+    sudo_subloc = list(set(sudo_subloc))
+    subloc = list(set(subloc))
     return sudo_subloc + subloc
 
 
