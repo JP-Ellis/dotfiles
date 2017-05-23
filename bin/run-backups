@@ -339,7 +339,17 @@ def run_backups(locations: dict, args) -> None:
     p_env["PASSPHRASE"] = PASSPHRASE
 
     for location in args.LOCATION:
-        logger.info(f"Location: {location}")
+        loc_fmt = colored("{loc}", "white") \
+            + " :   " \
+            + colored("{source}", "green") \
+            + "  =>  " \
+            + colored("{dest}", "blue")
+        print(loc_fmt.format(
+            loc=location,
+            source=locations[location]["source"],
+            dest=locations[location]["destination"],
+        ))
+
         opts = locations[location]
         # Construct the Duplicity command
         cmd = []
