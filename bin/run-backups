@@ -93,9 +93,12 @@ LOCATIONS = {
         "remove-all-but-n-full": False,  # Deletion of old files is handled by the bucket
         "remove-all-inc-of-but-n-full": 2,
     },
-    "uni": {
+    "cx": {
         "source": "{HOME}/University",
-        "destination": "rsync://baker/backups/University",
+        "destination": "rsync://cxin04//coepp/cephfs/mel/jellis/backups",
+        "exclude": [
+            "{SOURCE}/**/*.fs",
+        ],
         "options": [
             "--full-if-older-than", "30D",
         ],
