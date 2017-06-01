@@ -218,6 +218,7 @@ values."
      ;; dash
      ;; deft
      docker
+     ;; editorconfig
      ;; fasd
      finance
      ;; geolocation
@@ -564,7 +565,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; Ycmd
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq
-   ycmd-server-command (list "python" (file-truename "~/src/ycmd"))
+   ycmd-server-command (list "python" (file-truename "~/src/ycmd/ycmd"))
    ycmd-extra-conf-whitelist '("~/src/*")
    ycmd-force-semantic-completion t)
 
