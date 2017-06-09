@@ -1,6 +1,16 @@
-if [ ! -d "$TMPDIR" -o "$TMPDIR" = "/tmp" ]; then
+# Remove trailing slash from $TMPDIR if present
+export TMPDIR="${TMPDIR%/}"
+if [ ! -d "$TMPDIR" ]; then
     export TMPDIR="/tmp/$USER"
     mkdir -p -m 700 "$TMPDIR"
+elif [ "$TMPDIR" = "/tmp" -o "$TMPDIR" = "/scratch" ]; then
+    export TMPDIR="$TMPDIR/$USER"
+    mkdir -p -m 700 "$TMPDIR"
+fi
+
+# Give a warning if $TMPDIR does not user read-only
+if [ -n "$PS1" -a "$(stat --printf=%f $TMPDIR)" -ne "41c0" ]; then
+    echo "TMPDIR may be readable to others." >&2
 fi
 
 # Add directories from ~/.local to environment
