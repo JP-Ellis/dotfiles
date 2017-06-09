@@ -9,7 +9,7 @@ elif [ "$TMPDIR" = "/tmp" -o "$TMPDIR" = "/scratch" ]; then
 fi
 
 # Give a warning if $TMPDIR does not user read-only
-if [ -n "$PS1" -a "$(stat --printf=%f $TMPDIR)" -ne "41c0" ]; then
+if [ -n "$PS1" -a "$(stat --printf=%f $TMPDIR)" != "41c0" ]; then
     echo "TMPDIR may be readable to others." >&2
 fi
 
