@@ -53,12 +53,12 @@ while [ "$#" -gt 0 ]; do
     case $1 in
         (--external|-e|--output|-o)
             shift
-            if [[ -z ${DISPLAYS[(r)$1]} ]]; then
+            if [[ -z "${DISPLAYS[(r)$1]}" ]]; then
                 echo "External display '$1' not known by xrandr." >&2
                 echo "Known displays: $DISPLAYS" >&2
                 exit 1
-            elif [[ -z ${EXTERNAL[(r)$1]} ]]; then
-                EXTERNAL+=$1
+            elif [[ -z "${EXTERNAL[(r)$1]}" ]]; then
+                EXTERNAL+="$1"
             fi
 
             shift
