@@ -26,8 +26,8 @@ logger.addHandler(ch)
 # PASSPHRASE="..."
 
 LOCATIONS = {
-    "google": ["home", "etc"],
-    "home": {
+    "google": ["google:home", "google:etc"],
+    "google:home": {
         "source": "{HOME}",
         "destination": "gs://backups-os9h/{HOSTNAME}{SOURCE}",
         "exclude": [
@@ -48,9 +48,9 @@ LOCATIONS = {
             "--full-if-older-than", "90D",
         ],
         "remove-all-but-n-full": False,  # Deletion of old files is handled by the bucket
-        "remove-all-inc-of-but-n-full": 2,
+        "remove-all-inc-of-but-n-full": 6,
     },
-    "etc": {
+    "google:etc": {
         "sudo": True,
         "source": "/etc",
         "destination": "gs://backups-os9h/{HOSTNAME}{SOURCE}",
@@ -58,10 +58,10 @@ LOCATIONS = {
             "--full-if-older-than", "90D",
         ],
         "remove-all-but-n-full": False,  # Deletion of old files is handled by the bucket
-        "remove-all-inc-of-but-n-full": 2,
+        "remove-all-inc-of-but-n-full": 6,
     },
-    "hd": ["home-hd", "etc-hd"],
-    "home-hd": {
+    "hd": ["hd:home", "hd:home"],
+    "hd:home": {
         "source": "{HOME}",
         "destination": "file:///media/wd-elements/backups/{HOSTNAME}{SOURCE}",
         "exclude": [
@@ -81,9 +81,9 @@ LOCATIONS = {
             "--full-if-older-than", "90D",
         ],
         "remove-all-but-n-full": False,  # Deletion of old files is handled by the bucket
-        "remove-all-inc-of-but-n-full": 2,
+        "remove-all-inc-of-but-n-full": 4,
     },
-    "etc-hd": {
+    "hd:etc": {
         "sudo": True,
         "source": "/etc",
         "destination": "file:///media/wd-elements/backups/{HOSTNAME}{SOURCE}",
@@ -91,9 +91,10 @@ LOCATIONS = {
             "--full-if-older-than", "90D",
         ],
         "remove-all-but-n-full": False,  # Deletion of old files is handled by the bucket
-        "remove-all-inc-of-but-n-full": 2,
+        "remove-all-inc-of-but-n-full": 4,
     },
-    "cx": {
+    "uni": ["uni:cx"],
+    "uni:cx": {
         "source": "{HOME}/University",
         "destination": "rsync://cxin04//coepp/cephfs/mel/jellis/backups",
         "exclude": [
