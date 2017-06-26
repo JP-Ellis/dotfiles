@@ -18,3 +18,10 @@
 
 [github]
 	user = JP-Ellis
+
+[core]
+	attributesfile = /home/josh/.gitattributes
+
+[filter "dropoutput_ipynb"]
+	clean = ipynb_output_filter.py
+	smudge = cat
