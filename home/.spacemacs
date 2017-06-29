@@ -553,74 +553,11 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  ;; exec-path-from-shell
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq exec-path-from-shell-arguments '("-l"))
-
-  ;; LaTeX configuration
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq TeX-electric-sub-and-superscript t)
-  (setq LaTeX-math-list '((?\C-n "partial" "Misc Symbol" 8706)))
-
-  ;; BibTeX Configuration
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq bibtex-align-at-equal-sign t
-        bibtex-autoadd-commas t
-        bibtex-comma-after-last-field t)
-
-  ;; Ycmd
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq
-   ycmd-server-command (list "python" (file-truename "~/src/ycmd/ycmd"))
-   ycmd-extra-conf-whitelist '("~/src/*")
-   ycmd-force-semantic-completion t)
-
-  (add-hook 'c-mode-hook 'ycmd-mode)
-  (add-hook 'c++-mode-hook 'ycmd-mode)
-  ;; (add-hook 'python-mode-hook 'ycmd-mode)
-  ;; (add-hook 'go-mode-hook 'ycmd-mode)
-  ;; (add-hook 'rust-mode-hook 'ycmd-mode)
-
-  ;; Org configuration
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq org-format-latex-options '(:foreground default
-                                   :background default
-                                   :scale 2.0
-                                   :html-foreground "Black"
-                                   :html-background "Transparent"
-                                   :html-scale 2.0
-                                   :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
-        org-list-description-max-indent 5)
-
-  ;; (add-to-list 'org-export-latex-classes
-  ;;              '("koma-article"
-  ;;                "\\documentclass{scrartcl}"
-  ;;                ("\\section{%s}" . "\\section{%s}")
-  ;;                ("\\subsection{%s}" . "\\subsection{%s}")
-  ;;                ("\\subsubsection{%s}" . "\\subsubsection{%s}")
-  ;;                ("\\paragraph{%s}" . "\\paragraph{%s}")
-  ;;                ("\\subparagraph{%s}" . "\\subparagraph{%s}")))
-
-  ;; Rust mode
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq rust-format-on-save t)
-
-  ;; Python mode
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; Fix taken from https://emacs.stackexchange.com/q/30082
-  (with-eval-after-load 'python
-    (defun python-shell-completion-native-try ()
-      "Return non-nil if can trigger native completion."
-      (let ((python-shell-completion-native-enable t)
-            (python-shell-completion-native-output-timeout
-             python-shell-completion-native-try-output-timeout))
-        (python-shell-completion-native-get-completions
-         (get-buffer-process (current-buffer))
-         nil "_"))))
-
-  ;; Magit
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq magit-commit-arguments '("--signoff" "--gpg-sign=Joshua Ellis <josh@jpellis.me>"))
+   ;; `-l` ensures that the path variable is properly updated.  This needs to be
+   ;; done in user-init.
+   exec-path-from-shell-arguments '("-l")
+   )
   )
 
 (defun dotspacemacs/user-config ()
@@ -633,100 +570,120 @@ before packages are loaded."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Enable multiple cursors globally.
   (global-evil-mc-mode)
+  ;; Configure unicode font support
+  (unicode-fonts-setup)
 
-  ;; Prefer double spaces after lines
-  (setq sentence-end-double-space t)
+  (setq
+   ;; Prefer double spaces after lines
+   sentence-end-double-space t
 
-  ;; Setup the browser
-  (setq browse-url-browser-function 'browse-url-generic
-        browse-url-generic-program "chrome")
+   ;; Setup the browser
+   browse-url-browser-function 'browse-url-generic
+   browse-url-generic-program "chrome"
 
-  ;; Smartparens
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq sp-highlight-pair-overlay nil)
+   ;; smartparens (forgot what this does exactly)
+   sp-highlight-pair-overlay nil
 
-  ;; Web-Mode
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq web-mode-enable-current-element-highlight t
-        web-mode-enable-element-content-fontification t
-        web-mode-enable-element-tag-fontification t
-        web-mode-markup-indent-offset 2
-        web-mode-code-indent-offset 2)
+   ;; Set ghub username and token
 
-  ;; Latex
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; Use Zathura as the PDF viewer
+   ;; Sign git commits with GPG by default
+   magit-commit-arguments '("--signoff"
+                            "--gpg-sign=Joshua Ellis <josh@jpellis.me>")
+
+   ;; Adjust web-mode defaults
+   web-mode-enable-current-element-highlight t
+   web-mode-enable-element-content-fontification t
+   web-mode-enable-element-tag-fontification t
+   web-mode-markup-indent-offset 2
+   web-mode-code-indent-offset 2
+
+   ;; (La)TeX settings
+   TeX-electric-sub-and-superscript t
+   LaTeX-math-list '((?\C-n "partial" "Misc Symbol" 8706))
+
+   ;; BibTeX settings
+   bibtex-align-at-equal-sign t
+   bibtex-autoadd-commas t
+   bibtex-comma-after-last-field t
+
+   ;; Set bibliography location
+   reftex-default-bibliography '("~/University/Research/Papers/library.bib")
+   org-ref-default-bibliography '("~/University/Research/Papers/library.bib")
+   org-ref-pdf-directory "~/University/Research/Papers/"
+   org-ref-open-pdf-function (lambda (fpath) (start-process "zathura" "*helm-bibtex-zathura*" "/usr/bin/zathura" fpath))
+   org-ref-bibliography-notes "~/University/Research/Papers/notes.org"
+
+   ;; Adjust indentation in Wolfrma mode
+   wolfram-indent 2
+
+   ;; Rust settings
+   rust-format-on-save t
+
+   ;; Org mode settings
+   org-format-latex-options '(:foreground default
+                                          :background default
+                                          :scale 2.0
+                                          :html-foreground "Black"
+                                          :html-background "Transparent"
+                                          :html-scale 2.0
+                                          :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
+   org-list-description-max-indent 5
+
+   ;; YCMD settings
+   ycmd-server-command (list "python" (file-truename "~/src/ycmd/ycmd"))
+   ycmd-extra-conf-whitelist '("~/*")
+   ycmd-force-semantic-completion t
+
+   ;; Adjust hidden files in neotree
+   neo-hidden-regexp-list '(
+                            ;; Hidden files
+                            "^\\."
+                            ;; Backups/Temporary file
+                            "~$"
+                            "^#.*#$"
+                            ;; Python compiled
+                            "\\.pyc$"
+                            ;; Temporary binary files
+                            "\\.o$"
+                            ;; Autoconf
+                            "\\.lo$"
+                            ;; Emacs compiled
+                            "\\.elc$"
+                            ;; LaTeX temporary files
+                            "\\.aux$"
+                            "\\.bbl$"
+                            "\\.bcf$"
+                            "\\.blg$"
+                            "\\.fdb_latexmk$"
+                            "\\.fls$"
+                            "\\.glg$"
+                            "\\.glo$"
+                            "\\.gls$"
+                            "\\.idx$"
+                            "\\.ilg$"
+                            "\\.ind$"
+                            "\\.ist$"
+                            "\\.log$"
+                            "\\.nav"
+                            "\\.out$"
+                            "\\.run\\.xml$"
+                            "\\.snm"
+                            "\\.synctex\\.gz$"
+                            "\\.synctex\\.gz\\(busy\\)$"
+                            "\\.toc$"
+                            "\\.unq$"
+                            )
+   )
+
+  ;; Use Zathura as the PDF viewer in LaTeX and Org modes
   (add-hook 'TeX-mode-hook
             '(lambda ()
                (add-to-list 'TeX-view-program-selection
                             '(output-pdf "Zathura"))))
-
-  ;; Set master bibliography location
-  (setq reftex-default-bibliography '("~/University/Research/Papers/library.bib"))
-
-  ;; Bibtex
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; see org-ref for use of these variables
-  (setq org-ref-default-bibliography '("~/University/Research/Papers/library.bib")
-        org-ref-pdf-directory "~/University/Research/Papers/"
-        org-ref-open-pdf-function (lambda (fpath) (start-process "zathura" "*helm-bibtex-zathura*" "/usr/bin/zathura" fpath))
-        org-ref-bibliography-notes "~/University/Research/Papers/notes.org")
-
-  ;; Org Mode
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (with-eval-after-load 'org
     (setq org-file-apps '(("\\.pdf::\\(\\d+\\)\\'" . "zathura -P %1 %s")
                           ("\\.pdf\\'" . "zathura %s"))
           org-latex-pdf-process '("latexmk %f")))
-
-  ;; Wolfram mode
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq wolfram-indent 2)
-
-  ;; Unicode
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (unicode-fonts-setup)
-
-  ;; Neotree
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq neo-hidden-regexp-list '(
-                                 ;; Hidden files
-                                 "^\\."
-                                 ;; Backups/Temporary file
-                                 "~$"
-                                 "^#.*#$"
-                                 ;; Python compiled
-                                 "\\.pyc$"
-                                 ;; Temporary binary files
-                                 "\\.o$"
-                                 ;; Autoconf
-                                 "\\.lo$"
-                                 ;; Emacs compiled
-                                 "\\.elc$"
-                                 ;; LaTeX temporary files
-                                 "\\.aux$"
-                                 "\\.bbl$"
-                                 "\\.bcf$"
-                                 "\\.blg$"
-                                 "\\.fdb_latexmk$"
-                                 "\\.fls$"
-                                 "\\.glg$"
-                                 "\\.glo$"
-                                 "\\.gls$"
-                                 "\\.idx$"
-                                 "\\.ilg$"
-                                 "\\.ind$"
-                                 "\\.ist$"
-                                 "\\.log$"
-                                 "\\.nav"
-                                 "\\.out$"
-                                 "\\.run\\.xml$"
-                                 "\\.snm"
-                                 "\\.synctex\\.gz$"
-                                 "\\.synctex\\.gz\\(busy\\)$"
-                                 "\\.toc$"
-                                 "\\.unq$"
-                                 ))
 
   )
 
