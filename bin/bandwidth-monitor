@@ -1,0 +1,117 @@
+#!/bin/bash
+
+help () {
+    [[ -z "$COLUMNS" ]] && COLUMNS=80
+    fmt --uniform-spacing --width=$COLUMNS <<EOF
+Usage: $1 [OPTION]...
+
+Monitor the bandwidth usage on the current computer.
+
+This script does not require any special programs outside of the standard UNIX
+tools.
+
+  -i, --interface NAME
+
+      The interface name to monitor.  A list of interfaces can be obtained with
+      --list.  Defaults to the first interface discovered by --list.
+
+  -l, --list
+
+      List the known interfaces and exit.
+
+  -s, --sleep  TIME
+
+      Sleep time in seconds between statistics measure.
+
+  -c, --continuous [CHAR]
+
+      Continuously display statistics.  If a CHAR is specified, this is used for
+      the end of line.  Defaults to a newline.
+
+  -h, --help
+
+      Display this message.
+EOF
+}
+
+INTERFACE=$(ls /sys/class/net | head -n 1)
+SLEEP=1
+CONTINUOUS=false
+CHAR='\n'
+
+while [[ $# -ne 0 ]]; do
+    case $1 in
+        (--interface|-i)
+            shift
+            if [[ -d "/sys/class/net/$1" ]]; then
+                INTERFACE=$1
+            else
+                echo "Interface '$1' not known.  Please refer to '--help' for usage information." >&2
+                exit 1
+            fi
+            ;;
+        (--list|-l)
+            echo "Known interfaces:"
+            for interface in $(ls /sys/class/net); do
+                echo $interface
+            done
+            exit 0
+            ;;
+        (--sleep|-s)
+            shift
+            if [[ $1 =~ ^[0-9]+$ ]]; then
+                SLEEP=$1
+            else
+                echo "Sleep duration must be a whole number of a seconds." >&2
+                exit 1
+            fi
+            ;;
+        (--continus|-c)
+            CONTINUOUS=true
+            if [[ "$2" != "" && ! "$2" = -* ]]; then
+                shift
+                CHAR="$1"
+            fi
+            ;;
+        (--help|-h)
+            help ${0##*/}
+            exit 0
+            ;;
+        (*)
+            echo "Argument '$1' unknown.  Please refer to '--help' for usage information." >&2
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+if [[ ! -f "/sys/class/net/${INTERFACE}/statistics/rx_bytes" ]] ||
+       [[ ! -f "/sys/class/net/${INTERFACE}/statistics/tx_bytes" ]]; then
+    echo "Unable to  fetch '${INTERFACE}' interface statistics" >&2
+    exit 1
+fi
+
+TX_KBPS=0
+RX_KBPS=0
+
+get_rates () {
+    local rx1=$(cat "/sys/class/net/${INTERFACE}/statistics/rx_bytes")
+    local tx1=$(cat "/sys/class/net/${INTERFACE}/statistics/tx_bytes")
+    sleep $SLEEP
+    local rx2=$(cat "/sys/class/net/${INTERFACE}/statistics/rx_bytes")
+    local tx2=$(cat "/sys/class/net/${INTERFACE}/statistics/tx_bytes")
+
+    TX_KBPS=$(((tx2 - tx1) / 1024))
+    RX_KBPS=$(((rx2 - rx1) / 1024))
+}
+
+
+if $CONTINUOUS; then
+    while true; do
+        get_rates
+        printf "$(tput bold)%s$(tput sgr0) tx: %6d kB/s, rx: %6d kB/s$CHAR" $INTERFACE $TX_KBPS $RX_KBPS
+    done
+else
+    get_rates
+    printf "$(tput bold)%s$(tput sgr0) tx: %6d kB/s, rx: %6d kB/s\n" $INTERFACE $TX_KBPS $RX_KBPS
+fi
