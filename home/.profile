@@ -8,7 +8,7 @@ elif [ "$TMPDIR" = "/tmp" -o "$TMPDIR" = "/scratch" ]; then
     mkdir -p -m 700 "$TMPDIR"
 fi
 
-# Give a warning if $TMPDIR does not user read-only
+# Give a warning if $TMPDIR might be readable to other users
 if [ -n "$PS1" -a "$(stat --printf=%f $TMPDIR)" != "41c0" ]; then
     echo "TMPDIR may be readable to others." >&2
 fi
