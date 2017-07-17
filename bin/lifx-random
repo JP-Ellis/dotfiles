@@ -1,0 +1,117 @@
+#!/bin/zsh
+
+help () {
+    [[ -z "$COLUMNS" ]] && COLUMNS=80
+    fmt --uniform-spacing --width=$COLUMNS <<EOF
+Usage: $1 [OPTION]...
+Randomly change the colour of LIFX lights or set of lights.
+
+This script uses [this LIFX CLI](https://github.com/Rawa/lifx-cli).
+
+  -l, --light SPECIFICATION
+
+      Add a light that will be changed randomly.  This option can be specified
+      multiple times with each new specification having their own random colour.
+      The specification is the same as with the LIFX CLI:
+
+      - Using a group label:   -l "-g Lounge"
+      - Using a light label:   -l '-l "Lounge Front"'
+
+  -m, --mode {h[ue]|r[gb]}
+
+      Adjust the random mode.  If set to 'hue', only the hue is changed randomly
+      and the saturation remains fixed.  In 'rgb', all options can be adjusted.
+      By default the mode is set to 'hue'.
+
+  -d, --duration [[HH:]MM:]SS
+
+     Set the duration for each random change.  The default duration is 1 minute.
+
+  -h, --help
+
+      Display this message.
+EOF
+}
+
+LIGHTS=()
+MODE="HUE"
+DURATION=60
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        (--light|-l)
+            shift
+            LIGHTS+=$1
+            ;;
+        (--mode|-m)
+            shift
+            case "${1:u}" in
+                (H*)
+                    MODE="HUE"
+                    ;;
+                (R*)
+                    MODE="RGB"
+                    ;;
+                (*)
+                    echo "Invalid mode specified.  Please refer to '--help' for usage information." >&2
+                    exit 1
+                    ;;
+            esac
+            ;;
+        (--duration|-d)
+            shift
+            HOURS=0
+            MINUTES=0
+            SECONDS=0
+            case $1 in
+                (*:*:*)
+                    HOURS=${1%%:*}
+                    MINUTES=${${1#*:}%:*}
+                    SECONDS=${1##*:}
+                ;;
+                (*:*)
+                    MINUTES=${1%:*}
+                    SECONDS=${1##*:}
+                ;;
+                (*)
+                    SECONDS=$1
+                ;;
+            esac
+            DURATION=$((60 * 60 * $HOURS + 60 * $MINUTES + $SECONDS))
+            ;;
+        (--help|-h)
+            help ${0##*/}
+            exit 0
+            ;;
+        (*)
+            echo "Argument '$1' unknown.  Please refer to '--help' for usage information." >&2
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+if [[ ${#LIGHTS} -eq 0 ]]; then
+    echo "No lights were specified." >&2
+    exit 1
+fi
+
+if [[ $DURATION -lt 1 ]]; then
+    echo "The duration must be at least 1 second." >&2
+    exit 1
+fi
+
+while true; do
+    for light in ${LIGHTS}; do
+        STATE=
+        if [[ $MODE == "HUE" ]]; then
+            HUE=$(shuf -i 0-360 -n 1)
+            STATE=(--hue $HUE)
+        else
+            RGB=($(shuf -i 0-255 -n 3))
+            STATE=(--rgb ${RGB[@]})
+        fi
+        eval lifx state $STATE -d $DURATION ${=light} &
+        echo "$STATE"
+    done
+    sleep $DURATION
+done
