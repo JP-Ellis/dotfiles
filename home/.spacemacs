@@ -54,6 +54,7 @@ This function should only modify configuration layer settings."
      ;; ivy
 
      ;;;; Distributions
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; spacemacs
      ;; spacemacs-base
      ;; spacemacs-bootstrap
@@ -73,6 +74,10 @@ This function should only modify configuration layer settings."
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; gnus
      ;; mu4e
+
+     ;;;; Fonts
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     unicode-fonts
 
      ;;;; Frameworks
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -114,12 +119,14 @@ This function should only modify configuration layer settings."
      emacs-lisp
      ;; erlang
      ;; ess
+     ;; extra-langs
      ;; faust
      ;; forth
      ;; fsharp
      ;; go
      ;; gpu
      ;; graphviz
+     ;; groovy
      ;; haskell
      html
      ;; idris
@@ -150,7 +157,7 @@ This function should only modify configuration layer settings."
              python-fill-column 120)
      ;; racket
      ;; rest
-     restructuredtext
+     ;; restructuredtext
      ;; ruby
      rust
      ;; scala
@@ -187,6 +194,7 @@ This function should only modify configuration layer settings."
                       version-control-global-margin t)
 
      ;;;; Spacemacs
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; spacemacs-completion
      ;; spacemacs-editing
      ;; spacemacs-editing-visual
@@ -227,6 +235,7 @@ This function should only modify configuration layer settings."
      ;; geolocation
      ;; imenu-list
      ;; nginx
+     ;; node
      ;; pandoc
      ;; pass
      pdf-tools
@@ -269,7 +278,7 @@ This function should only modify configuration layer settings."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(unicode-fonts)
+   dotspacemacs-additional-packages '()
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -299,6 +308,7 @@ It should only modify the values of Spacemacs settings."
    ;; (default t)
    dotspacemacs-elpa-https t
    ;; Maximum allowed time in seconds to contact an ELPA repository.
+   ;; (default 5)
    dotspacemacs-elpa-timeout 5
    ;; If non-nil then spacemacs will check for updates at startup
    ;; when the current branch is not `develop'. Note that checking for
@@ -307,7 +317,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-check-for-update nil
    ;; If non-nil, a form that evaluates to a package directory. For example, to
    ;; use different package directories for different Emacs versions, set this
-   ;; to `emacs-version'.
+   ;; to `emacs-version'. (default nil)
    dotspacemacs-elpa-subdirectory nil
    ;; One of `vim', `emacs' or `hybrid'.
    ;; `hybrid' is like `vim' except that `insert state' is replaced by the
@@ -334,7 +344,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-startup-lists '((todos . 5)
                                 (projects . 5)
                                 (recents . 10))
-   ;; True if the home buffer should respond to resize events.
+   ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
@@ -344,6 +354,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-themes '(solarized-dark
                          spacemacs-dark)
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
+   ;; (default t)
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
@@ -352,7 +363,7 @@ It should only modify the values of Spacemacs settings."
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
-   ;; The leader key
+   ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands `M-x' (after pressing on the leader key).
    ;; (default "SPC")
@@ -395,7 +406,7 @@ It should only modify the values of Spacemacs settings."
    ;; start. (default nil)
    dotspacemacs-auto-resume-layouts nil
    ;; If non-nil, auto-generate layout name when creating new layouts. Only has
-   ;; effect when using the "jump to layout by number" commands.
+   ;; effect when using the "jump to layout by number" commands. (default nil)
    dotspacemacs-auto-generate-layout-names nil
    ;; Size (in MB) above which spacemacs will prompt to open the large file
    ;; literally to avoid performance issues. Opening a file literally means that
@@ -421,8 +432,9 @@ It should only modify the values of Spacemacs settings."
    ;; source settings. Else, disable fuzzy matching in all sources.
    ;; (default 'always)
    dotspacemacs-helm-use-fuzzy 'always
-   ;; If non-nil the paste micro-state is enabled. When enabled pressing `p'
-   ;; several times cycle between the kill ring content. (default nil)
+   ;; If non-nil, the paste transient-state is enabled. While enabled, pressing
+   ;; `p' several times cycles through the elements in the `kill-ring'.
+   ;; (default nil)
    dotspacemacs-enable-paste-transient-state t
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
    ;; the commands bound to the current keystroke sequence. (default 0.4)
