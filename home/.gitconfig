@@ -25,3 +25,7 @@
 [filter "dropoutput_ipynb"]
 	clean = ipynb_output_filter.py
 	smudge = cat
+
+[filter "dropoutput_nb"]
+	clean = mathematica-notebook-filter
+	smudge = cat
