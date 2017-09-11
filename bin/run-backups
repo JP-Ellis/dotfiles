@@ -6,14 +6,15 @@ import os.path
 import socket
 import subprocess
 import sys
-import typing
 from typing import List, Tuple
 
 try:
     from termcolor import colored
 except ModuleNotFoundError:
+
     def colored(s, *args, **kwargs):
         return s
+
 
 logger = logging.getLogger(__name__)
 ch = logging.StreamHandler(stream=sys.stderr)
@@ -21,15 +22,16 @@ ch.setLevel(0)
 ch.setFormatter(logging.Formatter(colored("%(levelname)s", "white") + ": %(message)s"))
 logger.addHandler(ch)
 
-
 # Set your passphrase for GPG.  You should *NEVER* commit the passphrase!
 # PASSPHRASE="..."
 
 LOCATIONS = {
     "google": ["google:home", "google:etc"],
     "google:home": {
-        "source": "{HOME}",
-        "destination": "gs://backups-os9h/{HOSTNAME}{SOURCE}",
+        "source":
+        "{HOME}",
+        "destination":
+        "gs://backups-os9h/{HOSTNAME}{SOURCE}",
         "exclude": [
             "{SOURCE}/**/*.fs",
             "{SOURCE}/.cache",
@@ -45,25 +47,31 @@ LOCATIONS = {
             "{SOURCE}/tmp",
         ],
         "options": [
-            "--full-if-older-than", "90D",
+            "--full-if-older-than",
+            "90D",
         ],
-        "remove-all-but-n-full": False,  # Deletion of old files is handled by the bucket
-        "remove-all-inc-of-but-n-full": 6,
+        "remove-all-but-n-full":
+        False,  # Deletion of old files is handled by the bucket
+        "remove-all-inc-of-but-n-full":
+        6,
     },
     "google:etc": {
         "sudo": True,
         "source": "/etc",
         "destination": "gs://backups-os9h/{HOSTNAME}{SOURCE}",
         "options": [
-            "--full-if-older-than", "90D",
+            "--full-if-older-than",
+            "90D",
         ],
         "remove-all-but-n-full": False,  # Deletion of old files is handled by the bucket
         "remove-all-inc-of-but-n-full": 6,
     },
     "hd": ["hd:home", "hd:home"],
     "hd:home": {
-        "source": "{HOME}",
-        "destination": "file:///media/wd-elements/backups/{HOSTNAME}{SOURCE}",
+        "source":
+        "{HOME}",
+        "destination":
+        "file:///media/wd-elements/backups/{HOSTNAME}{SOURCE}",
         "exclude": [
             "{SOURCE}/.cache",
             "{SOURCE}/.local/opt",
@@ -78,17 +86,21 @@ LOCATIONS = {
             "{SOURCE}/tmp",
         ],
         "options": [
-            "--full-if-older-than", "90D",
+            "--full-if-older-than",
+            "90D",
         ],
-        "remove-all-but-n-full": False,  # Deletion of old files is handled by the bucket
-        "remove-all-inc-of-but-n-full": 4,
+        "remove-all-but-n-full":
+        False,  # Deletion of old files is handled by the bucket
+        "remove-all-inc-of-but-n-full":
+        4,
     },
     "hd:etc": {
         "sudo": True,
         "source": "/etc",
         "destination": "file:///media/wd-elements/backups/{HOSTNAME}{SOURCE}",
         "options": [
-            "--full-if-older-than", "90D",
+            "--full-if-older-than",
+            "90D",
         ],
         "remove-all-but-n-full": False,  # Deletion of old files is handled by the bucket
         "remove-all-inc-of-but-n-full": 4,
@@ -101,7 +113,8 @@ LOCATIONS = {
             "{SOURCE}/**/*.fs",
         ],
         "options": [
-            "--full-if-older-than", "30D",
+            "--full-if-older-than",
+            "30D",
         ],
         "remove-all-but-n-full": 2,
         "remove-all-inc-of-but-n-full": 2,
@@ -119,6 +132,7 @@ class ActionNoYes(argparse.Action):
 
     Adapted from http://stackoverflow.com/a/20422915/1573761
     """
+
     def __init__(self, option_strings, dest, default=None, **kwargs):
         if default is None:
             raise ValueError('You must provide a default with Yes/No action')
@@ -132,8 +146,7 @@ class ActionNoYes(argparse.Action):
 
         opt = opt[2:]
         opts = ['--' + opt, '--no-' + opt]
-        super(ActionNoYes, self).__init__(opts, dest, nargs=0, const=None,
-                                          default=default, **kwargs)
+        super(ActionNoYes, self).__init__(opts, dest, nargs=0, const=None, default=default, **kwargs)
 
     def __call__(self, parser, namespace, values, option_strings=None):
         if option_strings.startswith('--no-'):
@@ -144,53 +157,54 @@ class ActionNoYes(argparse.Action):
 
 parser = argparse.ArgumentParser(description='Backup directories using Duplicity.')
 
-parser.add_argument('LOCATION', nargs='*',
-                    help="""Backup the specified directory.  This must correspond to an entry in the LOCATIONS
+parser.add_argument(
+    'LOCATION',
+    nargs='*',
+    help="""Backup the specified directory.  This must correspond to an entry in the LOCATIONS
                     dictionary contained within this script.""")
-parser.add_argument('-a', '--all',
-                    action='store_true',
-                    help="""Backup all pre-configured locations.""")
-parser.add_argument('-l', '--list',
-                    action='store_true',
-                    help="""List the known locations.""")
-parser.add_argument('-s', '--status',
-                    action='store_true',
-                    help="""Summarize the status of the backup repositories by printing the chains and sets found, and
+parser.add_argument('-a', '--all', action='store_true', help="""Backup all pre-configured locations.""")
+parser.add_argument('-l', '--list', action='store_true', help="""List the known locations.""")
+parser.add_argument(
+    '-s',
+    '--status',
+    action='store_true',
+    help="""Summarize the status of the backup repositories by printing the chains and sets found, and
                     the number of volumes in each.""")
 
-parser.add_argument('-v', '--verbose',
-                    action='count',
-                    default=0,
-                    help="""Increase the verbosity.  Repeat for even more verbose output.""")
-parser.add_argument('-q', '--quiet',
-                    action='store_true',
-                    default=0,
-                    help="""Don't display the output from duplicity.""")
-parser.add_argument('-n', '--dry-run',
-                    action='store_true',
-                    help="""Run Duplicity with `--dry-run` enabled so that it calculates what would be done, but does
+parser.add_argument(
+    '-v',
+    '--verbose',
+    action='count',
+    default=0,
+    help="""Increase the verbosity.  Repeat for even more verbose output.""")
+parser.add_argument(
+    '-q', '--quiet', action='store_true', default=0, help="""Don't display the output from duplicity.""")
+parser.add_argument(
+    '-n',
+    '--dry-run',
+    action='store_true',
+    help="""Run Duplicity with `--dry-run` enabled so that it calculates what would be done, but does
                     not perform any backend actions.""")
 
-
 duplicity_group = parser.add_argument_group("Optional arguments affecting Duplicity")
-duplicity_group.add_argument('--passphrase',
-                             action='store',
-                             help="""Use the given passphrase.  It is preferred to specify this within the file by
+duplicity_group.add_argument(
+    '--passphrase',
+    action='store',
+    help="""Use the given passphrase.  It is preferred to specify this within the file by
                              adding `PASSPHRASE=\"...\"` this this script.""")
-duplicity_group.add_argument('--async',
-                             action=ActionNoYes,
-                             default=True,
-                             help="""Enable/disable asynchronous upload""")
-duplicity_group.add_argument('-d', '--duplicity-options',
-                             action='append',
-                             nargs=argparse.REMAINDER,
-                             help="""List of extra arguments for Duplicity.  If specified, this must be placed LAST as
+duplicity_group.add_argument('--async', action=ActionNoYes, default=True, help="""Enable/disable asynchronous upload""")
+duplicity_group.add_argument(
+    '-d',
+    '--duplicity-options',
+    action='append',
+    nargs=argparse.REMAINDER,
+    help="""List of extra arguments for Duplicity.  If specified, this must be placed LAST as
                              it will consume all remaining options and arguments.""")
-
 
 ################################################################################
 # Helper Functions
 ################################################################################
+
 
 def clean_locations_dict(locations: dict) -> bool:
     """Verify that the locations dictionary is sane.
@@ -204,14 +218,8 @@ def clean_locations_dict(locations: dict) -> bool:
         "destination",
     ]
     # If one of the optional options is not specified, the default (second element in tuple) is used.
-    optional_opts = [
-        ("sudo", False),
-        ("options", []),
-        ("include", []),
-        ("exclude", []),
-        ("remove-all-but-n-full", False),
-        ("remove-all-inc-of-but-n-full", False)
-    ]
+    optional_opts = [("sudo", False), ("options", []), ("include", []), ("exclude", []),
+                     ("remove-all-but-n-full", False), ("remove-all-inc-of-but-n-full", False)]
     all_opts = required_opts + [v[0] for v in optional_opts]
 
     for loc, loc_opt in locations.items():
@@ -287,15 +295,13 @@ def list_locations(locations: dict) -> None:
             print(subloc_fmt.format(
                 loc=loc,
                 subloc=', '.join(v),
-                width=width,
-            ))
+                width=width, ))
         else:
             print(loc_fmt.format(
                 loc=loc,
                 source=v["source"],
                 dest=v["destination"],
-                width=width,
-            ))
+                width=width, ))
 
 
 def clean_locations_arg(locations: dict, to_clean: List[str]) -> List[str]:
@@ -358,11 +364,11 @@ def run_backups(locations: dict, args) -> None:
             + colored("{source}", "green") \
             + "  =>  " \
             + colored("{dest}", "blue")
-        print(loc_fmt.format(
-            loc=location,
-            source=locations[location]["source"],
-            dest=locations[location]["destination"],
-        ))
+        print(
+            loc_fmt.format(
+                loc=location,
+                source=locations[location]["source"],
+                dest=locations[location]["destination"], ))
 
         opts = locations[location]
         # Construct the Duplicity command
@@ -394,10 +400,7 @@ def run_backups(locations: dict, args) -> None:
 
         logger.debug(f"Command: {cmd}")
         try:
-            subprocess.run(cmd,
-                           check=True,
-                           env=p_env,
-                           stdout=pstdout)
+            subprocess.run(cmd, check=True, env=p_env, stdout=pstdout)
         except subprocess.CalledProcessError:
             exit(1)
 
@@ -412,10 +415,7 @@ def run_backups(locations: dict, args) -> None:
 
             logger.debug(f"Command: {cmd}")
             try:
-                subprocess.run(cmd,
-                               check=True,
-                               env=p_env,
-                               stdout=pstdout)
+                subprocess.run(cmd, check=True, env=p_env, stdout=pstdout)
             except subprocess.CalledProcessError:
                 exit(1)
 
@@ -430,10 +430,7 @@ def run_backups(locations: dict, args) -> None:
 
             logger.debug(f"Command: {cmd}")
             try:
-                subprocess.run(cmd,
-                               check=True,
-                               env=p_env,
-                               stdout=pstdout)
+                subprocess.run(cmd, check=True, env=p_env, stdout=pstdout)
             except subprocess.CalledProcessError:
                 exit(1)
 
