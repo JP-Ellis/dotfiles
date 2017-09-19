@@ -10,7 +10,7 @@ general {
 # order += "run_watch VPN"
 order += "wireless wlp3s0"
 order += "disk /"
-order += "disk /home/"
+order += "disk /home"
 order += "battery 0"
 order += "cpu_temperature 0"
 order += "load"
@@ -49,12 +49,18 @@ cpu_temperature 0 {
     path    = "/sys/devices/platform/coretemp.0/hwmon/hwmon1/temp1_input"
 }
 
-disk "/home/" {
+disk "/home" {
     format = "H: %free"
+    prefix_type = "binary"
+    low_threshold = 16
+    threshold_type = "gbytes_avail"
 }
 
 disk "/" {
     format = "R: %free"
+    prefix_type = "binary"
+    low_threshold = 4
+    threshold_type = "gbytes_avail"
 }
 
 volume master {
