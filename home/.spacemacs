@@ -75,6 +75,14 @@ This function should only modify configuration layer settings."
      ;; gnus
      ;; mu4e
 
+     ;;;; Filetree
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; neotree
+     (treemacs :variables
+               treemacs-use-collapsed-directories 3
+               treemacs-use-filewatch-mode t
+               treemacs-use-follow-mode t)
+
      ;;;; Fonts
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      unicode-fonts
