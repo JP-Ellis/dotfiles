@@ -146,6 +146,9 @@ bar {
 bindsym $mod+button10 move container to workspace prev_on_output
 bindsym $mod+button11 move container to workspace next_on_output
 
+# Background image
+exec --no-startup-id feh --bg-fill "~/.local/share/background.png"
+
 # Lock screen
 bindsym $mod+Ctrl+l exec "xautolock -locknow"
 
