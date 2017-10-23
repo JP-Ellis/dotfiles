@@ -636,7 +636,7 @@ before packages are loaded."
    reftex-default-bibliography '("~/University/Research/Papers/library.bib")
    org-ref-default-bibliography '("~/University/Research/Papers/library.bib")
    org-ref-pdf-directory "~/University/Research/Papers/"
-   org-ref-open-pdf-function (lambda (fpath) (start-process "zathura" "*helm-bibtex-zathura*" "/usr/bin/zathura" fpath))
+   org-ref-open-pdf-function 'org-ref-get-mendeley-filename
    org-ref-bibliography-notes "~/University/Research/Papers/notes.org"
 
    ;; Adjust indentation in Wolfrma mode
@@ -656,7 +656,7 @@ before packages are loaded."
    org-list-description-max-indent 5
 
    ;; YCMD settings
-   ycmd-server-command (list "python" (file-truename "~/src/ycmd/ycmd"))
+   ycmd-server-command (list "python" (file-truename "~/src/tools/ycmd/ycmd"))
    ycmd-extra-conf-whitelist '("~/*")
    ycmd-force-semantic-completion t
 

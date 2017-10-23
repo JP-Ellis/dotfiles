@@ -31,10 +31,10 @@ typeset -U path
 ## Applications
 ################################################################################
 
-export EDITOR='ec'
-export VISUAL='ec'
+export EDITOR='vim'
+export VISUAL='emacs'
 export PAGER='less'
-export BROWSER='chrome'
+export BROWSER='firefox-developer'
 
 ## Temporary Files
 ################################################################################
@@ -53,8 +53,7 @@ fi
 ################################################################################
 
 if (( $+commands[rustc] )); then
-    [[ -d "/usr/src/rust/src" ]] && export RUST_SRC_PATH="/usr/src/rust/src"
-    [[ -d "/usr/local/src/rust/src" ]] && export RUST_SRC_PATH="/usr/local/src/rust/src"
+    export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
     [[ -d "$HOME/.cargo" ]] && export CARGO_HOME="$HOME/.cargo"
 fi
 
