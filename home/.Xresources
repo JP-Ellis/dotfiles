@@ -50,8 +50,8 @@ rofi.tokenize:                       true
 
 !! Xautolock
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-Xautolock.time:                      10
+Xautolock.time:                      9
 Xautolock.locker:                    /usr/bin/i3lock-fancy
-Xautolock.notify:                    10
-Xautolock.notifier:                  notify-send -u critical -t 9500 -- 'LOCKING screen in 10 seconds'
+Xautolock.notify:                    15
+Xautolock.notifier:                  notify-send -u critical -t 9500 -- 'LOCKING screen in 15 seconds'
 Xautolock.noclose:                   true
