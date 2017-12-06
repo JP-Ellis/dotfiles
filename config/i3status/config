@@ -5,9 +5,7 @@ general {
 }
 
 ## Set the ordering of all the elements
-# order += "ipv6"
-# order += "run_watch DHCP"
-# order += "run_watch VPN"
+order += "ethernet ens9"
 order += "wireless wlp3s0"
 order += "disk /"
 order += "disk /home"
@@ -18,8 +16,14 @@ order += "tztime local"
 order += "tztime utc"
 order += "volume master"
 
+ethernet ens9 {
+    # if you use %speed, i3status requires the cap_net_admin capability
+    format_up = "E: %ip [%speed]"
+    format_down = "E: down"
+}
+
 wireless wlp3s0 {
-    format_up   = "%essid [%ip] %quality @ %frequency"
+    format_up   = "%essid %ip [%quality @ %frequency]"
     format_down = "W: down"
 }
 
@@ -29,6 +33,9 @@ battery 0 {
     low_threshold   = 15
     integer_battery_capacity = true
     hide_seconds    = true
+    status_chr      = "⚡"
+    status_bat      = "🔋"
+    status_full     = "🔌"
 }
 
 tztime local {
@@ -46,18 +53,19 @@ load {
 
 cpu_temperature 0 {
     format  = "%degrees °C"
-    # path    = "/sys/devices/platform/coretemp.0/hwmon/hwmon1/temp1_input"
+    # path    = "/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp1_input"
+    path    = "/sys/devices/platform/applesmc.768/temp6_input"
 }
 
 disk "/home" {
-    format = "H: %free"
+    format = "🏠 %free"
     prefix_type = "binary"
     low_threshold = 16
     threshold_type = "gbytes_avail"
 }
 
 disk "/" {
-    format = "R: %free"
+    format = "√ %free"
     prefix_type = "binary"
     low_threshold = 4
     threshold_type = "gbytes_avail"
