@@ -2,19 +2,56 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
-set $mod Mod4
+################################################################################
+## Theme
+################################################################################
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 font pango:Open Sans 8
-# Before i3 v4.8, we used to recommend this one as the default:
-# font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
-# The font above is very space-efficient, that is, it looks good, sharp and
-# clear in small sizes. However, its unicode glyph coverage is limited, the old
-# X core fonts rendering does not support right-to-left and this being a bitmap
-# font, it doesn’t scale on retina/hidpi displays.
+
+# Background image
+exec --no-startup-id feh --bg-scale "/home/josh/.local/share/background.png"
+
+# Use a 2-pixel boundary on windows
+new_window pixel 2
+# Use the normal window style on floats
+new_float normal
+
+# Hybrid colors
+set $base03  #002b36
+set $base02  #073642
+set $base01  #586e75
+set $base00  #657b83
+set $base0   #839496
+set $base1   #93a1a1
+set $base2   #eee8d5
+set $base3   #fdf6e3
+set $yellow  #b58900
+set $orange  #cb4b16
+set $red     #dc322f
+set $magenta #d33682
+set $violet  #6c71c4
+set $blue    #268bd2
+set $cyan    #2aa198
+set $green   #859900
+set $black   #222222
+
+# class                  border      backgr      text        split
+client.focused           $green      $base02     $base3      $base02
+client.focused_inactive  $blue       $black      $base1      $base03
+client.unfocused         $base00     $black      $base0      $base03
+client.urgent            $red        $red        $black      $base00
+client.background        $black
+
+################################################################################
+## Key Bindings
+################################################################################
+
+# Modifier key: mac CMD
+set $mod Mod4
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -133,39 +170,6 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
-bar {
-      font pango:Inconsolata-g 9
-      position bottom
-      status_command i3status-rs ~/.config/i3/status.toml
-      colors {
-            separator #666666
-            background #222222
-            statusline #dddddd
-            focused_workspace #0088CC #0088CC #ffffff
-            active_workspace #333333 #333333 #ffffff
-            inactive_workspace #333333 #333333 #888888
-            urgent_workspace #2f343a #900000 #ffffff
-      }
-}
-# bar {
-#         status_command i3status
-# }
-
-# 3 finger swips.  Up, down, left and right are 8, 9, 10 and 11 respectively.
-# Currently, button10 and button11 are implemented through ~/.xbindkeysrc
-# bindsym button10 workspace prev
-# bindsym button11 workspace next
-bindsym $mod+button10 move container to workspace prev_on_output
-bindsym $mod+button11 move container to workspace next_on_output
-
-# Background image
-exec --no-startup-id feh --bg-scale "/home/josh/.local/share/background.png"
-
-# Lock screen
-bindsym $mod+Ctrl+l exec "xautolock -locknow"
-
 # Function keys
 bindsym XF86MonBrightnessDown       exec light -U 5
 bindsym XF86MonBrightnessUp         exec light -A 5
@@ -185,9 +189,33 @@ bindsym XF86AudioNext               exec playerctl next
 bindsym XF86AudioPrev               exec playerctl previous
 bindsym XF86AudioPlay               exec playerctl play-pause
 
-# PDF Presenter Console
-assign [title="pdfpc - presentation"] 2
-assign [title="pdfpc - presenter"] 1
+# Lock screen
+bindsym $mod+Ctrl+l exec "xautolock -locknow"
+
+################################################################################
+## Bar
+################################################################################
+
+# Start i3bar to display a workspace bar (plus the system information i3status
+# finds out, if available)
+bar {
+      font pango:Inconsolata-g 9
+      position bottom
+      status_command i3status-rs ~/.config/i3/status.toml
+      colors {
+            separator #666666
+            background #222222
+            statusline #dddddd
+            focused_workspace #0088CC #0088CC #ffffff
+            active_workspace #333333 #333333 #ffffff
+            inactive_workspace #333333 #333333 #888888
+            urgent_workspace #2f343a #900000 #ffffff
+      }
+}
+
+################################################################################
+## Startup
+################################################################################
 
 # Startup
 exec --no-startup-id i3-msg "workspace 1; exec firefox-developer"
@@ -197,3 +225,11 @@ exec --no-startup-id i3-msg "workspace 2; exec emacs"
 # Some services need to be started *after* i3
 exec --no-startup-id systemctl --user restart gpg-agent
 exec --no-startup-id systemctl --user start screensaver
+
+################################################################################
+## Special Windows
+################################################################################
+
+# PDF Presenter Console
+assign [title="pdfpc - presentation"] 2
+assign [title="pdfpc - presenter"] 1
