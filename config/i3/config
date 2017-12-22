@@ -43,7 +43,7 @@ set $black   #222222
 client.focused           $green      $base02     $base3      $base02
 client.focused_inactive  $blue       $black      $base1      $base03
 client.unfocused         $base00     $black      $base0      $base03
-client.urgent            $red        $red        $black      $base00
+client.urgent            $red        $black      $red        $base03
 client.background        $black
 
 ################################################################################
