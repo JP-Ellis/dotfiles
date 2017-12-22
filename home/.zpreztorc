@@ -24,38 +24,37 @@ zstyle ':prezto:*:*' color 'yes'
 # - gnu-utility must come before utility
 # - completion must come after utility
 # - history-substring-search must come after syntax-highlighting
-# - autosuggestions must come after history-substring
+# - autosuggestions must come after history-substring and syntax-highlighting
 # - prompt should be last
 zstyle ':prezto:load' pmodule \
-    'environment' \
-    'archive' \
-    'command-not-found' \
-    'gnu-utility' \
-    'utility' \
-    'completion' \
-    'editor' \
-    'git' \
-    'history' \
-    'pacman' \
-    'python' \
-    'rsync' \
-    'ruby' \
-    'spectrum' \
-    'syntax-highlighting' \
-    'terminal' \
-    'history-substring-search' \
-    'prompt'
-
-    # 'gpg' \
-    # 'ssh' \
+       'environment' \
+       \
+       'archive' \
+       'command-not-found' \
+       'directory' \
+       'editor' \
+       'fasd' \
+       'git' \
+       'gnu-utility' \
+       'history' \
+       'pacman' \
+       'python' \
+       'rsync' \
+       'spectrum' \
+       'terminal' \
+       'tmux' \
+       'utility' \
+       \
+       'autosuggestions' \
+       'completion' \
+       'syntax-highlighting' \
+       'history-substring-search' \
+       \
+       'prompt'
 
 ############################################################
 # Module options
 ############################################################
-
-# Environment
-########################################
-
 
 # Archive
 ########################################
@@ -63,15 +62,13 @@ zstyle ':prezto:load' pmodule \
 # `lsarchive` to list the content of one or more archives.
 # `unarchive` to extract the content of one or more archives.
 
-
 # Command Not Found
 ########################################
 # Requires `command-not-found` package.
 
-
 # Completion
 ########################################
-
+# Must be loaded after `utility`.
 
 # Directory
 ########################################
@@ -79,29 +76,36 @@ zstyle ':prezto:load' pmodule \
 # `d`  Prints the directory stack
 # `1` ... `9`  Change to the nth directory in the stack
 
-# Don't want to automatically change to the directory
+# Auto changes to a directory without typing cd.
 unsetopt AUTO_CD
-# Automatically push to the directory stack on cd
+# Pushes the old directory onto the stack on cd.
 setopt AUTO_PUSHD
-# Ignore duplicates in stack
+# Does not store duplicates in the stack.
 setopt PUSHD_IGNORE_DUPS
-# Don't print stack after `pushd` and `popd`
+# Does not print the directory stack after pushd or popd.
 setopt PUSHD_SILENT
-# Don't go straight to home if pushd has no argument
+# Pushes to the home directory when no argument is given.
 unsetopt PUSHD_TO_HOME
-# Do not overwrite existing files with > and >>, instead use >! and >>!
+# Changes directory to a path stored in a variable.
+setopt CDABLE_VARS
+# Auto adds variable-stored paths to ~ list.
+setopt AUTO_NAME_DIRS
+# Writes to multiple descriptors.
+setopt MULTIOS
+# Uses extended globbing syntax.
+setopt EXTENDED_GLOB
+# Does not overwrite existing files with > and >>. Use >! and >>! to bypass.
 setopt CLOBBER
-
 
 # Editor
 ########################################
 
 # Set the key mapping style to 'emacs' or 'vi'.
 zstyle ':prezto:module:editor' key-bindings 'emacs'
-
 # Auto convert .... to ../..
 zstyle ':prezto:module:editor' dot-expansion 'yes'
-
+# To enable the prompt context to be set, add the following to your zpreztorc.
+zstyle ':prezto:module:editor' ps-context 'yes'
 # Indicatorsr for the various modes
 zstyle ':prezto:module:editor:info:keymap:primary' format '%B%F{blue}❯%f%b'
 zstyle ':prezto:module:editor:info:keymap:primary:insert' format 'I'
@@ -109,6 +113,17 @@ zstyle ':prezto:module:editor:info:keymap:primary:overwrite' format '%F{red}♺%
 zstyle ':prezto:module:editor:info:keymap:alternate' format '%B%F{red}❮%f%b'
 zstyle ':prezto:module:editor:info:completing' format '%B%F{red}...%f%b'
 
+# Environment
+########################################
+# Must be loaded first
+
+# Fasd
+########################################
+# Fasd is a command-line productivity booster, inspired by tools like autojump,
+# z and v, it offers quick access to files and directories by keeping track of
+# files and directories that were previously accessed.
+#
+# > https://github.com/clvv/fasd
 
 # Git
 ########################################
@@ -117,7 +132,10 @@ zstyle ':prezto:module:editor:info:completing' format '%B%F{red}...%f%b'
 # They can be ignored when they are 'dirty', 'untracked', 'all', or
 # 'none'.
 zstyle ':prezto:module:git:status:ignore' submodules 'all'
+# Don't define git aliases
+zstyle ':prezto:module:git:alias' skip 'yes'
 
+# Theming
 zstyle ':prezto:module:git:info:action' format '! %s'
 zstyle ':prezto:module:git:info:added' format '✚'
 zstyle ':prezto:module:git:info:ahead' format '⬆'
@@ -135,31 +153,65 @@ zstyle ':prezto:module:git:info:keys' format \
     'prompt' '$(coalesce "%b" "%p" "%c")%s' \
     'status' '%A%B%S%a%d%m%r%U%u'
 
-
-
-# GPG
+# History Substring Search
 ########################################
+# Integrates zsh-history-substring-search into Prezto, which implements the Fish
+# shell's history search feature, where the user can type in any part of a
+# previously entered command and press up and down to cycle through matching
+# commands.
+#
+# If this module is used in conjunction with the syntax-highlighting module,
+# this module must be loaded after the syntax-highlighting module.
 
+# Case-insensitive search
+zstyle ':prezto:module:history-substring-search' case-sensitive 'no'
+# Use  colour
+zstyle ':prezto:module:history-substring-search' color 'yes'
 
 # History
 ########################################
+# Variables
 
+# stores the path to the history file.
+HISTFILE=$HOME/.zhistory
+# stores the maximum number of events to save in the internal history.
+HISTSIZE=1000
+# stores the maximum number of events to save in the history file.
+SAVEHIST=1000000
 
-# History Substring Search
-########################################
+# Options
 
-# Change the colour of particular searches
-#zstyle ':prezto:module:history-substring-search:color' found ''
-#zstyle ':prezto:module:history-substring-search:color' not-found ''
-#zstyle ':prezto:module:history-substring-search' globbing-flags ''
-
+# treats the ! character specially during expansion.
+unsetopt BANG_HIST
+# writes the history file in the :start:elapsed;command format.
+setopt EXTENDED_HISTORY
+# writes to the history file immediately, not when the shell exits.
+setopt INC_APPEND_HISTORY
+# shares history between all sessions.
+unsetopt SHARE_HISTORY
+# expires a duplicate event first when trimming history.
+setopt HIST_EXPIRE_DUPS_FIRST
+# does not record an event that was just recorded again.
+setopt HIST_IGNORE_DUPS
+# deletes an old recorded event if a new event is a duplicate.
+setopt HIST_IGNORE_ALL_DUPS
+# does not display a previously found event.
+setopt HIST_FIND_NO_DUPS
+# does not record an event starting with a space.
+setopt HIST_IGNORE_SPACE
+# does not write a duplicate event to the history file.
+setopt HIST_SAVE_NO_DUPS
+# does not execute immediately upon history expansion.
+setopt HIST_VERIFY
+# beeps when accessing non-existent history.
+unsetopt HIST_BEEP
 
 # Pacman
 ########################################
+# Provides aliases and functions for the Pacman package manager and frontends.
 
 # Set the Pacman frontend.
 zstyle ':prezto:module:pacman' frontend 'yaourt'
-
 
 # Prompt
 ########################################
@@ -167,12 +219,11 @@ zstyle ':prezto:module:pacman' frontend 'yaourt'
 # Set the prompt theme to load.
 zstyle ':prezto:module:prompt' theme 'jpellis'
 
-
 # Python
 ########################################
 
 zstyle ':prezto:module:python:info:virtualenv' format '%v'
-
+zstyle ':prezto:module:python:virtualenv' auto-switch 'yes'
 
 # Rsync
 ########################################
@@ -182,59 +233,44 @@ zstyle ':prezto:module:python:info:virtualenv' format '%v'
 # `rsync-update`
 # `rsync-synchronize`
 
-
-# Ruby
-########################################
-
-zstyle ':prezto:module:ruby:info:version' format '%v'
-
-
 # Spectrum
 ########################################
-
-
-# SSH
-########################################
-
-# Set the SSH identities to load into the agent.
-# zstyle ':prezto:module:ssh:load' identities 'id_rsa'
-
+# Provides for easier use of 256 colors and effects.
 
 # Syntax Highlighting
 ########################################
+# Integrates zsh-syntax-highlighting into Prezto.
+#
+# This module should be loaded second to last, where last is the prompt module,
+# unless used in conjuncture with the history-substring-search module where it
+# must be loaded before it.
 
-# Set syntax highlighters.  Possible options are
-# - main
-# - brackets
-# - pattern
-# - cursor
-# - root
+# Set syntax highlighters
+# (https://github.com/zsh-users/zsh-syntax-highlighting/tree/master/highlighters)
 zstyle ':prezto:module:syntax-highlighting' highlighters \
-  'main' \
-  'brackets' \
-  'pattern' \
-  'root'
-
-# Set syntax highlighting styles.
-# zstyle ':prezto:module:syntax-highlighting' styles \
-#   'builtin' 'bg=blue' \
-#   'command' 'bg=blue' \
-#   'function' 'bg=blue'
-
+       'brackets' \
+       'cursor' \
+       'line' \
+       'main' \
+       'pattern' \
+       'root'
 
 # Terminal
 ########################################
 
 # Auto set the tab and window titles.
 zstyle ':prezto:module:terminal' auto-title 'yes'
-
-# Set the window title format.
+# Set the window, tab and multiplexer title formats.
 zstyle ':prezto:module:terminal:window-title' format '%n@%m: %s'
-
-# Set the tab title format.
 zstyle ':prezto:module:terminal:tab-title' format '%m: %s'
+zstyle ':prezto:module:terminal:multiplexer-title' format '%s'
 
+# Tmux
+########################################
+# Defines tmux aliases and provides for auto launching it at start-up.
+zstyle ':prezto:module:tmux:auto-start' remote 'yes'
 
 # Utility
 ########################################
-# Provides many useful aliases.
+# Defines general aliases and functions
+# (https://github.com/sorin-ionescu/prezto/tree/master/modules/utility)
