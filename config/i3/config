@@ -218,7 +218,7 @@ bar {
 ################################################################################
 
 # Startup
-exec --no-startup-id i3-msg "workspace 1; exec firefox-developer"
+exec --no-startup-id i3-msg "workspace 1; exec firefox-developer-edition"
 exec --no-startup-id i3-msg "workspace 10; exec termite"
 exec --no-startup-id i3-msg "workspace 2; exec emacs"
 
