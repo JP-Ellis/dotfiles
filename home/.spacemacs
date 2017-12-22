@@ -718,6 +718,15 @@ before packages are loaded."
                           ("\\.pdf\\'" . "zathura %s"))
           org-latex-pdf-process '("latexmk %f")))
 
+  (defun random-alnum ()
+    (let* ((alnum "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+           (i (% (abs (random)) (length alnum))))
+      (substring alnum i (1+ i))))
+
+  (defun insert-random-alnum (n)
+    (interactive "p")
+    (dotimes (_ n)
+      (insert (random-alnum))))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
