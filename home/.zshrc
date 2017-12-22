@@ -95,3 +95,16 @@ export LESS=(
     --window=-4
     --shift=.33
 )
+
+# Change ls to exa
+alias ls='exa --group-directories-first --git --binary'
+alias l='ls --oneline --all'
+alias ll='ls --long --header'
+alias lr='ll --tree'
+alias la='ll --all'
+alias lx='ll --sort=extension'
+alias lk='ll --sort=size'
+alias lc='ll --sort=created'
+alias lm='ll --sort=modified'
+unalias lu
+alias sl=ls
