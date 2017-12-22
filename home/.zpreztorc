@@ -45,9 +45,8 @@ zstyle ':prezto:load' pmodule \
        'tmux' \
        'utility' \
        \
-       'autosuggestions' \
-       'completion' \
        'syntax-highlighting' \
+       'completion' \
        'history-substring-search' \
        \
        'prompt'
