@@ -153,7 +153,7 @@ case $POS in
                 --panning "${INTERNAL_MODE[1]}x${INTERNAL_MODE[2]}+0+0" \
             --output $EXTERNAL \
                 --auto \
-                --panning "${INTERNAL_MODE[1]}x${INTERNAL_MODE[2]}+0+${EXTERNAL_MODE[2]}" \
+                --panning "${INTERNAL_MODE[1]}x${INTERNAL_MODE[2]}+0+${INTERNAL_MODE[2]}" \
                 --scale $SCALE \
                 --below $INTERNAL
         ;;
@@ -161,10 +161,10 @@ case $POS in
         xrandr \
             --output $INTERNAL \
                 --auto \
-                --panning "${INTERNAL_MODE[1]}x${INTERNAL_MODE[2]}+0+0" \
+                --panning "${INTERNAL_MODE[1]}x${INTERNAL_MODE[2]}+${INTERNAL_MODE[1]}+0" \
             --output $EXTERNAL \
                 --auto \
-                --panning "${INTERNAL_MODE[1]}x${INTERNAL_MODE[2]}+${EXTERNAL_MODE[1]}+0" \
+                --panning "${INTERNAL_MODE[1]}x${INTERNAL_MODE[2]}+0+0" \
                 --scale $SCALE \
                 --left-of $INTERNAL
         ;;
