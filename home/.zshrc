@@ -110,3 +110,6 @@ if (( $+commands[exa] )); then
     unalias lu
     alias sl=ls
 fi
+
+## By default, use all cores when compiling
+export MAKEFLAGS="-j$(nproc)"
