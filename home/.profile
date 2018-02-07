@@ -32,13 +32,27 @@ fi
                                     && export OBJC_INCLUDE_PATH="/scratch/$SUSER/local/include:$OBJC_INCLUDE_PATH"
 [ -d /scratch/$SUSER/local/lib ] && export LD_LIBRARY_PATH="/scratch/$SUSER/local/lib:$LD_LIBRARY_PATH"
 
-# Multirust support
-[ -d $HOME/.cargo/bin ] && export PATH="$HOME/.cargo/bin:$PATH"
+# Rust support
+if [ -d $HOME/.cargo ] ; then
+    export CARGO_HOME="$HOME/.cargo"
+    export PATH="$HOME/.cargo/bin:$PATH"
+fi
+if [ -d $HOME/.rustup ] ; then
+    export RUSTUP_HOME="$HOME/.rustup"
+fi
+if [ -d /scratch/$SUSER/local/rust/cargo ] ; then
+    export CARGO_HOME="/scratch/$SUSER/local/rust/cargo"
+    export PATH="/scratch/$SUSER/local/rust/cargo/bin:$PATH"
+fi
+if [ -d /scratch/$SUSER/local/rust/rustup ] ; then
+    export RUSTUP_HOME="/scratch/$SUSER/local/rust/rustup"
+fi
 
 # gpg-agent and ssh
 [ -d $HOME/.config/gnupg ] && export GNUPGHOME="$HOME/.config/gnupg"
 [ -S "/run/user/1000/gnupg/d.ktgehwewyo8sebu4d9w5kak4/S.gpg-agent.ssh" ] && export SSH_AUTH_SOCK="/run/user/1000/gnupg/d.ktgehwewyo8sebu4d9w5kak4/S.gpg-agent.ssh"
 
+# XDG directories
 export XDG_DOWNLOAD_DIR="$TMPDIR/Downloads"
 export XDG_DESKTOP_DIR="$HOME/"
 export XDG_DOCUMENTS_DIR="$HOME/Documents"
