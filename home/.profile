@@ -11,6 +11,13 @@ elif [ "$TMPDIR" = "/tmp" -o "$TMPDIR" = "/scratch" ]; then
     mkdir -p -m 700 "$TMPDIR"
 fi
 
+# Switch to ZSH if it is present
+ZSH_SHELL=$(which zsh)
+if [ -z "$PS1" -a $? -eq 0 -a -z "$ZSH_VERSION" ]; then
+    export SHELL="$ZSH_SHELL"
+    exec "$SHELL" -l
+fi
+
 # Give a warning if $TMPDIR might be readable to other users
 if [ -n "$PS1" -a "$(stat --printf=%f $TMPDIR)" != "41c0" ]; then
     echo "TMPDIR may be readable to others." >&2
