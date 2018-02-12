@@ -11,18 +11,6 @@ elif [ "$TMPDIR" = "/tmp" -o "$TMPDIR" = "/scratch" ]; then
     mkdir -p -m 700 "$TMPDIR"
 fi
 
-# Switch to ZSH if it is present
-ZSH_SHELL=$(which zsh)
-if [ -z "$PS1" -a $? -eq 0 -a -z "$ZSH_VERSION" ]; then
-    export SHELL="$ZSH_SHELL"
-    exec "$SHELL" -l
-fi
-
-# Give a warning if $TMPDIR might be readable to other users
-if [ -n "$PS1" -a "$(stat --printf=%f $TMPDIR)" != "41c0" ]; then
-    echo "TMPDIR may be readable to others." >&2
-fi
-
 # Add directories from ~/.local to environment
 [ -d $HOME/.local/bin ] && export PATH="$HOME/.local/bin:$PATH"
 [ -d $HOME/.local/include ] && export CPATH="$HOME/.local/include:$CPATH" \
@@ -68,3 +56,30 @@ export XDG_PICTURES_DIR="$HOME/Media/Pictures"
 export XDG_PUBLICSHARE_DIR="$HOME/Documents/Public"
 export XDG_TEMPLATES_DIR="$HOME/Documents/Templates"
 export XDG_VIDEOS_DIR="$HOME/Media/Videos"
+
+
+# Last couple of things to check when we have an interactive shell
+case $- in
+    *i*)
+        # Switch to ZSH if it is present.
+        ZSH_SHELL=$(which zsh)
+        if [ $? -eq 0 -a -z "$ZSH_VERSION" ] ; then
+            # If we have bash, check whether it is a login shell
+            if [ -n "$BASH" ]; then
+                if ! shopt -q login_shell ; then
+                    export SHELL="$ZSH_SHELL"
+                    exec "$SHELL" -l
+                fi
+            fi
+        fi
+
+        # Give a warning if $TMPDIR might be readable to other users
+        if [ "$(stat --printf=%f $TMPDIR)" != "41c0" ] ; then
+            echo "TMPDIR may be readable to others." >&2
+        fi
+        ;;
+    *)
+        ;;
+esac
+
+
