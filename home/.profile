@@ -42,6 +42,7 @@ fi
 if [ -d /scratch/$SUSER/local/rust/rustup ] ; then
     export RUSTUP_HOME="/scratch/$SUSER/local/rust/rustup"
 fi
+[ -n "$CARGO_HOME" ] && export CARGO_TARGET_DIR="$TMPDIR/cargo"
 
 # gpg-agent and ssh
 [ -d $HOME/.config/gnupg ] && export GNUPGHOME="$HOME/.config/gnupg"
