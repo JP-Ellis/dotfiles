@@ -22,9 +22,9 @@ fi
 # Add directories from /scratch/$SUSER/local to environment
 [ -d /scratch/$SUSER/local/bin ] && export PATH="/scratch/$SUSER/local/bin:$PATH"
 [ -d /scratch/$SUSER/local/include ] && export CPATH="/scratch/$SUSER/local/include:$CPATH" \
-                                    && export C_INCLUDE_PATH="/scratch/$SUSER/local/include:$C_INCLUDE_PATH" \
-                                    && export CPLUS_INCLUDE_PATH="/scratch/$SUSER/local/include:$CPLUS_INCLUDE_PATH" \
-                                    && export OBJC_INCLUDE_PATH="/scratch/$SUSER/local/include:$OBJC_INCLUDE_PATH"
+                                     && export C_INCLUDE_PATH="/scratch/$SUSER/local/include:$C_INCLUDE_PATH" \
+                                     && export CPLUS_INCLUDE_PATH="/scratch/$SUSER/local/include:$CPLUS_INCLUDE_PATH" \
+                                     && export OBJC_INCLUDE_PATH="/scratch/$SUSER/local/include:$OBJC_INCLUDE_PATH"
 [ -d /scratch/$SUSER/local/lib ] && export LD_LIBRARY_PATH="/scratch/$SUSER/local/lib:$LD_LIBRARY_PATH"
 
 # Rust support
