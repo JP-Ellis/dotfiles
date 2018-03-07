@@ -188,7 +188,7 @@ This function should only modify configuration layer settings."
 
      ;;;; misc
      nlinum
-     ;; parinfer
+     parinfer
 
      ;;;; OS
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -252,7 +252,7 @@ This function should only modify configuration layer settings."
      ;; nginx
      ;; node
      ;; pandoc
-     ;; pass
+     pass
      pdf-tools
      ;; prodigy
      ;; puppet
