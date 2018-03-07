@@ -111,5 +111,9 @@ if (( $+commands[exa] )); then
     alias sl=ls
 fi
 
+function sshtmux() {
+    ssh -t "$@" "tmux new-session -As sshtmux"
+}
+
 ## By default, use all cores when compiling
 export MAKEFLAGS="-j$(nproc)"
