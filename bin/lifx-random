@@ -110,7 +110,7 @@ while true; do
             RGB=($(shuf -i 0-255 -n 3))
             STATE=(--rgb ${RGB[@]})
         fi
-        eval lifx state $STATE -d $DURATION ${=light} &
+        eval lifx state $STATE -d $DURATION --label '${light}' &
         echo "$STATE"
     done
     sleep $DURATION
