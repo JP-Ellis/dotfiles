@@ -80,7 +80,6 @@ alias open=xdg-open
 ## Set the default Less options.
 ## Mouse-wheel scrolling has been disabled by `--no-init` (disable screen clearing).
 ## Remove `--no-init` and `--quit-if-one-screen` to enable it.
-export LESS='-F -g -i -M -R -S -w -X -z-4'
 export LESS=(
     --quit-if-one-screen
     --hilite-search
