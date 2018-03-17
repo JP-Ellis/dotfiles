@@ -68,9 +68,6 @@ add-zsh-hook chpwd check_python_virtualenv
 ## Miscellaneous
 ################################################################################
 
-## Make cd list the directory content on arrival
-alias cd=cdls
-
 ## Add a command to cd into a tmp directory
 alias cdtmp='cd $(mktemp -d)'
 
@@ -109,6 +106,13 @@ if (( $+commands[exa] )); then
     unalias lu
     alias sl=ls
 fi
+
+## Make cd list the directory content on arrival
+cdls () {
+	  \cd "$argv[-1]" && ls "${(@)argv[1,-2]}"
+}
+alias cd=cdls
+
 
 function sshtmux() {
     ssh -t "$@" "tmux new-session -As sshtmux"
