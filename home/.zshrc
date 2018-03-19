@@ -114,7 +114,7 @@ cdls () {
 alias cd=cdls
 
 
-function sshtmux() {
+sshtmux() {
     ssh -t "$@" "tmux new-session -As sshtmux"
 }
 
