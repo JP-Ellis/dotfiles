@@ -71,8 +71,14 @@ add-zsh-hook chpwd check_python_virtualenv
 ## Add a command to cd into a tmp directory
 alias cdtmp='cd $(mktemp -d)'
 
-## Shorten `xdg-open` to just `open`
-alias open=xdg-open
+## Shorten `xdg-open` to just `open`, and if given multiple arguments open each
+## of them individually.
+open() {
+    for arg in "${(@)argv}"; do
+        xdg-open "$arg"
+    done
+}
+
 
 ## Set the default Less options.
 ## Mouse-wheel scrolling has been disabled by `--no-init` (disable screen clearing).
