@@ -107,8 +107,9 @@ if (( $+commands[exa] )); then
     alias la='ll --all'
     alias lx='ll --sort=extension'
     alias lk='ll --sort=size'
-    alias lc='ll --sort=created'
-    alias lm='ll --sort=modified'
+    alias lc='ll --sort=created --time=created'
+    alias lm='ll --sort=modified --time=modified'
+    alias lt='lm'
     unalias lu
     alias sl=ls
 fi
