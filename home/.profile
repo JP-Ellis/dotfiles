@@ -75,7 +75,11 @@ case $- in
         fi
 
         # Give a warning if $TMPDIR might be readable to other users
-        if [ "$(stat --printf='%a' $TMPDIR)" != "1700" -o "$(stat --printf='%a' $TMPDIR)" != "2700" ] ; then
+        if [ \
+             $(( $(stat --printf='%a' $TMPDIR) % 1000 )) != 700 \
+             -o "$(id -u)" -ne "$(stat --printf='%u' $TMPDIR)" \
+             -o "$(id -g)" -ne "$(stat --printf='%g' $TMPDIR)" \
+           ] ; then
             echo "TMPDIR may be readable to others." >&2
         fi
         ;;
