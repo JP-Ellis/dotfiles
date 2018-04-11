@@ -101,6 +101,7 @@ export LESS=(
 if (( $+commands[exa] )); then
     # Change ls to exa
     alias ls='exa --group-directories-first --git --binary'
+    alias li='ls --git-ignore'
     alias l='ls --oneline --all'
     alias ll='ls --long --header'
     alias lr='ll --tree'
