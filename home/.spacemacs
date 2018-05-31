@@ -703,7 +703,6 @@ before packages are loaded."
    ;; smartparens (forgot what this does exactly)
    sp-highlight-pair-overlay nil
 
-   ;; Set ghub username and token
    ;; Make the API timeout slightly longer
    magithub-api-timeout 5
 
