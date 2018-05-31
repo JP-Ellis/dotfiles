@@ -16,9 +16,6 @@
   name = JP-Ellis
   signingkey = 8BA20FCE
 
-[github]
-  user = JP-Ellis
-
 [core]
   attributesfile = /home/josh/.gitattributes
 
