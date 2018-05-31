@@ -192,6 +192,9 @@ bindsym XF86AudioPlay               exec playerctl play-pause
 # Lock screen
 bindsym $mod+Ctrl+l exec "xautolock -locknow"
 
+# Papis
+bindsym $mod+p exec "papis gui"
+
 ################################################################################
 ## Bar
 ################################################################################
