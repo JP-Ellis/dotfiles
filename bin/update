@@ -1,0 +1,33 @@
+#!/usr/bin/zsh
+
+printf "$(tput bold)==> Checking TeXLive updates...$(tput sgr0)\n"
+printf "$(tput bold)===============================$(tput sgr0)\n"
+sudo tlmgr update --self --all
+
+printf "$(tput bold)==> Checking Arch Linux updates...$(tput sgr0)\n"
+printf "$(tput bold)==================================$(tput sgr0)\n"
+if (( $(date +%j) % 3 == 0 )) ; then
+    pacaur -Syu --noconfirm --noedit --devel
+else
+    pacaur -Syu --noconfirm --noedit
+fi
+
+printf "$(tput bold)==> Checking ycmd updates...$(tput sgr0)\n"
+printf "$(tput bold)============================$(tput sgr0)\n"
+cd ~/src/tools/ycmd
+git fetch
+if [[ $(git rev-parse HEAD) != $(git rev-parse @\{u\}) ]]; then
+    git pull
+    git submodule update --init --recursive
+    ./build.py --all --system-libclang --system-boost
+fi
+cd ~
+
+printf "$(tput bold)==> Checking Rustup updates...$(tput sgr0)\n"
+printf "$(tput bold)==============================$(tput sgr0)\n"
+rustup update stable beta
+rust-update-nightly
+
+printf "$(tput bold)==> Checking Cargo updates...$(tput sgr0)\n"
+printf "$(tput bold)=============================$(tput sgr0)\n"
+cargo install-update -al

@@ -1,0 +1,22 @@
+#!/bin/sh
+
+set -e
+
+export CARGO_INCREMENTAL=0
+export CARGO_TARGET_DIR=$TMPDIR/rustup-attempt/cargo
+
+try_out() {
+	export RUSTUP_HOME=$TMPDIR/rustup-attempt/rustup
+	test -d $RUSTUP_HOME || (rustup toolchain add nightly && rustup default nightly)
+	rustup update
+	cargo +nightly install --force clippy
+	unset RUSTUP_HOME
+	export RUSTUP_HOME
+}
+
+try_out && {
+    rustup update ;
+    cargo +nightly install --force clippy
+}
+
+rm -rvf $TMPDIR/rustup-attempt
