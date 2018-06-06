@@ -1,22 +1,23 @@
-#!/bin/sh
-
-set -e
+#!/bin/zsh
 
 export CARGO_INCREMENTAL=0
-export CARGO_TARGET_DIR=$TMPDIR/rustup-attempt/cargo
 
 try_out() {
-	export RUSTUP_HOME=$TMPDIR/rustup-attempt/rustup
-	test -d $RUSTUP_HOME || (rustup toolchain add nightly && rustup default nightly)
-	rustup update
-	cargo +nightly install --force clippy
-	unset RUSTUP_HOME
-	export RUSTUP_HOME
-}
-
-try_out && {
-    rustup update ;
+    local ret
+    export RUSTUP_HOME=$HOME/.cache/rust-update-nightly/rustup
+    if [[ ! -d $RUSTUP_HOME ]] ; then
+        rustup toolchain add nightly
+        rustup default nightly
+    fi
+    rustup update
     cargo +nightly install --force clippy
+    ret=$?
+    unset RUSTUP_HOME
+    export RUSTUP_HOME
+    return $ret
 }
 
-rm -rvf $TMPDIR/rustup-attempt
+if try_out ; then
+    rustup update nightly
+    cargo +nightly install --force clippy
+fi
