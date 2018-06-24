@@ -713,26 +713,12 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-  ;; Miscellaneous
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Enable multiple cursors globally.
   (global-evil-mc-mode)
-  ;; Configure unicode font support
-  (unicode-fonts-setup)
-  ;; Major mode
-  (add-to-list 'auto-mode-alist '("\\.m\\'" . wolfram-mode))
-  (add-to-list 'auto-mode-alist '("\\.fr\\'" . wolfram-mode))
 
-  (setq
+  (setq-default
    ;; Prefer double spaces after lines
    sentence-end-double-space t
-
-   ;; Setup the browser
-   browse-url-browser-function 'browse-url-generic
-   browse-url-generic-program "chrome"
-
-   ;; smartparens (forgot what this does exactly)
-   sp-highlight-pair-overlay nil
 
    ;; Make the API timeout slightly longer
    magithub-api-timeout 5
@@ -741,16 +727,8 @@ before packages are loaded."
    magit-commit-arguments '("--signoff"
                             "--gpg-sign=Joshua Ellis <josh@jpellis.me>")
 
-   ;; Adjust web-mode defaults
-   web-mode-enable-current-element-highlight t
-   web-mode-enable-element-content-fontification t
-   web-mode-enable-element-tag-fontification t
-   web-mode-markup-indent-offset 2
-   web-mode-code-indent-offset 2
-
    ;; (La)TeX settings
    TeX-electric-sub-and-superscript t
-   LaTeX-math-list '((?\C-n "partial" "Misc Symbol" 8706))
 
    ;; BibTeX settings
    bibtex-align-at-equal-sign t
@@ -783,8 +761,8 @@ before packages are loaded."
    ;; YCMD settings
    ycmd-server-command (list "python" (file-truename "~/src/tools/ycmd/ycmd"))
    ycmd-extra-conf-whitelist '("~/*")
-   ycmd-force-semantic-completion t
-   )
+   ycmd-force-semantic-completion t)
+
 
   ;; Use Zathura as the PDF viewer in LaTeX and Org modes
   (add-hook 'TeX-mode-hook
@@ -796,19 +774,25 @@ before packages are loaded."
                           ("\\.pdf\\'" . "zathura %s"))
           org-latex-pdf-process '("latexmk %f")))
 
+  ;; Give a random alphanumerical character
   (defun random-alnum ()
     "Return a random alphanumeric character."
     (let* ((alnum "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
            (i (% (abs (random)) (length alnum))))
       (substring alnum i (1+ i))))
 
-  (defun insert-random-alnum (n)
+  ;; Insert `n' random alphanumerical characters.  If C-u is also used, insert
+  ;; these in square brackets.
+  (defun insert-random-alnum (&optional n)
     "Insert a random alphanumeric character in the buffer.
 A prefix can be specified to insert multiple characters."
-    (interactive "p")
+    (interactive)
+    (unless n (setq n 5))
     (dotimes (_ n)
       (insert (random-alnum))))
-  )
+
+  (spacemacs/set-leader-keys (kbd "i r") 'insert-random-alnum))
+
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
