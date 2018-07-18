@@ -1,31 +1,31 @@
 [alias]
-  lg = log \
-        --graph \
-        --abbrev-commit \
-        --decorate \
-        --date=relative \
-        --all \
-        --format=format:'%C(red)%h%C(reset) - %C(white)%s%C(reset) %C(green)(%ar)%C(reset) %C(blue)<%an>%C(reset)%C(yellow)%d%C(reset)'
-  pullall = "!f() { git pull && git submodule update --init --recursive; }; f"
+	lg = log \
+		--graph \
+		--abbrev-commit \
+		--decorate \
+		--date=relative \
+		--all \
+		--format=format:'%C(red)%h%C(reset) - %C(white)%s%C(reset) %C(green)(%ar)%C(reset) %C(blue)<%an>%C(reset)%C(yellow)%d%C(reset)'
+	pullall = "!f() { git pull && git submodule update --init --recursive; }; f"
 
 [push]
-  default = simple
+	default = simple
 
 [user]
-  email = josh@jpellis.me
-  name = JP-Ellis
-  signingkey = 8BA20FCE
+	email = josh@jpellis.me
+	name = JP-Ellis
+	signingkey = 8BA20FCE
 
 [core]
-  attributesfile = /home/josh/.gitattributes
+	attributesfile = /home/josh/.gitattributes
 
 [filter "dropoutput_ipynb"]
-  clean = ipynb_output_filter.py
-  smudge = cat
+	clean = ipynb_output_filter.py
+	smudge = cat
 
 [filter "dropoutput_nb"]
-  clean = mathematica-notebook-filter
-  smudge = cat
+	clean = mathematica-notebook-filter
+	smudge = cat
 
 [github]
 	user = JP-Ellis
