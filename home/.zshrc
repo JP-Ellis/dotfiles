@@ -123,7 +123,7 @@ alias cd=cdls
 
 
 sshtmux() {
-    ssh -t "$@" "tmux new-session -As sshtmux"
+    ssh -t "${@:1:-1}" "${@: -1}" "tmux new-session -As sshtmux"
 }
 
 ## By default, use all cores when compiling
