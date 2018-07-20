@@ -210,7 +210,7 @@ unsetopt HIST_BEEP
 # Provides aliases and functions for the Pacman package manager and frontends.
 
 # Set the Pacman frontend.
-zstyle ':prezto:module:pacman' frontend 'yaourt'
+zstyle ':prezto:module:pacman' frontend 'yay'
 
 # Prompt
 ########################################

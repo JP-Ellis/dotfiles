@@ -6,11 +6,7 @@ sudo tlmgr update --self --all
 
 printf "$(tput bold)==> Checking Arch Linux updates...$(tput sgr0)\n"
 printf "$(tput bold)==================================$(tput sgr0)\n"
-if (( $(date +%j) % 3 == 0 )) ; then
-    pacaur -Syu --noconfirm --noedit --devel
-else
-    pacaur -Syu --noconfirm --noedit
-fi
+yay -Syu --noconfirm
 
 printf "$(tput bold)==> Checking ycmd updates...$(tput sgr0)\n"
 printf "$(tput bold)============================$(tput sgr0)\n"
