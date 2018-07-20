@@ -216,7 +216,10 @@ zstyle ':prezto:module:pacman' frontend 'yay'
 ########################################
 
 # Set the prompt theme to load.
-zstyle ':prezto:module:prompt' theme 'jpellis'
+# zstyle ':prezto:module:prompt' theme 'jpellis'
+# zstyle ':prezto:module:prompt' theme 'nicoulaj'
+zstyle ':prezto:module:prompt' theme 'paradox'
+# zstyle ':prezto:module:prompt' theme 'powerlevel9k'
 
 # Python
 ########################################
