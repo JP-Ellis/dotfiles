@@ -7,9 +7,6 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-## User and hostname are hidden if $USER and $DEFAULT_USER match
-DEFAULT_USER="josh"
-
 ## Use extended glob to allow single paths abbreviations
 setopt EXTENDED_GLOB
 
