@@ -6,7 +6,7 @@ sudo tlmgr update --self --all
 
 printf "$(tput bold)==> Checking Arch Linux updates...$(tput sgr0)\n"
 printf "$(tput bold)==================================$(tput sgr0)\n"
-yay -Syu --noconfirm
+yay -Syu --noconfirm --devel
 
 printf "$(tput bold)==> Checking ycmd updates...$(tput sgr0)\n"
 printf "$(tput bold)============================$(tput sgr0)\n"
@@ -25,4 +25,4 @@ rustup update
 
 printf "$(tput bold)==> Checking Cargo updates...$(tput sgr0)\n"
 printf "$(tput bold)=============================$(tput sgr0)\n"
-cargo install-update -al
+cargo install-update -a
