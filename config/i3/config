@@ -224,7 +224,7 @@ bar {
 exec --no-startup-id i3-msg "workspace 10; exec termite"
 exec --no-startup-id i3-msg "workspace 2; exec emacs"
 exec --no-startup-id i3-msg "workspace 1; exec firefox-developer-edition"
-exec --no-startup-id i3-msg "workspace 1; exec signal-desktop-beta"
+exec --no-startup-id i3-msg "workspace 1; exec signal-desktop"
 exec --no-startup-id i3-msg "workspace 1; layout tabbed"
 
 # Some services need to be started *after* i3
