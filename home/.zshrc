@@ -95,6 +95,7 @@ export LESS=(
     --shift=.33
 )
 
+## Use exa as a replacement for ls
 if (( $+commands[exa] )); then
     # Change ls to exa
     alias ls='exa --group-directories-first --git --binary'
@@ -108,7 +109,9 @@ if (( $+commands[exa] )); then
     alias lc='ll --sort=created --time=created'
     alias lm='ll --sort=modified --time=modified'
     alias lt='lm'
-    unalias lu
+    if (( $+commands[lu] )); then
+        unalias lu
+    fi
     alias sl=ls
 fi
 
