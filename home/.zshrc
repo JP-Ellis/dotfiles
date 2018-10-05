@@ -128,3 +128,7 @@ sshtmux() {
 
 ## By default, use all cores when compiling
 export MAKEFLAGS="-j$(nproc)"
+
+## Change feh
+
+alias feh='\feh --scale-down'
