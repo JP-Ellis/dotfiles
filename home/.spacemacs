@@ -197,6 +197,7 @@ This function should only modify configuration layer settings."
      ;;;; misc
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      copy-as-format
+     multiple-cursors
      ;; nlinum
      parinfer
 
@@ -712,9 +713,6 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-  ;; Enable multiple cursors globally.
-  (global-evil-mc-mode)
-
   (setq-default
    ;; Prefer double spaces after lines
    sentence-end-double-space t
