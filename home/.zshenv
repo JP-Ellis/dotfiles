@@ -24,7 +24,7 @@ typeset -U path
 export EDITOR='vim'
 export VISUAL='emacs'
 export PAGER='less'
-export BROWSER='firefox-developer'
+export BROWSER='firefox-developer-edition'
 
 ## Temporary Files
 ################################################################################
