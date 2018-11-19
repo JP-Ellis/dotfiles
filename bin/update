@@ -6,7 +6,7 @@ sudo tlmgr update --self --all
 
 printf "$(tput bold)==> Checking Arch Linux updates...$(tput sgr0)\n"
 printf "$(tput bold)==================================$(tput sgr0)\n"
-yay -Syu --noconfirm --devel --removemake --ignore papis
+yay -Syu --noconfirm --devel --removemake
 
 printf "$(tput bold)==> Checking ycmd updates...$(tput sgr0)\n"
 printf "$(tput bold)============================$(tput sgr0)\n"
