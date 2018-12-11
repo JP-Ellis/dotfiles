@@ -74,5 +74,3 @@ case $- in
     *)
         ;;
 esac
-
-
