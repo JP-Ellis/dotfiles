@@ -270,7 +270,7 @@ zstyle ':prezto:module:terminal:multiplexer-title' format '%s'
 # Tmux
 ########################################
 # Defines tmux aliases and provides for auto launching it at start-up.
-zstyle ':prezto:module:tmux:auto-start' remote 'yes'
+zstyle ':prezto:module:tmux:auto-start' remote 'no'
 
 # Utility
 ########################################
