@@ -771,24 +771,13 @@ before packages are loaded."
                           ("\\.pdf\\'" . "zathura %s"))
           org-latex-pdf-process '("latexmk %f")))
 
-  ;; Give a random alphanumerical character
-  (defun random-alnum ()
-    "Return a random alphanumeric character."
-    (let* ((alnum "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-           (i (% (abs (random)) (length alnum))))
-      (substring alnum i (1+ i))))
-
-  ;; Insert `n' random alphanumerical characters.  If C-u is also used, insert
-  ;; these in square brackets.
-  (defun insert-random-alnum (&optional n)
-    "Insert a random alphanumeric character in the buffer.
-A prefix can be specified to insert multiple characters."
-    (interactive)
-    (unless n (setq n 5))
-    (dotimes (_ n)
-      (insert (random-alnum))))
-
-  (spacemacs/set-leader-keys (kbd "i r") 'insert-random-alnum))
+  ;; Fix taken from:
+  ;; https://github.com/syl20bnr/spacemacs/issues/7446#issuecomment-417376425
+  (with-eval-after-load "helm"
+    (defun helm-persistent-action-display-window (&optional split-onewindow)
+      "Return the window that will be used for persistent action.
+If SPLIT-ONEWINDOW is non-`nil' window is split in persistent action."
+      (with-helm-window (setq helm-persistent-action-display-window (get-mru-window))))))
 
 
 ;; Do not write anything past this comment. This is where Emacs will
