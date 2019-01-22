@@ -30,9 +30,9 @@
 [github]
 	user = JP-Ellis
 [magithub]
-	online = false
+	online = true
 [magithub "status"]
-	includeStatusHeader = false
+	includeStatusHeader = true
 	includePullRequestsSection = false
 	includeIssuesSection = false
 [credential "https://source.developers.google.com"]
