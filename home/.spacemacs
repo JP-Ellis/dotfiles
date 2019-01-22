@@ -170,7 +170,7 @@ This function should only modify configuration layer settings."
      ;; octave
      ;; perl5
      ;; perl6
-     ;; php
+     php
      ;; plantuml
      ;; protobuf
      ;; purescript
