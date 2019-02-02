@@ -32,7 +32,7 @@
 [magithub]
 	online = true
 [magithub "status"]
-	includeStatusHeader = true
+	includeStatusHeader = false
 	includePullRequestsSection = false
 	includeIssuesSection = false
 [credential "https://source.developers.google.com"]
