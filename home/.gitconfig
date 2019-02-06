@@ -1,3 +1,11 @@
+[user]
+	email = josh@jpellis.me
+	name = JP-Ellis
+	signingkey = 8BA20FCE
+
+[commit]
+	gpgsign = true
+
 [alias]
 	lg = log \
 		--graph \
@@ -8,14 +16,24 @@
 		--format=format:'%C(red)%h%C(reset) - %C(white)%s%C(reset) %C(green)(%ar)%C(reset) %C(blue)<%an>%C(reset)%C(yellow)%d%C(reset)'
 	pull-all = "!f() { git pull && git submodule update --init --recursive \"$@\"; }; f"
 
-[push]
-	default = simple
+# Credentials / Integration
+################################################################################
+[credential "https://source.developers.google.com"]
+	helper = gcloud.sh
 
-[user]
-	email = josh@jpellis.me
-	name = JP-Ellis
-	signingkey = 8BA20FCE
+[github]
+	user = JP-Ellis
 
+[magithub]
+	online = true
+
+[magithub "status"]
+	includeStatusHeader = true
+	includePullRequestsSection = false
+	includeIssuesSection = false
+
+# Filters for files containing outputs which shouldn't be committed
+################################################################################
 [core]
 	attributesfile = /home/josh/.gitattributes
 
@@ -26,14 +44,3 @@
 [filter "dropoutput_nb"]
 	clean = mathematica-notebook-filter
 	smudge = cat
-
-[github]
-	user = JP-Ellis
-[magithub]
-	online = true
-[magithub "status"]
-	includeStatusHeader = false
-	includePullRequestsSection = false
-	includeIssuesSection = false
-[credential "https://source.developers.google.com"]
-	helper = gcloud.sh
