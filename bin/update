@@ -59,15 +59,20 @@ sudo tlmgr update --self --all
 title "Arch Linux"
 yay -Syu --noconfirm --devel --removemake
 
-# title "YCMD"
-# cd ~/src/tools/ycmd
-# git fetch
-# if [[ $(git rev-parse HEAD) != $(git rev-parse @\{u\}) ]]; then
-#     git pull
-#     git submodule update --init --recursive
-#     ./build.py --all --system-libclang --system-boost
-# fi
-# cd ~
+title "YCMD"
+cd ~/src/tools/ycmd
+git fetch
+if [[ $(git rev-parse HEAD) != $(git rev-parse @\{u\}) ]]; then
+    git pull
+    git submodule update --init --recursive
+    ./build.py --system-boost --system-libclang \
+               --clang-completer \
+               --clangd-completer \
+               --java-completer \
+               --rust-completer \
+               --ts-completer
+fi
+cd ~
 
 title "Rustup and Cargo"
 rustup update
