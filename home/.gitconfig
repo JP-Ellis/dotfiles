@@ -25,10 +25,10 @@
 	user = JP-Ellis
 
 [magithub]
-	online = true
+	online = false
 
 [magithub "status"]
-	includeStatusHeader = true
+	includeStatusHeader = false
 	includePullRequestsSection = false
 	includeIssuesSection = false
 
