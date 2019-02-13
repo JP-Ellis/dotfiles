@@ -714,65 +714,81 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  ;; Git
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq-default
-   ;; Prefer double spaces after lines
-   sentence-end-double-space t
-
-   ;; Make the API timeout slightly longer
-   magithub-api-timeout 5
-
    ;; Sign git commits with GPG by default
    magit-commit-arguments '("--signoff"
-                            "--gpg-sign=Joshua Ellis <josh@jpellis.me>")
+                            "--gpg-sign=Joshua Ellis <josh@jpellis.me>"))
 
-   ;; (La)TeX settings
+  ;; TeX/LaTeX/BibTeX
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (setq-default
    TeX-electric-sub-and-superscript t
 
-   ;; BibTeX settings
    bibtex-align-at-equal-sign t
    bibtex-autoadd-commas t
-   bibtex-comma-after-last-field t
+   bibtex-comma-after-last-field t)
 
-   ;; Set bibliography location
+  ;; References
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (setq-default
    reftex-default-bibliography '("~/University/Research/Papers/library.bib")
    org-ref-default-bibliography '("~/University/Research/Papers/library.bib")
    org-ref-pdf-directory "~/University/Research/Papers/"
    org-ref-open-pdf-function 'org-ref-get-mendeley-filename
-   org-ref-bibliography-notes "~/University/Research/Papers/notes.org"
+   org-ref-bibliography-notes "~/University/Research/Papers/notes.org")
 
-   ;; Adjust indentation in Wolfrma mode
-   wolfram-indent 2
-
-   ;; Rust settings
-   rust-format-on-save t
-
-   ;; Org mode settings
-   org-format-latex-options '(:foreground default
-                                          :background default
-                                          :scale 2.0
-                                          :html-foreground "Black"
-                                          :html-background "Transparent"
-                                          :html-scale 2.0
-                                          :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
-   org-list-description-max-indent 5
-
-   ;; YCMD settings
-   ycmd-server-command (list "python" (file-truename "~/src/tools/ycmd/ycmd"))
-   ycmd-extra-conf-whitelist '("~/*")
-   ycmd-force-semantic-completion t)
-
-
-  ;; Use Zathura as the PDF viewer in LaTeX and Org modes
+  ;; Use Zathura as the PDF viewer in LaTeX
   (add-hook 'TeX-mode-hook
             '(lambda ()
                (add-to-list 'TeX-view-program-selection
                             '(output-pdf "Zathura"))))
+
+  ;; Org mode
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (setq-default
+   org-format-latex-options '(
+                              :foreground default
+                              :background default
+                              :scale 2.0
+                              :html-foreground "Black"
+                              :html-background "Transparent"
+                              :html-scale 2.0
+                              :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
+   org-list-description-max-indent 5)
+
   (with-eval-after-load 'org
     (setq org-file-apps '(("\\.pdf::\\(\\d+\\)\\'" . "zathura -P %1 %s")
                           ("\\.pdf\\'" . "zathura %s"))
           org-latex-pdf-process '("latexmk %f")))
 
-  ;; Fix taken from:
+  ;; Rust
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (setq-default
+   rust-format-on-save t)
+
+  ;; Wolfram mode
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (setq-default
+   wolfram-indent 2)
+
+  ;; YCMD
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (setq-default
+   ycmd-server-command (list "python" (file-truename "~/src/tools/ycmd/ycmd"))
+   ycmd-extra-conf-whitelist '("~/*")
+   ycmd-force-semantic-completion t)
+
+  ;; Miscellaneous
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (setq-default
+   ;; Prefer double spaces after lines
+   sentence-end-double-space t)
+
+  ;; Fix for Helm not working nicely with the file browser side window.
+  ;;
+  ;; From:
   ;; https://github.com/syl20bnr/spacemacs/issues/7446#issuecomment-417376425
   (with-eval-after-load "helm"
     (defun helm-persistent-action-display-window (&optional split-onewindow)
