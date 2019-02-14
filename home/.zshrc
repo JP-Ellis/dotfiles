@@ -80,7 +80,7 @@ open() {
 ## Set the default Less options.
 ## Mouse-wheel scrolling has been disabled by `--no-init` (disable screen clearing).
 ## Remove `--no-init` and `--quit-if-one-screen` to enable it.
-export LESS=(
+less_opt=(
     --chop-long-lines
     --hilite-search
     --hilite-unread
@@ -94,6 +94,7 @@ export LESS=(
     --squeeze-blank-lines
     --window=-4
 )
+export LESS="$less_opt"
 export LESSOPEN='|pygmentize -g %s'
 
 ## Use exa as a replacement for ls
