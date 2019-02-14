@@ -312,6 +312,10 @@ This function should only modify configuration layer settings."
      ;; search-engine
      ;; twitter
      ;; wakatime
+
+     ;;;; Private
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; display
      )
 
    ;; List of additional packages that will be installed without being
@@ -705,8 +709,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   "Library to load while dumping.
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
-dump."
-  )
+dump.")
+
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
