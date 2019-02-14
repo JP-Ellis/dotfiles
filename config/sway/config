@@ -1,6 +1,6 @@
-# i3 config file (v4)
+# sway config file
 #
-# Please see http://i3wm.org/docs/userguide.html for a complete reference!
+# Read `man 5 sway` for a complete reference.
 
 ################################################################################
 ## Theme
@@ -39,12 +39,11 @@ set $cyan    #2aa198
 set $green   #859900
 set $black   #222222
 
-# class                  border      backgr      text        split
-client.focused           $green      $base02     $base3      $base02
-client.focused_inactive  $blue       $black      $base1      $base03
-client.unfocused         $base00     $black      $base0      $base03
-client.urgent            $red        $black      $red        $base03
-client.background        $black
+# class                  border      backgr      text        indicator  child_order
+client.focused           $green      $base02     $base3      $base02    $green
+client.focused_inactive  $blue       $black      $base1      $base03    $blue
+client.unfocused         $base00     $black      $base0      $base03    $base00
+client.urgent            $red        $black      $red        $base03    $red
 
 ################################################################################
 ## Key Bindings
