@@ -81,19 +81,20 @@ open() {
 ## Mouse-wheel scrolling has been disabled by `--no-init` (disable screen clearing).
 ## Remove `--no-init` and `--quit-if-one-screen` to enable it.
 export LESS=(
-    --quit-if-one-screen
+    --chop-long-lines
     --hilite-search
+    --hilite-unread
     --ignore-case
     --jump-target=.5
     --LONG-PROMPT
-    --RAW-CONTROL-CHARS
-    --squeeze-blank-lines
-    --chop-long-lines
-    --hilite-unread
     --no-init
-    --window=-4
+    --quit-if-one-screen
+    --RAW-CONTROL-CHARS
     --shift=.33
+    --squeeze-blank-lines
+    --window=-4
 )
+export LESSOPEN='|pygmentize -g %s'
 
 ## Use exa as a replacement for ls
 if (( $+commands[exa] )); then
