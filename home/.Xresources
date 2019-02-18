@@ -14,7 +14,7 @@ Xft.rgba:       rgb
 ! Font to use
 rofi.font:                           Roboto 18
 ! Terminal to use
-rofi.terminal:                       termite
+rofi.terminal:                       alacritty
 ! Ssh client to use
 rofi.ssh-client:                     ssh
 ! Ssh command to execute
