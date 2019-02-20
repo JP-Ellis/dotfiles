@@ -39,6 +39,8 @@ if [[ ! -d "$TMPPREFIX" ]]; then
   mkdir -p "$TMPPREFIX"
 fi
 
+export PYTHONPYCACHEPREFIX="$HOME/.cache/python"
+
 ## Caro / Rust
 ################################################################################
 
