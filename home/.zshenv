@@ -52,4 +52,6 @@ fi
 ## GPG-Agent
 ################################################################################
 
-[[ -S "$(gpgconf --list-dirs | sed -n 's|agent-socket:||p').ssh" ]] && export SSH_AUTH_SOCK="$(gpgconf --list-dirs | sed -n 's|agent-socket:||p').ssh"
+if [[ -S "$(gpgconf --list-dirs | sed -n 's|agent-socket:||p').ssh" ]] ; then
+    export SSH_AUTH_SOCK="$(gpgconf --list-dirs | sed -n 's|agent-socket:||p').ssh"
+fi
