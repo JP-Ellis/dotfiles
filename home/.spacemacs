@@ -182,7 +182,8 @@ This function should only modify configuration layer settings."
      ;; racket
      ;; restructuredtext
      ;; ruby
-     rust
+     ( rust :variables
+            rust-backend 'lsp)
      ;; scala
      ;; scheme
      ;; semantic-web
@@ -275,7 +276,7 @@ This function should only modify configuration layer settings."
      finance
      ;; geolocation
      ;; imenu-list
-     ;; lsp
+     lsp
      ;; nginx
      ;; node
      ;; pandoc
