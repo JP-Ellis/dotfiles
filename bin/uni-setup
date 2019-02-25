@@ -1,0 +1,33 @@
+#!/usr/bin/env zsh
+
+uni-screen-layout
+
+update
+
+duplicity-front backup google
+
+rsync \
+    --verbose \
+    --progress \
+    --human-readable \
+    --compress \
+    --archive \
+    --hard-links \
+    --one-file-system \
+    --acls \
+    --xattrs \
+    --delete \
+    $HOME/src cxin03:/coepp/cephfs/mel/jellis/mirror/.
+
+rsync \
+    --verbose \
+    --progress \
+    --human-readable \
+    --compress \
+    --archive \
+    --hard-links \
+    --one-file-system \
+    --acls \
+    --xattrs \
+    --delete \
+    $HOME/University cxin04:/coepp/cephfs/mel/jellis/mirror/.
