@@ -17,7 +17,6 @@ typeset -U path
 # Custom Rust completions
 [[ -d $HOME/.zfunc ]] && fpath+="$HOME/.zfunc"
 
-
 ## Applications
 ################################################################################
 

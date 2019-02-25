@@ -10,10 +10,6 @@ fi
 ## Use extended glob to allow single paths abbreviations
 setopt EXTENDED_GLOB
 
-################################################################################
-## Miscellaneous
-################################################################################
-
 ## Add a command to cd into a tmp directory
 alias cdtmp='cd $(mktemp -d)'
 
@@ -77,8 +73,6 @@ sshtmux() {
     ssh -t "${@:1:-1}" "${@: -1}" "tmux new-session -As sshtmux"
 }
 
-## By default, use all cores when compiling
-export MAKEFLAGS="-j$(nproc)"
 
 ## Change feh
 

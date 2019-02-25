@@ -58,6 +58,8 @@ export XDG_PUBLICSHARE_DIR="$HOME/Documents/Public"
 export XDG_TEMPLATES_DIR="$HOME/Documents/Templates"
 export XDG_VIDEOS_DIR="$HOME/Media/Videos"
 
+## By default, use all cores when compiling
+export MAKEFLAGS="-j$(nproc)"
 
 # Last couple of things to check when we have an interactive shell
 case $- in
