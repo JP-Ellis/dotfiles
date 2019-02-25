@@ -11,57 +11,6 @@ fi
 setopt EXTENDED_GLOB
 
 ################################################################################
-## Python Virtual Env
-################################################################################
-## Autoload a python virtual env if .pyvenv is present in the directory.
-##
-## By default, the presence of .venv will look for `pyvenv/bin/activate` in
-## order to load the python virtualenv, but this can be customized by setting
-## either of these two variables:
-## - `pyvenv_activate`:  path to the activate script
-## - `pyvenv_directory`:  path to the virtualenv directory.  It is assumed that
-##   the activate script is in `$venv_directory/bin/activate`.
-##
-## The .pyvenv should look like:
-## ```
-## pyvenv_activate=pyvenv/bin/activate
-## pyvenv_directory=pyvenv
-## ```
-
-## Disable the built-in PyEnv prompt modification
-VIRTUAL_ENV_DISABLE_PROMPT=1
-
-function check_python_virtualenv {
-    if [[ -e .pyvenv ]]; then
-        if [[ -n "$VIRTUAL_ENV" && ( "${PWD}" != "${VIRTUAL_ENV%%/pyvenv}" || "${PWD}" != "${VIRTUAL_ENV%%$pyvenv_subdir}" ) ]]; then
-            deactivate
-            unset pyvenv_activate
-            unset pyvenv_directory
-            unset pyvenv_subdir
-        fi
-        source .pyvenv
-
-        if [[ -n "$pyvenv_activate" ]]; then
-            source "$pyvenv_activate"
-        elif [[ -n "$pyvenv_directory" ]]; then
-            source "$pyvenv_directory/bin/activate"
-        else
-            source "pyvenv/bin/activate"
-        fi
-        pyvenv_subdir=${VIRTUAL_ENV##$PWD}
-    ## If PWD stripped of VIRTUAL_ENV prefix matches PWD, then we are no longer
-    ## with the virtualenv and should deactive.
-    elif [[ -n "$VIRTUAL_ENV" && ( "${PWD##${VIRTUAL_ENV%%$pyvenv_subdir}}" == "${PWD}" || "${PWD##${VIRTUAL_ENV%%/pyvenv}}" == "${PWD}" ) ]]; then
-        deactivate
-        unset pyvenv_activate
-        unset pyvenv_directory
-        unset pyvenv_subdir
-    fi
-}
-
-add-zsh-hook chpwd check_python_virtualenv
-
-################################################################################
 ## Miscellaneous
 ################################################################################
 
