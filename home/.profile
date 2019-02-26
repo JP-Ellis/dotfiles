@@ -51,7 +51,7 @@ add_paths() {
 }
 
 for dir in "$HOME/.local" "/scratch/$USER/local" "/scratch/$SUSER/local" ; do
-    add_paths "$dir" &
+    add_paths "$dir"
 done
 
 
@@ -69,7 +69,7 @@ fi
 ## Use $HOME/.cache/cargo for all cargo build artefacts
 [ -n "$CARGO_HOME" ] && export CARGO_TARGET_DIR="$HOME/.cache/cargo"
 
-if command -v rustc ; then
+if command -v rustc >/dev/null ; then
     export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
 fi
 
