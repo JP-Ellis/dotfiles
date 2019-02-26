@@ -1,54 +1,98 @@
-# Define $SUSER as a shortened version of $USER if there's an '@' in it
-export SUSER="${USER/@*}"
+#!/bin/sh
 
-# Remove trailing slash from $TMPDIR if present
+
+## User name
+################################################################################
+## If $USER is some long@username.institution.edu, define $SUSER to be the part
+## before the '@' (or leave it unchanged if there is no '@').
+export SUSER="${USER%@*}"
+
+
+## Temporary directory
+################################################################################
+## Remove trailing slash from $TMPDIR if present
 export TMPDIR="${TMPDIR%/}"
-if [ ! -d "$TMPDIR" ]; then
-    export TMPDIR="/tmp/$SUSER"
-    mkdir -p -m 700 "$TMPDIR"
-elif [ "$TMPDIR" = "/tmp" -o "$TMPDIR" = "/scratch" ]; then
+
+## If $TMPDIR defaults to /tmp or /scratch, create a subdirectory inside that.
+if [ "$TMPDIR" = "/tmp" -o "$TMPDIR" = "/scratch" ] ; then
     export TMPDIR="$TMPDIR/$SUSER"
     mkdir -p -m 700 "$TMPDIR"
 fi
 
-# Add directories from ~/.local to environment
-[ -d $HOME/.local/bin ] && export PATH="$HOME/.local/bin:$PATH"
-[ -d $HOME/.local/include ] && export CPATH="$HOME/.local/include:$CPATH" \
-                            && export C_INCLUDE_PATH="$HOME/.local/include:$C_INCLUDE_PATH" \
-                            && export CPLUS_INCLUDE_PATH="$HOME/.local/include:$CPLUS_INCLUDE_PATH" \
-                            && export OBJC_INCLUDE_PATH="$HOME/.local/include:$OBJC_INCLUDE_PATH"
-[ -d $HOME/.local/lib ] && export LD_LIBRARY_PATH="$HOME/.local/lib:$LD_LIBRARY_PATH"
+## Try and make the $TMPDIR is only readable to the current user
+chown "$USER" "$TMPDIR"
+chmod 700 "$TMPDIR"
 
-# Add directories from /scratch/$SUSER/local to environment
-[ -d /scratch/$SUSER/local/bin ] && export PATH="/scratch/$SUSER/local/bin:$PATH"
-[ -d /scratch/$SUSER/local/include ] && export CPATH="/scratch/$SUSER/local/include:$CPATH" \
-                                     && export C_INCLUDE_PATH="/scratch/$SUSER/local/include:$C_INCLUDE_PATH" \
-                                     && export CPLUS_INCLUDE_PATH="/scratch/$SUSER/local/include:$CPLUS_INCLUDE_PATH" \
-                                     && export OBJC_INCLUDE_PATH="/scratch/$SUSER/local/include:$OBJC_INCLUDE_PATH"
-[ -d /scratch/$SUSER/local/lib ] && export LD_LIBRARY_PATH="/scratch/$SUSER/local/lib:$LD_LIBRARY_PATH"
 
-# Rust support
-if [ -d $HOME/.cargo ] ; then
+## Applications
+################################################################################
+
+export EDITOR='vim'
+export VISUAL='emacs'
+export PAGER='less'
+export BROWSER='firefox-developer-edition'
+
+
+## Paths
+################################################################################
+
+## Update the various PATH variables if the relevant subdirectories exist
+add_paths() {
+    if [ -d "$1/bin" ] ; then
+        export PATH="$1/bin:$PATH"
+    fi
+    if [ -d "$1/include" ] ; then
+        export CPATH="$1/include:$CPATH"
+    fi
+    if [ -d "$1/lib" ] ; then
+        export LIBRARY_PATH="$1/lib:$LIBRARY_PATH"
+        export LD_LIBRARY_PATH="$1/lib:$LD_LIBRARY_PATH"
+    fi
+}
+
+for dir in "$HOME/.local" "/scratch/$USER/local" "/scratch/$SUSER/local" ; do
+    add_paths "$dir" &
+done
+
+
+## Rust
+################################################################################
+
+if [ -d "$HOME/.cargo" ] ; then
     export CARGO_HOME="$HOME/.cargo"
     export PATH="$HOME/.cargo/bin:$PATH"
 fi
-if [ -d $HOME/.rustup ] ; then
+if [ -d "$HOME/.rustup" ] ; then
     export RUSTUP_HOME="$HOME/.rustup"
 fi
-if [ -d /scratch/$SUSER/local/rust/cargo ] ; then
-    export CARGO_HOME="/scratch/$SUSER/local/rust/cargo"
-    export PATH="/scratch/$SUSER/local/rust/cargo/bin:$PATH"
-fi
-if [ -d /scratch/$SUSER/local/rust/rustup ] ; then
-    export RUSTUP_HOME="/scratch/$SUSER/local/rust/rustup"
-fi
+
+## Use $HOME/.cache/cargo for all cargo build artefacts
 [ -n "$CARGO_HOME" ] && export CARGO_TARGET_DIR="$HOME/.cache/cargo"
 
-# gpg-agent and ssh
-[ -d $HOME/.config/gnupg ] && export GNUPGHOME="$HOME/.config/gnupg"
-[ -S "/run/user/1000/gnupg/d.ktgehwewyo8sebu4d9w5kak4/S.gpg-agent.ssh" ] && export SSH_AUTH_SOCK="/run/user/1000/gnupg/d.ktgehwewyo8sebu4d9w5kak4/S.gpg-agent.ssh"
+if command -v rustc ; then
+    export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
+fi
 
-# XDG directories
+## Python
+################################################################################
+
+export PYTHONPYCACHEPREFIX="$HOME/.cache/python"
+
+
+## gpg-agent and ssh
+################################################################################
+
+if [ -d $HOME/.config/gnupg ] ; then
+    export GNUPGHOME="$HOME/.config/gnupg"
+fi
+if [ -S "$(gpgconf --list-dirs | sed -n 's|agent-socket:||p').ssh" ]; then
+    export SSH_AUTH_SOCK="$(gpgconf --list-dirs | sed -n 's|agent-socket:||p').ssh"
+fi
+
+
+## XDG directories
+################################################################################
+
 export XDG_DOWNLOAD_DIR="$TMPDIR/Downloads"
 export XDG_DESKTOP_DIR="$HOME/"
 export XDG_DOCUMENTS_DIR="$HOME/Documents"
@@ -58,9 +102,15 @@ export XDG_PUBLICSHARE_DIR="$HOME/Documents/Public"
 export XDG_TEMPLATES_DIR="$HOME/Documents/Templates"
 export XDG_VIDEOS_DIR="$HOME/Media/Videos"
 
-## By default, use all cores when compiling
+
+## Make
+################################################################################
+
 export MAKEFLAGS="-j$(nproc)"
 
+
+## Interactive Shell
+################################################################################
 # Last couple of things to check when we have an interactive shell
 case $- in
     *i*)
