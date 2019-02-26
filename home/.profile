@@ -13,13 +13,18 @@ export SUSER="${USER%@*}"
 ## Remove trailing slash from $TMPDIR if present
 export TMPDIR="${TMPDIR%/}"
 
-## If $TMPDIR defaults to /tmp or /scratch, create a subdirectory inside that.
-if [ "$TMPDIR" = "/tmp" -o "$TMPDIR" = "/scratch" ] ; then
+## If $TMPDIR is unset, set it to /tmp/$SUSER
+if [ -z "$TMPDIR" ] ; then
+    export TMPDIR="/tmp/$SUSER"
+fi
+
+## Make sure that $TMPDIR ends with $SUSER
+if [ "${TMPDIR%$SUSER}" = "$TMPDIR" ] ; then
     export TMPDIR="$TMPDIR/$SUSER"
-    mkdir -p -m 700 "$TMPDIR"
 fi
 
 ## Try and make the $TMPDIR is only readable to the current user
+mkdir -p -m 700 "$TMPDIR"
 chown "$USER" "$TMPDIR"
 chmod 700 "$TMPDIR"
 
