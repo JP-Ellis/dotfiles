@@ -112,6 +112,15 @@ if yes_or_no "Setup ZSH?" Y; then
     yes_or_no "Make ZSH the default shell?" Y && chsh -s $(which zsh) $(whoami)
 fi
 
+if yes_or_no "Setup zplug?" Y; then
+    # Clone (or update) zplug
+    if [ ! -d "$HOME/.zplug" ]; then
+        echo "Cloning zplug"
+        git clone https://github.com/zplug/zplug.git "$HOME/.zplug"
+    else
+        git -C "$HOME/.zplug" pull
+    fi
+fi
 
 ## Spacemacs
 ################################################################################
