@@ -138,7 +138,7 @@ esac
 
 clean_path=""
 for p in $(printf %s "$PATH" | tr ':' '\n') ; do
-    if [ "${clean_path#*$p}" != "$clean_path" ] ; then
+    if [ "${clean_path#*:$p}" != "$clean_path" ] ; then
         continue
     fi
     if [ -d "$p" ] ; then
