@@ -1,3 +1,42 @@
 ################################################################################
 ## Configuration for zplug
 ################################################################################
+
+## Allow zplug to manage itself
+zplug 'zplug/zplug', \
+      from:github, \
+      as:plugin, \
+      hook-build:'zplug --self-manage'
+
+## Use syntax highlighting
+zplug 'zsh-users/zsh-syntax-highlighting', \
+      from:github, \
+      as:plugin
+
+## Use syntax highlighting
+zplug 'zsh-users/zsh-history-substring-search', \
+      from:github, \
+      as:plugin
+
+## Completions
+zplug 'zsh-users/zsh-completions', \
+      from:github, \
+      as:plugin
+
+## Use the paradox theme from prezto
+zplug 'modules/prompt', \
+      from:prezto, \
+      as:plugin
+zstyle ':prezto:module:prompt' theme 'paradox'
+
+## Install and load plugins
+################################################################################
+
+if ! zplug check; then
+    zplug install
+fi
+zplug load
+
+# Local Variables:
+# mode: sh
+# End:

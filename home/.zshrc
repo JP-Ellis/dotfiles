@@ -3,15 +3,15 @@
 ################################################################################
 
 ## Source Prezto.
-# if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
-#   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
-# fi
+if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+fi
 
 ## Load zplug
-if [[ -s "${ZPLUG_HOME:-$HOME/.zplug}/init.zsh" ]]; then
-    source "${ZPLUG_HOME:-$HOME/.zplug}/init.zsh"
-    source "$HOME/.zplugrc"
-fi
+# if [[ -s "${ZPLUG_HOME:-$HOME/.zplug}/init.zsh" ]]; then
+#     source "${ZPLUG_HOME:-$HOME/.zplug}/init.zsh"
+#     source "$HOME/.zplugrc"
+# fi
 
 
 ## Use extended glob to allow single paths abbreviations
