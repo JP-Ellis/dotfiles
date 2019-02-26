@@ -126,3 +126,22 @@ case $- in
     *)
         ;;
 esac
+
+
+## Clean path
+################################################################################
+
+clean_path=""
+for p in $(printf %s "$PATH" | tr ':' '\n') ; do
+    if [ "${clean_path#*$p}" != "$clean_path" ] ; then
+        continue
+    fi
+    if [ -d "$p" ] ; then
+        if [ "$clean_path" = "" ] ; then
+            clean_path="$p"
+        else
+            clean_path="$clean_path:$p"
+        fi
+    fi
+done
+export PATH="$clean_path"
