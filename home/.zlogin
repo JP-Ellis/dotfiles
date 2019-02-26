@@ -12,8 +12,7 @@
 } &!
 
 # Fix to allow Emacs' tramp to work
-if [[ "$TERM" == "dumb" ]]
-then
+if [[ "$TERM" == "dumb" ]] ; then
     unsetopt zle
     unsetopt prompt_cr
     unsetopt prompt_subst
