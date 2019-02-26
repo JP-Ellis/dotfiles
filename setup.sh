@@ -105,11 +105,6 @@ if yes_or_no "Setup ZSH?" Y; then
         git -C "${ZDOTDIR:-$HOME}/.zprezto" pull
         git -C "${ZDOTDIR:-$HOME}/.zprezto" submodule update --init --recursive
     fi
-
-    # Make the DEFAULT_USER the current user
-    sed -i "s#DEFAULT_USER=\"josh\"#DEFAULT_USER=\"$(whoami)\"#" "$(pwd)/home/.zshrc"
-
-    yes_or_no "Make ZSH the default shell?" Y && chsh -s $(which zsh) $(whoami)
 fi
 
 if yes_or_no "Setup zplug?" Y; then
