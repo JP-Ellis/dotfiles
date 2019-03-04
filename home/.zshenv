@@ -15,11 +15,14 @@ typeset -U path
 typeset -xTU CPATH cpath
 typeset -xTU LD_LIBRARY_PATH ld_library_path
 typeset -xTU LIBRARY_PATH library_path
+typeset -xTU FPATH fpath
 
 
 ## Zsh completions
 ################################################################################
-[[ -d $HOME/.zfunc ]] && fpath+="$HOME/.zfunc"
+if [[ -d $HOME/.zfunc ]] ; then
+    fpath=( "$HOME/.zfunc" "${fpath[@]}" )
+fi
 
 
 ## Temporary Files
