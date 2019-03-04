@@ -122,8 +122,13 @@ This function should only modify configuration layer settings."
      ;; autohotkey
      bibtex
      (c-c++ :variables
+            c-c++-backend 'lsp-ccls
             c-c++-default-mode-for-headers 'c++-mode
-            c-c++-enable-clang-support t)
+            c-c++-enable-clang-format-on-save t
+            c-c++-enable-google-style t
+            c-c++-enable-google-newline t
+            c-c++-adopt-subprojects t
+            )
 
      ;; clojure
      ;; coffeescript
