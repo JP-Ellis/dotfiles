@@ -182,8 +182,7 @@ This function should only modify configuration layer settings."
      (python :variables
              python-backend 'lsp
              python-sort-imports-on-save t
-             python-enable-yapf-format-on-save t
-             python-fill-column 120)
+             python-enable-yapf-format-on-save t)
      ;; racket
      ;; restructuredtext
      ;; ruby
