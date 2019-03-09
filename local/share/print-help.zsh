@@ -1,4 +1,4 @@
-#!/usr/bin/zsh
+#!/bin/sh
 
 # check if messages are to be printed using color
 unset ALL_OFF BOLD BLUE GREEN RED YELLOW
@@ -52,28 +52,3 @@ function title {
     done
     printf "${ALL_OFF}\n"
 }
-
-title "TeXLive"
-sudo tlmgr update --self --all
-
-title "Arch Linux"
-yay -Syu --noconfirm --devel --removemake
-
-title "YCMD"
-cd ~/src/tools/ycmd
-git fetch
-if [[ $(git rev-parse HEAD) != $(git rev-parse @\{u\}) ]]; then
-    git pull
-    git submodule update --init --recursive
-    ./build.py --system-boost --system-libclang \
-               --clang-completer \
-               --clangd-completer \
-               --java-completer \
-               --rust-completer \
-               --ts-completer
-fi
-cd ~
-
-title "Rustup and Cargo"
-rustup update
-cargo install-update -a

@@ -16,45 +16,18 @@ if [ $# -gt 0 ]; then
     exit 1
 fi
 
-# As yes or no and return true or false
-# Usage:
-# yes_or_no <statement>, <default>
-yes_or_no() {
-    while true; do
-        if [ "${2:-}" = "Y" ]; then
-            prompt="Y/n"
-            default=Y
-        elif [ "${2:-}" = "N" ]; then
-            prompt="y/N"
-            default=N
-        else
-            prompt="y/n"
-            default=
-        fi
-
-        unset REPLY
-        local compcontext='yn:yes or no:(y n)'
-        vared -cp "$(tput bold)$1 [$prompt]$(tput sgr0) " REPLY
-
-        if [ -z "$REPLY" ]; then
-            REPLY=$default
-        fi
-
-        case "$REPLY" in
-            Y*|y*) return 0 ;;
-            N*|n*) return 1 ;;
-        esac
-    done
-}
+source "${0:A:h}/local/share/yes-or-no.zsh"
+source "${0:A:h}/local/share/print-help.zsh"
 
 make_backup() {
     if [ $# -ne 1 ]; then
-        echo "$0 requires exactly one argument." >&2
+        error "$0 requires exactly one argument."
         exit 1
     fi
     if [ -e "$1" ]; then
-        printf "Moved "
-        mv -v "$1" "$1.bak.$RANDOM"
+        local backup="$1.bak.$RANDOM"
+        msg "Moving ${1:t} -> ${backup:t}"
+        mv "$1" "$backup"
     fi
 }
 
@@ -64,50 +37,71 @@ make_link() {
         exit 1
     fi
     make_backup "$2"
-    printf "Linked "
+    msg "Linking ${1:t} -> $2"
     ln -vs "$1" "$2"
 }
 
 ## Link files and directories
 ################################################################################
 
+ROOT_DIR="${0:A:h}"
+
+title "Files in ~/."
 ## Files in the home directory
-for f in $(pwd)/home/* $(pwd)/home/.*; do
-    f="$(basename "$f")"
-    yes_or_no "Link $f into the home directory?" Y || continue
-    make_link "$(pwd)/home/$f" "$HOME/$f"
+for f in $ROOT_DIR/home/* $ROOT_DIR/home/.*; do
+    yes_or_no "Link ${f#$ROOT_DIR/} into the home directory?" Y || continue
+    make_link "$f" "$HOME/$f"
 done
 
+printf '\n'
+
+title "Files in ~/.config"
 mkdir -p "$HOME/.config"
-for f in $(pwd)/config/* $(pwd)/config/.*; do
-    f="$(basename "$f")"
-    yes_or_no "Link $f into the .config directory?" Y || continue
-    make_link "$(pwd)/config/$f" "$HOME/.config/$f"
+for f in $ROOT_DIR/config/* $ROOT_DIR/config/.*; do
+    yes_or_no "Link ${f#$ROOT_DIR/} into the .config directory?" Y || continue
+    make_link "$f" "$HOME/.config/$f"
 done
 
-mkdir -p "$HOME/.local/bin"
-for f in $(pwd)/bin/* $(pwd)/bin/.*; do
-    f="$(basename "$f")"
-    yes_or_no "Link $f into .local/bin" Y || continue
-    make_link "$(pwd)/bin/$f" "$HOME/.local/bin/$f"
+printf '\n'
+
+title "Files in ~/.local/share"
+mkdir -p "$HOME/.local/share"
+for f in $ROOT_DIR/local/share/* $ROOT_DIR/bin/.* ; do
+    yes_or_no "Link ${f#$ROOT_DIR/} into .local/bin" Y || continue
+    make_link "$f" "$HOME/.local/bin/$f"
 done
+
+printf '\n'
+
+title "Files in ~/.local/bin"
+mkdir -p "$HOME/.local/bin"
+for f in $ROOT_DIR/local/bin/* $ROOT_DIR/bin/.* ; do
+    yes_or_no "Link ${f#$ROOT_DIR/} into .local/bin" Y || continue
+    make_link "$f" "$HOME/.local/bin/$f"
+done
+
+printf '\n'
 
 ## ZSH
 ################################################################################
 
-if yes_or_no "Setup ZSH?" Y; then
+title "Zprezto"
+if yes_or_no "Setup Zprezto?" Y; then
     # Clone (or update) ZSH
     if [ ! -d "$HOME/.zprezto" ]; then
         echo "Cloning zprezto"
         git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
-        ln -fvs "$(pwd)/prompt_jpellis_setup" "${ZDOTDIR:-$HOME}/.zprezto/modules/prompt/functions/prompt_jpellis_setup"
+        ln -fvs "$ROOT_DIR/prompt_jpellis_setup" "${ZDOTDIR:-$HOME}/.zprezto/modules/prompt/functions/prompt_jpellis_setup"
     else
         git -C "${ZDOTDIR:-$HOME}/.zprezto" pull
         git -C "${ZDOTDIR:-$HOME}/.zprezto" submodule update --init --recursive
     fi
 fi
 
-if yes_or_no "Setup zplug?" Y; then
+printf '\n'
+
+title "Zplug"
+if yes_or_no "Setup Zplug?" Y; then
     # Clone (or update) zplug
     if [ ! -d "$HOME/.zplug" ]; then
         echo "Cloning zplug"
@@ -117,9 +111,12 @@ if yes_or_no "Setup zplug?" Y; then
     fi
 fi
 
+printf '\n'
+
 ## Spacemacs
 ################################################################################
 
+title "Spacemacs"
 if yes_or_no "Setup Spacemacs?" Y; then
     # Clone spacemacs if it hasn't been done already.
     if [ ! -d "$HOME/.emacs.d" ]; then
@@ -129,3 +126,5 @@ if yes_or_no "Setup Spacemacs?" Y; then
         git clone --branch develop https://github.com/syl20bnr/spacemacs ~/.emacs.d
     fi
 fi
+
+printf '\n'
