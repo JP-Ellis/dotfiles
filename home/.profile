@@ -82,6 +82,7 @@ fi
 ################################################################################
 
 export PYTHONPYCACHEPREFIX="$HOME/.cache/python"
+export PYLINTHOME="$HOME/.cache/pylint"
 
 
 ## gpg-agent and ssh
