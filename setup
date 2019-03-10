@@ -38,7 +38,7 @@ make_link() {
     fi
     make_backup "$2"
     msg "Linking ${1:t} -> $2"
-    ln -vs "$1" "$2"
+    ln -s "$1" "$2"
 }
 
 ## Link files and directories
@@ -50,7 +50,7 @@ title "Files in ~/."
 ## Files in the home directory
 for f in $ROOT_DIR/home/* $ROOT_DIR/home/.*; do
     yes_or_no "Link ${f#$ROOT_DIR/} into the home directory?" Y || continue
-    make_link "$f" "$HOME/$f"
+    make_link "${f:A}" "$HOME/${f:t}"
 done
 
 printf '\n'
@@ -59,7 +59,7 @@ title "Files in ~/.config"
 mkdir -p "$HOME/.config"
 for f in $ROOT_DIR/config/* $ROOT_DIR/config/.*; do
     yes_or_no "Link ${f#$ROOT_DIR/} into the .config directory?" Y || continue
-    make_link "$f" "$HOME/.config/$f"
+    make_link "${f:A}" "$HOME/.config/${f:t}"
 done
 
 printf '\n'
@@ -68,7 +68,7 @@ title "Files in ~/.local/share"
 mkdir -p "$HOME/.local/share"
 for f in $ROOT_DIR/local/share/* $ROOT_DIR/bin/.* ; do
     yes_or_no "Link ${f#$ROOT_DIR/} into .local/bin" Y || continue
-    make_link "$f" "$HOME/.local/bin/$f"
+    make_link "${f:A}" "$HOME/.local/share/${f:t}"
 done
 
 printf '\n'
@@ -77,7 +77,7 @@ title "Files in ~/.local/bin"
 mkdir -p "$HOME/.local/bin"
 for f in $ROOT_DIR/local/bin/* $ROOT_DIR/bin/.* ; do
     yes_or_no "Link ${f#$ROOT_DIR/} into .local/bin" Y || continue
-    make_link "$f" "$HOME/.local/bin/$f"
+    make_link "${f:A}" "$HOME/.local/bin/${f:t}"
 done
 
 printf '\n'
@@ -92,10 +92,9 @@ if yes_or_no "Setup Zprezto?" Y; then
         echo "Cloning zprezto"
         git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
         ln -fvs "$ROOT_DIR/prompt_jpellis_setup" "${ZDOTDIR:-$HOME}/.zprezto/modules/prompt/functions/prompt_jpellis_setup"
-    else
-        git -C "${ZDOTDIR:-$HOME}/.zprezto" pull
-        git -C "${ZDOTDIR:-$HOME}/.zprezto" submodule update --init --recursive
     fi
+    git -C "${ZDOTDIR:-$HOME}/.zprezto" pull
+    git -C "${ZDOTDIR:-$HOME}/.zprezto" submodule update --init --recursive
 fi
 
 printf '\n'
