@@ -13,9 +13,12 @@ fi
 #     source "$HOME/.zplugrc"
 # fi
 
+if [[ -s "$HOME/.zoptions" ]]; then
+    source "$HOME/.zoptions"
+fi
 
-## Use extended glob to allow single paths abbreviations
-setopt EXTENDED_GLOB
+## Commands
+################################################################################
 
 ## Add a command to cd into a tmp directory
 alias cdtmp='cd $(mktemp -d)'
@@ -75,11 +78,9 @@ cdls () {
 }
 alias cd=cdls
 
-
 sshtmux() {
     ssh -t "${@:1:-1}" "${@: -1}" "tmux new-session -As sshtmux"
 }
-
 
 ## Change feh
 alias feh='\feh --scale-down'
