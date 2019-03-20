@@ -10,7 +10,7 @@
 # is used in the bar {} block below.
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
-font pango:Open Sans 8
+font pango:Open Sans 12
 
 # Background image
 output * bg /home/josh/.local/share/background.png fill
@@ -40,9 +40,9 @@ set $green   #859900
 set $black   #222222
 
 # class                  border      backgr      text        indicator  child_order
-client.focused           $green      $base02     $base3      $base02    $green
+client.focused           $base03     $base02     $base3      $base02    $base01
 client.focused_inactive  $blue       $black      $base1      $base03    $blue
-client.unfocused         $base00     $black      $base0      $base03    $base00
+client.unfocused         $base00     $black      $base0      $base03    $base03
 client.urgent            $red        $black      $red        $base03    $red
 
 ################################################################################
@@ -56,7 +56,7 @@ set $mod Mod4
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec termite
+bindsym $mod+Return exec alacritty
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -137,9 +137,7 @@ bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
 
 # reload the configuration file
-# bindsym $mod+Shift+r reload
-# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+r restart
+bindsym $mod+Shift+r reload
 # exit i3 (logs you out of your X session)
 # bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
@@ -201,9 +199,9 @@ bindsym $mod+p exec "papis rofi ''"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-      font pango:Open Sans 8
+      font pango:Open Sans 14
       position bottom
-      status_command i3status-rs ~/.config/sway/status.toml
+      status_command /home/josh/.cargo/bin/i3status-rs ~/.config/sway/status.toml
       colors {
             separator #666666
             background #222222
@@ -220,13 +218,13 @@ bar {
 ################################################################################
 
 # Startup
-exec --no-startup-id i3-msg "workspace 10; exec termite"
-exec --no-startup-id i3-msg "workspace 2; exec emacs"
-exec --no-startup-id i3-msg "workspace 1; exec firefox-developer-edition"
-exec --no-startup-id i3-msg "workspace 1; exec signal-desktop"
-exec --no-startup-id i3-msg "workspace 1; layout tabbed"
+exec --no-startup-id swaymsg "workspace 10; exec termite"
+exec --no-startup-id swaymsg "workspace 2; exec emacs"
+exec --no-startup-id swaymsg "workspace 1; exec firefox-developer-edition"
+exec --no-startup-id swaymsg "workspace 1; exec signal-desktop"
+exec --no-startup-id swaymsg "workspace 1; layout tabbed"
 
-# Some services need to be started *after* i3
+# Some services need to be started *after* sway
 exec --no-startup-id systemctl --user restart gpg-agent
 exec --no-startup-id systemctl --user start screensaver
 
