@@ -84,8 +84,3 @@ sshtmux() {
 
 ## Change feh
 alias feh='\feh --scale-down'
-
-## Print stderr in red
-if [[ -f /usr/share/stderred/stderred.sh ]]; then
-    source /usr/share/stderred/stderred.sh
-fi
