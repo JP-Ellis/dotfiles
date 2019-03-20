@@ -723,13 +723,6 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-  ;; Git
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (setq-default
-   ;; Sign git commits with GPG by default
-   magit-commit-arguments '("--signoff"
-                            "--gpg-sign=Joshua Ellis <josh@jpellis.me>"))
-
   ;; TeX/LaTeX/BibTeX
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq-default
