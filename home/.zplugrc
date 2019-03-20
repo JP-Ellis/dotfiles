@@ -2,6 +2,8 @@
 ## Configuration for zplug
 ################################################################################
 
+export ZPLUG_CACHE_DIR="$HOME/.cache/zplug"
+
 ## Allow zplug to manage itself
 zplug 'zplug/zplug', \
       from:github, \
