@@ -16,6 +16,7 @@ device = "ens9"
 interval = 5
 ip = false
 hide_inactive = true
+hide_missing = true
 
 [[block]]
 block = "net"
