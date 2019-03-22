@@ -28,12 +28,12 @@
 	user = JP-Ellis
 
 [magithub]
-	online = false
+	online = true
 
 [magithub "status"]
-	includeStatusHeader = false
-	includePullRequestsSection = false
-	includeIssuesSection = false
+	includeStatusHeader = true
+	includePullRequestsSection = true
+	includeIssuesSection = true
 
 # Filters for files containing outputs which shouldn't be committed
 ################################################################################
