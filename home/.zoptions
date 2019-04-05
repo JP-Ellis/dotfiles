@@ -30,12 +30,12 @@ setopt CDABLE_VARS                # unset
 ## this option set, ‘cd /foo/bar/..’ changes to /foo; with it set, it changes to
 ## /alt. The same applies if the current directory is /foo/bar and ‘cd ..’ is
 ## used. Note that all other symbolic links in the path will also be resolved.
-setopt CHASE_DOTS                 # unset
+unsetopt CHASE_DOTS               # unset
 ## Resolve symbolic links to their true values when changing directory. This
 ## also has the effect of CHASE_DOTS, i.e. a ‘..’ path segment will be treated
 ## as referring to the physical parent, even if the preceding path segment is a
 ## symbolic link.
-setopt CHASE_LINKS                # unset
+unsetopt CHASE_LINKS              # unset
 ## Modifies the behaviour of cd, chdir and pushd commands to make them more
 ## compatible with the POSIX standard. The behaviour with the option unset is
 ## described in the documentation for the cd builtin in Shell Builtin
