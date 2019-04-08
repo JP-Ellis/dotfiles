@@ -5,12 +5,6 @@ name = "solarized-dark"
 name = "awesome"
 
 [[block]]
-block = "music"
-player = "google-play-music-desktop-player"
-max_width = 30
-buttons = ["play", "next"]
-
-[[block]]
 block = "net"
 device = "ens9"
 interval = 5
