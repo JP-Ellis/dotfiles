@@ -74,4 +74,10 @@ block = "sound"
 [[block]]
 block = "time"
 interval = 10
+format = "%Y-%m-%d %H:%M+00"
+timezone = "UTC"
+
+[[block]]
+block = "time"
+interval = 10
 format = "%a %d/%m %R"
