@@ -72,6 +72,14 @@ interval = 60
 block = "sound"
 
 [[block]]
+block = "weather"
+[block.service]
+name = "openweathermap"
+api_key = "35ee3a1b9a02aa4ab66866c43bc10d54"
+units = "metric"
+city_id = "2158177"
+
+[[block]]
 block = "time"
 interval = 10
 format = "%Y-%m-%d %H:%M+00"
