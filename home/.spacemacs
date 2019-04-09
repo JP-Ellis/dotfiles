@@ -70,7 +70,12 @@ This function should only modify configuration layer settings."
      ;; better-defaults
      ibuffer
      (org :variables
-          org-enable-github-support t)
+          org-enable-github-support t
+          org-enable-sticky-header t
+          org-enable-bootstrap-support t
+          org-enable-reveal-js-support t
+          org-enable-org-journal-support t
+          org-projectile-file "TODO.org")
      semantic
      ;; smex
      typography
@@ -762,12 +767,26 @@ before packages are loaded."
                               :html-background "Transparent"
                               :html-scale 2.0
                               :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
-   org-list-description-max-indent 5)
+   org-list-description-max-indent 5
+   ;; Reveal.js
+   org-reveal-root "file:///home/josh/src/reveal.js"
+   ;; Journal
+   org-journal-dir "~/journal/"
+   org-journal-file-format "%Y-%m-%d"
+   org-journal-date-prefix "#+TITLE: "
+   org-journal-date-format "%A, %B %d %Y")
 
   (with-eval-after-load 'org
     (setq org-file-apps '(("\\.pdf::\\(\\d+\\)\\'" . "zathura -P %1 %s")
                           ("\\.pdf\\'" . "zathura %s"))
           org-latex-pdf-process '("latexmk %f")))
+
+  (with-eval-after-load 'org-agenda
+    (require 'org-projectile)
+    (mapcar '(lambda (file)
+               (when (file-exists-p file)
+                 (push file org-agenda-files)))
+            (org-projectile-todo-files)))
 
   ;; Rust
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
