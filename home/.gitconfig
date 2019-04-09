@@ -47,3 +47,5 @@
 [filter "dropoutput_nb"]
 	clean = mathematica-notebook-filter
 	smudge = cat
+[gitlab]
+	user = JP-Ellis
