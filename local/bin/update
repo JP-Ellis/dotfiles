@@ -19,6 +19,11 @@ if [[ $(git rev-parse HEAD) != $(git rev-parse @\{u\}) ]]; then
 fi
 cd ~
 
+title "Zprezto"
+cd ~/.zprezto
+git pull-all --remote
+cd ~
+
 title "Rustup and Cargo"
 rustup update
 cargo install-update -a
