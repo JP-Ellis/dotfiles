@@ -1,9 +1,16 @@
 #!/usr/bin/env zsh
 
+source ~/.local/share/print-help.zsh
+
 uni-screen-layout
 
 update
 
+title "Backing up to Google"
 duplicity-front backup google
 
+title "Backing up to Uni"
 duplicity-front backup uni
+
+title "Update Uni computer"
+ssh uni-josh -t yay -Syu --noconfirm --devel --removemake

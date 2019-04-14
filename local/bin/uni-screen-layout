@@ -1,4 +1,8 @@
-#!/bin/sh
+#!/bin/zsh
+
+source ~/.local/share/print-help.zsh
+
+title "Setting 3-screen layout"
 
 xrandr \
     --output eDP1 \
