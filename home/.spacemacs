@@ -101,8 +101,8 @@ This function should only modify configuration layer settings."
      ;;;; Frameworks
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      django
-     emberjs
-     phoenix
+     ;; emberjs
+     ;; phoenix
      ;; react
      ;; ruby-on-rails
 
@@ -143,6 +143,7 @@ This function should only modify configuration layer settings."
      ;; csharp
      csv
      ;; d
+     ;; dhall
      ;; elixir
      ;; elm
      emacs-lisp
@@ -191,8 +192,8 @@ This function should only modify configuration layer settings."
      ;; racket
      ;; restructuredtext
      ;; ruby
-     ( rust :variables
-            rust-backend 'lsp)
+     (rust :variables
+           rust-backend 'lsp)
      ;; scala
      ;; scheme
      ;; semantic-web
@@ -204,10 +205,12 @@ This function should only modify configuration layer settings."
      ;; vimscript
      ;; windows-scripts
      yaml
+     ;; yang
 
      ;;;; misc
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      copy-as-format
+     ;; ietf
      multiple-cursors
      ;; nlinum
      parinfer
@@ -279,6 +282,7 @@ This function should only modify configuration layer settings."
      ;; chrome
      cmake
      command-log
+     dap
      debug
      docker
      ;; fasd
@@ -290,13 +294,14 @@ This function should only modify configuration layer settings."
      ;; node
      ;; pandoc
      pass
+     ;; prettier
      ;; prodigy
      ;; puppet
      ;; ranger
      ;; rebox
      restclient
      ;; salt
-     ;; shell
+     shell
      ;; sphinx
      systemd
      ;; tern
@@ -322,11 +327,8 @@ This function should only modify configuration layer settings."
      ;; search-engine
      ;; twitter
      ;; wakatime
-
-     ;;;; Private
-     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-     ;; display
      )
+
 
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -719,8 +721,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   "Library to load while dumping.
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
-dump.")
-
+dump."
+  )
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -772,6 +774,7 @@ before packages are loaded."
    org-reveal-root "file:///home/josh/src/reveal.js"
    ;; Journal
    org-journal-dir "~/journal/"
+   org-journal-enable-agenda-integration t
    org-journal-file-format "%Y-%m-%d"
    org-journal-date-prefix "#+TITLE: "
    org-journal-date-format "%A, %B %d %Y")
