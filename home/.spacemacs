@@ -183,12 +183,14 @@ This function should only modify configuration layer settings."
      ;; perl6
      php
      ;; plantuml
+     ;; prolog
      ;; protobuf
      ;; purescript
      (python :variables
              python-backend 'lsp
              python-sort-imports-on-save t
-             python-enable-yapf-format-on-save t)
+             python-formatter 'black
+             python-format-on-save t)
      ;; racket
      ;; restructuredtext
      ;; ruby
