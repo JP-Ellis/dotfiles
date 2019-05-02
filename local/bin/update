@@ -24,6 +24,10 @@ cd ~/.zprezto
 git pull-all --remote
 cd ~
 
+title "Emacs"
+emacs -f 'configuration-layer/update-packages' \
+      -f 'kill-emacs'
+
 title "Rustup and Cargo"
 rustup update
 cargo install-update -a
