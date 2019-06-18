@@ -13,7 +13,7 @@ env:
   #TERM: xterm-256color
   # Avoid scaling on a per-screen basis.
   # See: https://github.com/jwilm/alacritty/issues/1501#issuecomment-413292223
-  WINIT_HIDPI_FACTOR: 1.0
+  WINIT_HIDPI_FACTOR: "1.0"
 
 window:
   # Window dimensions (changes require restart)
@@ -163,12 +163,6 @@ font:
   # This is a global setting and will require a log out or restart to take
   # effect.
   use_thin_strokes: true
-
-# Display the time it takes to redraw each frame.
-render_timer: false
-
-# Keep the log file after quitting Alacritty.
-persistent_logging: false
 
 # If `true`, bold text is drawn using the bright color variants.
 draw_bold_text_with_bright_colors: true
