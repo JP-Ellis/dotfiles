@@ -201,7 +201,7 @@ This function should only modify configuration layer settings."
      ;; semantic-web
      shell-scripts
      ;; sml
-     ;; sql
+     sql
      ;; swift
      ;; typescript
      ;; vimscript
@@ -736,6 +736,7 @@ before packages are loaded."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq-default
    ispell-dictionary "en_GB-ize-w_accents")
+
   ;; TeX/LaTeX/BibTeX
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq-default
