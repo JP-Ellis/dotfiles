@@ -62,12 +62,13 @@ for sheet in sheets:
                 cell[field] = None
 
         if "metadata" in cell:
-            for field in ("collapsed", "scrolled", "ExecuteTime"):
+            for field in ["heading_collapsed", "collapsed", "scrolled", "ExecuteTime"]:
                 if field in cell.metadata:
                     del cell.metadata[field]
 
-    if hasattr(sheet.metadata, "widgets"):
-        del sheet.metadata["widgets"]
+    for field in ["widgets", "celltoolbar"]:
+        if hasattr(sheet.metadata, field):
+            del sheet.metadata[field]
 
     if hasattr(sheet.metadata, "language_info"):
         if hasattr(sheet.metadata.language_info, "version"):
