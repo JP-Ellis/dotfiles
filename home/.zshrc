@@ -84,3 +84,6 @@ sshtmux() {
 
 ## Change feh
 alias feh='\feh --scale-down'
+
+## xclip defaults to using the clipboard
+alias xclip='\xclip -selection clipboard'
