@@ -7,12 +7,6 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-## Load zplug
-# if [[ -s "${ZPLUG_HOME:-$HOME/.zplug}/init.zsh" ]]; then
-#     source "${ZPLUG_HOME:-$HOME/.zplug}/init.zsh"
-#     source "$HOME/.zplugrc"
-# fi
-
 if [[ -s "$HOME/.zoptions" ]]; then
     source "$HOME/.zoptions"
 fi
