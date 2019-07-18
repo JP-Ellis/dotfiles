@@ -47,18 +47,7 @@ export LESS="$less_opt"
 export LESSOPEN='|pygmentize -g %s'
 
 ## Use exa as a replacement for ls
-if (( $+commands[lsd] )); then
-    unalias ls l ll lr la lm lx lk lt lc lu sl
-    # Change ls to lsd
-    alias ls='lsd --group-dirs first'
-    alias l='ls --oneline --almost-all'
-    alias ll='ls --long'
-    alias lr='ll --tree'
-    alias la='ll --almost-all'
-    alias lk='ll --sizesort'
-    alias lt='ll --timesort'
-    alias sl=ls
-elif (( $+commands[exa] )); then
+if (( $+commands[exa] )); then
     unalias ls l ll lr la lm lx lk lt lc lu sl
     # Change ls to exa
     alias ls='exa --group-directories-first --git --binary'
@@ -72,6 +61,17 @@ elif (( $+commands[exa] )); then
     alias lc='ll --sort=created --time=created'
     alias lm='ll --sort=modified --time=modified'
     alias lt='lm'
+    alias sl=ls
+elif (( $+commands[lsd] )); then
+    unalias ls l ll lr la lm lx lk lt lc lu sl
+    # Change ls to lsd
+    alias ls='lsd --group-dirs first'
+    alias l='ls --oneline --almost-all'
+    alias ll='ls --long'
+    alias lr='ll --tree'
+    alias la='ll --almost-all'
+    alias lk='ll --sizesort'
+    alias lt='ll --timesort'
     alias sl=ls
 fi
 
