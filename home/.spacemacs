@@ -807,7 +807,7 @@ before packages are loaded."
   ;; YCMD
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (setq-default
-   ycmd-server-command (list "python" (file-truename "~/src/tools/ycmd/ycmd"))
+   ycmd-server-command (list "python" (file-truename "~/src/ycmd/ycmd"))
    ycmd-extra-conf-whitelist '("~/*")
    ycmd-force-semantic-completion t)
 
