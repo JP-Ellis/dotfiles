@@ -1,0 +1,10 @@
+[Unit]
+Description=udiskie
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/udiskie --notify --smart-tray
+Restart=on-abort
+
+[Install]
+WantedBy=default.target
