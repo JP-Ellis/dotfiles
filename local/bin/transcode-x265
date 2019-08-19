@@ -1,0 +1,109 @@
+#!/usr/bin/zsh
+
+## Get the input filename, and either get or generate the output filename
+if [[ $# -ge 1 ]]; then
+    INPUT_FILE="$1"
+else
+    echo "Input file must be provided." >&2
+    exit 1
+fi
+
+shift
+if [[ $# -ge 1 ]]; then
+    OUTPUT_FILE="$1"
+else
+    OUTPUT_FILE="$INPUT_FILE"
+fi
+if [[ "${OUTPUT_FILE:e}" = "mkv" && -e "$OUTPUT_FILE" ]]; then
+    OUTPUT_FILE="${OUTPUT_FILE:r}.x265.mkv"
+else
+    if [[ "${OUTPUT_FILE:e}" = "" ]]; then
+        OUTPUT_FILE="$OUTPUT_FILE.mkv"
+    else
+        OUTPUT_FILE="${OUTPUT_FILE:r}.mkv"
+    fi
+fi
+
+NEEDS_TRANSCODING=false
+
+## Create the video options
+typeset -a VIDEO_OPTS
+codecs=(
+    $(
+    ffprobe "$INPUT_FILE" \
+            -v error \
+            -select_streams v \
+            -show_entries stream=codec_name \
+            -print_format default=nk=1:nw=1
+    )
+)
+i=0
+for codec in $codecs ; do
+    if [[ $codec == "hevc" ]]; then
+        VIDEO_OPTS+=(-c:v:$i copy)
+    else
+        NEEDS_TRANSCODING=true
+        VIDEO_OPTS+=(-c:v:$i libx265)
+    fi
+    ((i++))
+done
+
+
+# Create the audio options
+typeset -a AUDIO_OPTS
+codecs=(
+    $(
+    ffprobe "$INPUT_FILE" \
+            -v error \
+            -select_streams a \
+            -show_entries stream=codec_name \
+            -print_format default=nk=1:nw=1
+    )
+)
+i=0
+for codec in $codecs ; do
+    if [[ $codec == "opus" ]]; then
+        AUDIO_OPTS+=(-c:a:$i copy)
+    else
+        NEEDS_TRANSCODING=true
+        AUDIO_OPTS+=(-c:a:$i libopus -b:a:$i 128k)
+
+        # Libopus doesn't understand `5.1(side)` channels, but does understand
+        # `5.1`; so we adjust this if need be.
+        # https://trac.ffmpeg.org/ticket/5718
+        channels=$(
+            ffprobe "$INPUT_FILE" \
+                    -v error \
+                    -select_streams a:$i \
+                    -show_entries stream=channel_layout \
+                    -print_format default=nk=1:nw=1
+                )
+        if [[ "$channels" =~ "^.*\(side\)$" ]]; then
+            AUDIO_OPTS+=(-filter:a:$i aformat=channel_layouts="${channels%%\(side\)}")
+        fi
+    fi
+    ((i++))
+done
+
+
+## Run FFmpeg
+if $NEEDS_TRANSCODING ; then
+    echo ffmpeg -hide_banner \
+           -n \
+           -i "$INPUT_FILE" \
+           -map_metadata 0 \
+           -map_chapters 0 \
+           -c:s mov_text \
+           "${(@)VIDEO_OPTS}" \
+           "${(@)AUDIO_OPTS}" \
+           "$OUTPUT_FILE"
+    ffmpeg -hide_banner \
+           -n \
+           -i "$INPUT_FILE" \
+           -map_metadata 0 \
+           -map_chapters 0 \
+           -c:s webvtt \
+           "${(@)VIDEO_OPTS}" \
+           "${(@)AUDIO_OPTS}" \
+           "$OUTPUT_FILE"
+fi
