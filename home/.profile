@@ -63,50 +63,16 @@ done
 ## Rust
 ################################################################################
 
-if [ -d "$HOME/.cargo" ] ; then
-    export CARGO_HOME="$HOME/.cargo"
-    export PATH="$HOME/.cargo/bin:$PATH"
+if [ -n "$CARGO_HOME" ]; then
+    export PATH="$CARGO_HOME/bin:$PATH"
 fi
-if [ -d "$HOME/.rustup" ] ; then
-    export RUSTUP_HOME="$HOME/.rustup"
-fi
-
-## Use $HOME/.cache/cargo for all cargo build artefacts
-[ -n "$CARGO_HOME" ] && export CARGO_TARGET_DIR="$HOME/.cache/cargo"
-
-if command -v rustc >/dev/null ; then
-    export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
-fi
-
-## Python
-################################################################################
-
-export PYTHONPYCACHEPREFIX="$HOME/.cache/python"
-export PYLINTHOME="$HOME/.cache/pylint"
-
 
 ## gpg-agent and ssh
 ################################################################################
 
-if [ -d $HOME/.config/gnupg ] ; then
-    export GNUPGHOME="$HOME/.config/gnupg"
+if [ -S /run/user/$UID/gnupg/S.gpg-agent.ssh ]; then
+    export SSH_AUTH_SOCK=/run/user/$UID/gnupg/S.gpg-agent.ssh
 fi
-if [ -S "$(gpgconf --list-dirs | sed -n 's|agent-socket:||p').ssh" ]; then
-    export SSH_AUTH_SOCK="$(gpgconf --list-dirs | sed -n 's|agent-socket:||p').ssh"
-fi
-
-
-## XDG directories
-################################################################################
-
-export XDG_DOWNLOAD_DIR="$TMPDIR/Downloads"
-export XDG_DESKTOP_DIR="$HOME/"
-export XDG_DOCUMENTS_DIR="$HOME/Documents"
-export XDG_MUSIC_DIR="$HOME/Media/Music"
-export XDG_PICTURES_DIR="$HOME/Media/Pictures"
-export XDG_PUBLICSHARE_DIR="$HOME/Documents/Public"
-export XDG_TEMPLATES_DIR="$HOME/Documents/Templates"
-export XDG_VIDEOS_DIR="$HOME/Media/Videos"
 
 
 ## Make
