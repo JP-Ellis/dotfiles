@@ -222,14 +222,14 @@ bar {
 
 # Startup
 exec --no-startup-id i3-msg "workspace 10; exec alacritty"
-exec --no-startup-id i3-msg "workspace 2; exec emacs"
 exec --no-startup-id i3-msg "workspace 1; exec firefox-developer-edition"
 exec --no-startup-id i3-msg "workspace 1; exec signal-desktop"
 exec --no-startup-id i3-msg "workspace 1; layout tabbed"
 
 # Some services need to be started *after* i3
-exec --no-startup-id systemctl --user restart gpg-agent
-exec --no-startup-id systemctl --user start screensaver
+# exec --no-startup-id systemctl --user start gpg-agent
+# exec --no-startup-id systemctl --user start screensaver
+exec --no-startup-id systemctl --user restart udiskie
 
 ################################################################################
 ## Special Windows
