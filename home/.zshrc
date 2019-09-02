@@ -77,7 +77,7 @@ fi
 
 ## Make cd list the directory content on arrival
 cdls () {
-	  \cd "$argv[-1]" && ls "${(@)argv[1,-2]}"
+    \cd "$argv[-1]" && ls "${(@)argv[1,-2]}"
 }
 alias cd=cdls
 
