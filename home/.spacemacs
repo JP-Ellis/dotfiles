@@ -313,7 +313,7 @@ This function should only modify configuration layer settings."
      ;; vagrant
      ;; web-beautify
      xclipboard
-     ycmd
+     ;; ycmd
 
      ;;;; Vim
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
