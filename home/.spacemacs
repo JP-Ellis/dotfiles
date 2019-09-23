@@ -164,7 +164,7 @@ This function should only modify configuration layer settings."
      ;; java
      javascript
      ;; jr
-     ;; json
+     (json :variables json-fmt-on-save t)
      ;; jsonnet
      ;; julia
      ;; kotlin
