@@ -80,6 +80,32 @@ for codec in $codecs ; do
                 )
         if [[ "$channels" =~ "^.*\(side\)$" ]]; then
             AUDIO_OPTS+=(-filter:a:$i aformat=channel_layouts="${channels%%\(side\)}")
+        elif [[ "$channels" = "unknown" ]]; then
+            # If the layout is unknown, use the number of channels to infer the layout
+            channels=$(
+                ffprobe "$INPUT_FILE" \
+                    -v error \
+                    -select_streams a:$i \
+                    -show_entries stream=channels \
+                    -print_format default=nk=1:nw=1
+                    )
+            case $channels in
+                (1)
+                    AUDIO_OPTS+=(-filter:a:$i aformat=channel_layouts="mono")
+                    ;;
+                (2)
+                    AUDIO_OPTS+=(-filter:a:$i aformat=channel_layouts="stereo")
+                    ;;
+                (6)
+                    AUDIO_OPTS+=(-filter:a:$i aformat=channel_layouts="5.1")
+                    ;;
+                (8)
+                    AUDIO_OPTS+=(-filter:a:$i aformat=channel_layouts="7.1")
+                    ;;
+                (*)
+                    printf "Unknown channel layout with %d channels.\n" $channels >&2
+                    exit 1
+            esac
         fi
     fi
     ((i++))
