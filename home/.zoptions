@@ -400,7 +400,7 @@ unsetopt HIST_IGNORE_DUPS         # unset
 ## next command is entered before it vanishes, allowing you to briefly reuse or
 ## edit the line. If you want to make it vanish right away without entering
 ## another command, type a space and press return.
-unsetopt HIST_IGNORE_SPACE        # unset
+setopt HIST_IGNORE_SPACE        # unset
 ## By default, shell history that is read in from files is split into words on
 ## all white space. This means that arguments with quoted whitespace are not
 ## correctly handled, with the consequence that references to words in history
