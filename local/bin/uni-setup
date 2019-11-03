@@ -14,6 +14,3 @@ duplicity-front backup uni
 
 title "Update Uni computer"
 ssh uni-josh -t yay -Syu --noconfirm --devel --removemake
-
-title "Update emacs-git"
-yay -U $(ls /media/ssh/uni-josh/var/cache/pacman/pkg/* | grep emacs-git | sort | tail -n 1)
