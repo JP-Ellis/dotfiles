@@ -91,7 +91,7 @@ This function should only modify configuration layer settings."
      (treemacs :variables
                treemacs-use-collapsed-directories 3
                treemacs-use-filewatch-mode t
-               treemacs-use-follow-mode t)
+               treemacs-use-follow-mode 'tag)
 
      ;;;; Fonts
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -126,7 +126,7 @@ This function should only modify configuration layer settings."
      ;; autohotkey
      bibtex
      (c-c++ :variables
-            c-c++-backend 'lsp-ccls
+            c-c++-backend 'lsp
             c-c++-default-mode-for-headers 'c++-mode
             c-c++-enable-clang-format-on-save t
             c-c++-enable-google-style t
@@ -825,16 +825,7 @@ before packages are loaded."
   (setq-default
    ;; Prefer double spaces after lines
    sentence-end-double-space t)
-
-  ;; Fix for Helm not working nicely with the file browser side window.
-  ;;
-  ;; From:
-  ;; https://github.com/syl20bnr/spacemacs/issues/7446#issuecomment-417376425
-  (with-eval-after-load "helm"
-    (defun helm-persistent-action-display-window (&optional split-onewindow)
-      "Return the window that will be used for persistent action.
-If SPLIT-ONEWINDOW is non-`nil' window is split in persistent action."
-      (with-helm-window (setq helm-persistent-action-display-window (get-mru-window))))))
+)
 
 
 ;; Do not write anything past this comment. This is where Emacs will
