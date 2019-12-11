@@ -3,17 +3,14 @@
 # Any items in the `env` entry below will be added as
 # environment variables. Some entries may override variables
 # set by alacritty itself.
-env:
-  # TERM variable
-  #
-  # This value is used to set the `$TERM` environment variable for
-  # each instance of Alacritty. If it is not present, alacritty will
-  # check the local terminfo database and use `alacritty` if it is
-  # available, otherwise `xterm-256color` is used.
-  #TERM: xterm-256color
-  # Avoid scaling on a per-screen basis.
-  # See: https://github.com/jwilm/alacritty/issues/1501#issuecomment-413292223
-  WINIT_HIDPI_FACTOR: "1.0"
+# env:
+#   # TERM variable
+#   #
+#   # This value is used to set the `$TERM` environment variable for
+#   # each instance of Alacritty. If it is not present, alacritty will
+#   # check the local terminfo database and use `alacritty` if it is
+#   # available, otherwise `xterm-256color` is used.
+#   #TERM: xterm-256color
 
 window:
   # Window dimensions (changes require restart)
@@ -74,15 +71,6 @@ scrolling:
   # scrollback is enabled (history > 0).
   multiplier: 3
 
-  # Faux Scrolling
-  #
-  # The `faux_multiplier` setting controls the number of lines the terminal
-  # should scroll when the alternate screen buffer is active. This is used
-  # to allow mouse scrolling for applications like `man`.
-  #
-  # Specifying `0` will disable faux scrolling.
-  faux_multiplier: 3
-
   # Scroll to the bottom when new text is written to the terminal.
   auto_scroll: false
 
@@ -133,7 +121,7 @@ font:
     #style: Italic
 
   # Point size
-  size: 16.0
+  size: 10.0
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
