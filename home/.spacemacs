@@ -91,7 +91,7 @@ This function should only modify configuration layer settings."
      (treemacs :variables
                treemacs-use-collapsed-directories 3
                treemacs-use-filewatch-mode t
-               treemacs-use-follow-mode 'tag)
+               treemacs-use-follow-mode t)
 
      ;;;; Fonts
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -202,7 +202,7 @@ This function should only modify configuration layer settings."
      ;; sml
      sql
      ;; swift
-     ;; typescript
+     typescript
      ;; vimscript
      ;; windows-scripts
      yaml
