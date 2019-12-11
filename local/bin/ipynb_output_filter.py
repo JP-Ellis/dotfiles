@@ -62,7 +62,13 @@ for sheet in sheets:
                 cell[field] = None
 
         if "metadata" in cell:
-            for field in ["heading_collapsed", "collapsed", "scrolled", "ExecuteTime"]:
+            for field in [
+                "ExecuteTime",
+                "collapsed",
+                "heading_collapsed",
+                "hidden",
+                "scrolled",
+            ]:
                 if field in cell.metadata:
                     del cell.metadata[field]
 
