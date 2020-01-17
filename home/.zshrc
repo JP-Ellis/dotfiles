@@ -2,14 +2,22 @@
 ## Executes commands at the start of an interactive session.
 ################################################################################
 
-## Source Prezto.
-if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
-  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
-fi
-
+## Source ZSH options
 if [[ -s "$HOME/.zoptions" ]]; then
     source "$HOME/.zoptions"
 fi
+
+## Source Prezto.
+# if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+#   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+# fi
+
+## Source zplugin
+if [[ -s "$HOME/.zplugin" ]]; then
+    source "$HOME/.zplugin/bin/zplugin.zsh"
+    source "$HOME/.zpluginrc"
+fi
+
 
 ## Commands
 ################################################################################
@@ -48,7 +56,6 @@ export LESSOPEN='|pygmentize -g %s'
 
 ## Use exa as a replacement for ls
 if (( $+commands[exa] )); then
-    unalias ls l ll lr la lm lx lk lt lc lu sl
     # Change ls to exa
     alias ls='exa --group-directories-first --git --binary'
     alias li='ls --git-ignore'
@@ -63,7 +70,6 @@ if (( $+commands[exa] )); then
     alias lt='lm'
     alias sl=ls
 elif (( $+commands[lsd] )); then
-    unalias ls l ll lr la lm lx lk lt lc lu sl
     # Change ls to lsd
     alias ls='lsd --group-dirs first'
     alias l='ls --oneline --almost-all'
@@ -73,6 +79,19 @@ elif (( $+commands[lsd] )); then
     alias lk='ll --sizesort'
     alias lt='ll --timesort'
     alias sl=ls
+# else
+#     alias ls='ls --group-directories-first --git --binary'
+#     alias li='ls --git-ignore'
+#     alias l='ls --oneline --all'
+#     alias ll='ls --long --header'
+#     alias lr='ll --tree'
+#     alias la='ll --all'
+#     alias lx='ll --sort=extension'
+#     alias lk='ll --sort=size'
+#     alias lc='ll --sort=created --time=created'
+#     alias lm='ll --sort=modified --time=modified'
+#     alias lt='lm'
+#     alias sl=ls
 fi
 
 ## Make cd list the directory content on arrival
@@ -90,3 +109,9 @@ alias feh='\feh --scale-down'
 
 ## xclip defaults to using the clipboard
 alias xclip='\xclip -selection clipboard'
+
+
+## Load starship
+if (( $+commands[starship] )); then
+    eval "$(starship init zsh)"
+fi

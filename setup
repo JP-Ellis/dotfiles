@@ -86,9 +86,9 @@ printf '\n'
 ################################################################################
 
 title "Zprezto"
-if yes_or_no "Setup Zprezto?" Y; then
+if yes_or_no "Setup Zprezto?" N; then
     # Clone (or update) ZSH
-    if [ ! -d "$HOME/.zprezto" ]; then
+    if [[ ! -d "$HOME/.zprezto" ]]; then
         echo "Cloning zprezto"
         git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
         ln -fvs "$ROOT_DIR/prompt_jpellis_setup" "${ZDOTDIR:-$HOME}/.zprezto/modules/prompt/functions/prompt_jpellis_setup"
@@ -98,6 +98,14 @@ if yes_or_no "Setup Zprezto?" Y; then
 fi
 
 printf '\n'
+
+title "Zplugin"
+if yes_or_no "Setup Zplugin?" Y; then
+    mkdir -p ~/.zplugin
+    if [[ ! -d "$HOME/.zplugin/bin" ]]; then
+        git clone https://github.com/zdharma/zplugin.git ~/.zplugin/bin
+    fi
+fi
 
 ## Spacemacs
 ################################################################################
