@@ -205,7 +205,7 @@ This function should only modify configuration layer settings."
      typescript
      ;; vimscript
      ;; windows-scripts
-     yaml
+     (yaml :variables yaml-enable-lsp t)
      ;; yang
 
      ;;;; misc
