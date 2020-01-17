@@ -241,6 +241,7 @@ exec --no-startup-id i3-msg "workspace 1; layout tabbed"
 # exec --no-startup-id systemctl --user start gpg-agent
 # exec --no-startup-id systemctl --user start screensaver
 exec --no-startup-id systemctl --user restart udiskie
+exec --no-startup-id nm-applet
 
 ################################################################################
 ## Special Windows
