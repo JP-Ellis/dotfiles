@@ -14,7 +14,7 @@ hide_missing = true
 
 [[block]]
 block = "net"
-device = "wlp3s0"
+device = "wlan0"
 interval = 5
 ip = false
 ssid = false

@@ -215,7 +215,7 @@ bindsym $mod+p exec "papis rofi ''"
 bar {
       font pango:Open Sans 8
       position bottom
-      status_command i3status-rs ~/.config/i3/status.toml
+      status_command i3status-rs ~/.config/i3status/status.toml
       colors {
             separator #666666
             background #222222
