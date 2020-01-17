@@ -16,9 +16,9 @@ font pango:Open Sans 12
 output * bg /home/josh/.local/share/background.png fill
 
 # Use a 2-pixel boundary on windows
-new_window pixel 2
+default_border pixel 2
 # Use the normal window style on floats
-new_float normal
+default_floating_border normal
 
 # Hybrid colors
 set $base03  #002b36
@@ -199,7 +199,7 @@ bindsym $mod+p exec "papis rofi ''"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-      font pango:Open Sans 14
+      font pango:Open Sans 9
       position bottom
       status_command i3status-rs ~/.config/i3status/status.toml
       colors {
