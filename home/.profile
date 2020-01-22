@@ -100,6 +100,26 @@ case $- in
 esac
 
 
+## Load environment variables from .config/environment.d if needed
+################################################################################
+# Pending on the resut from https://github.com/systemd/systemd/issues/7641
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+    SESSION_TYPE=remote/ssh
+else
+    case $(ps -o comm= -p $PPID) in
+        sshd|*/sshd) SESSION_TYPE=remote/ssh;;
+    esac
+fi
+
+if [ "$SESSION_TYPE" = "remote/ssh" ]; then
+    for f in $HOME/.config/environment.d/* ; do
+        set -o allexport
+        source $f
+        set +o allexport
+    done
+fi
+
+
 ## Clean path
 ################################################################################
 
