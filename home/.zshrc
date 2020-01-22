@@ -8,15 +8,15 @@ if [[ -s "$HOME/.zoptions" ]]; then
 fi
 
 ## Source Prezto.
-# if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
-#   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
-# fi
+if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+fi
 
 ## Source zplugin
-if [[ -s "$HOME/.zplugin" ]]; then
-    source "$HOME/.zplugin/bin/zplugin.zsh"
-    source "$HOME/.zpluginrc"
-fi
+# if [[ -s "$HOME/.zplugin" ]]; then
+#     source "$HOME/.zplugin/bin/zplugin.zsh"
+#     source "$HOME/.zpluginrc"
+# fi
 
 
 ## Commands
