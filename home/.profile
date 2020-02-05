@@ -35,7 +35,7 @@ chmod 700 "$TMPDIR"
 export EDITOR='vim'
 export VISUAL='emacs'
 export PAGER='less'
-export BROWSER='firefox-developer-edition'
+export BROWSER='brave'
 
 
 ## Paths
