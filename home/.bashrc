@@ -78,13 +78,9 @@ fi
 
 ## Make cd list the directory content on arrival
 cdls () {
-    \cd "$argv[-1]" && ls "${(@)argv[1,-2]}"
+    \cd "$@" && ls
 }
 alias cd=cdls
-
-sshtmux() {
-    ssh -t "${@:1:-1}" "${@: -1}" "tmux new-session -As sshtmux"
-}
 
 ## Change feh
 alias feh='\feh --scale-down'
