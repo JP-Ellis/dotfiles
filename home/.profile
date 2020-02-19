@@ -33,7 +33,7 @@ chmod 700 "$TMPDIR"
 ################################################################################
 
 export EDITOR='vim'
-export VISUAL='emacs'
+export VISUAL='code -w'
 export PAGER='less'
 export BROWSER='brave'
 
