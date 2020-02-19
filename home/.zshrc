@@ -22,7 +22,12 @@ fi
 ## Commands
 ################################################################################
 
-## Add a command to cd into a tmp directory
+## Various navigation/directory shortcuts and convenience
+cdls () {
+    \cd "$argv[-1]" && ls "${(@)argv[1,-2]}"
+}
+alias cd=cdls
+alias mkcd='\mkdir $1 && cd $1'
 alias cdtmp='cd $(mktemp -d)'
 
 ## Shorten `xdg-open` to just `open`, and if given multiple arguments open each
@@ -32,7 +37,6 @@ open() {
         xdg-open "$arg"
     done
 }
-
 
 ## Set the default Less options.
 ## Mouse-wheel scrolling has been disabled by `--no-init` (disable screen clearing).
@@ -52,7 +56,6 @@ less_opt=(
     --window=-4
 )
 export LESS="$less_opt"
-export LESSOPEN='|pygmentize -g %s'
 
 ## Use exa as a replacement for ls
 if (( $+commands[exa] )); then
@@ -94,12 +97,7 @@ elif (( $+commands[lsd] )); then
 #     alias sl=ls
 fi
 
-## Make cd list the directory content on arrival
-cdls () {
-    \cd "$argv[-1]" && ls "${(@)argv[1,-2]}"
-}
-alias cd=cdls
-
+## Combine SSH and tmux
 sshtmux() {
     ssh -t "${@:1:-1}" "${@: -1}" "tmux new-session -As sshtmux"
 }
@@ -110,6 +108,10 @@ alias feh='\feh --scale-down'
 ## xclip defaults to using the clipboard
 alias xclip='\xclip -selection clipboard'
 
+## Use to format man page
+if (( $+commands[bat] )); then
+    export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+fi
 
 ## Load starship
 if (( $+commands[starship] )); then

@@ -5,8 +5,14 @@
 ## Commands
 ################################################################################
 
-## Add a command to cd into a tmp directory
+## Various navigation/directory shortcuts and convenience
 alias cdtmp='cd $(mktemp -d)'
+cdls () {
+    \cd "$@" && ls
+}
+alias cd=cdls
+alias mkcd='\mkdir $1 && cd $1'
+
 
 ## Shorten `xdg-open` to just `open`, and if given multiple arguments open each
 ## of them individually.
@@ -15,7 +21,6 @@ open() {
         xdg-open "$arg"
     done
 }
-
 
 ## Set the default Less options.
 ## Mouse-wheel scrolling has been disabled by `--no-init` (disable screen clearing).
@@ -34,8 +39,7 @@ less_opt=(
     --squeeze-blank-lines
     --window=-4
 )
-export LESS="$less_opt"
-export LESSOPEN='|pygmentize -g %s'
+export LESS="${less_opt[@]}"
 
 ## Use exa as a replacement for ls
 if command -v exa 2>&1 1>/dev/null ; then
@@ -76,18 +80,16 @@ else
     alias sl=ls
 fi
 
-## Make cd list the directory content on arrival
-cdls () {
-    \cd "$@" && ls
-}
-alias cd=cdls
-
 ## Change feh
 alias feh='\feh --scale-down'
 
 ## xclip defaults to using the clipboard
 alias xclip='\xclip -selection clipboard'
 
+## Use to format man page
+if command -v bat 2>&1 1>/dev/null ; then
+    export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+fi
 
 ## Load starship
 if command -v starship 2>&1 1>/dev/null ; then
