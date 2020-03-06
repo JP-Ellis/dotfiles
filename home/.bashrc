@@ -5,15 +5,6 @@
 ## Commands
 ################################################################################
 
-## Various navigation/directory shortcuts and convenience
-alias cdtmp='cd $(mktemp -d)'
-cdls () {
-    \cd "$@" && ls
-}
-alias cd=cdls
-alias mkcd='\mkdir $1 && cd $1'
-
-
 ## Shorten `xdg-open` to just `open`, and if given multiple arguments open each
 ## of them individually.
 open() {
@@ -85,6 +76,14 @@ alias feh='\feh --scale-down'
 
 ## xclip defaults to using the clipboard
 alias xclip='\xclip -selection clipboard'
+
+## Various navigation/directory shortcuts and convenience
+alias cdtmp='cd $(mktemp -d)'
+cdls () {
+    \cd "$@" && ls
+}
+alias cd=cdls
+alias mkcd='\mkdir $1 && cd $1'
 
 ## Use to format man page
 if command -v bat 2>&1 1>/dev/null ; then
