@@ -48,6 +48,7 @@ less_opt=(
     --ignore-case
     --jump-target=.5
     --LONG-PROMPT
+    --mouse
     --no-init
     --quit-if-one-screen
     --RAW-CONTROL-CHARS
