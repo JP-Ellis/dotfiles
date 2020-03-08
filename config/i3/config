@@ -232,11 +232,11 @@ bar {
 ################################################################################
 
 # Startup
-exec --no-startup-id i3-msg "workspace 10; exec alacritty"
-# exec --no-startup-id i3-msg "workspace 1; exec firefox-developer-edition"
-exec --no-startup-id i3-msg "workspace 1; exec brave"
-exec --no-startup-id i3-msg "workspace 1; exec signal-desktop"
-exec --no-startup-id i3-msg "workspace 1; layout tabbed"
+exec --no-startup-id i3-msg "exec alacritty"
+# exec --no-startup-id i3-msg "exec firefox-developer-edition"
+exec --no-startup-id i3-msg "exec brave"
+exec --no-startup-id i3-msg "exec signal-desktop"
+exec --no-startup-id i3-msg "layout tabbed"
 
 # Some services need to be started *after* i3
 # exec --no-startup-id systemctl --user start gpg-agent
