@@ -114,6 +114,9 @@ if (( $+commands[bat] )); then
     export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 fi
 
+## Filter out ANSI colours
+alias remove-ansi="sed 's/\x1b\[[0-9;]*m//g'"
+
 ## Load starship
 if (( $+commands[starship] )); then
     eval "$(starship init zsh)"
