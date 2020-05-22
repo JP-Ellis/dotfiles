@@ -57,7 +57,7 @@ set $mod Mod4
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec alacritty
+bindsym $mod+Return exec kitty
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -232,7 +232,7 @@ bar {
 ################################################################################
 
 # Startup
-exec --no-startup-id i3-msg "exec alacritty"
+exec --no-startup-id i3-msg "exec kitty"
 # exec --no-startup-id i3-msg "exec firefox-developer-edition"
 exec --no-startup-id i3-msg "exec brave"
 exec --no-startup-id i3-msg "exec signal-desktop"
