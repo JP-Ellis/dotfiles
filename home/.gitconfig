@@ -6,6 +6,9 @@
 [commit]
 	gpgsign = true
 
+[pull]
+	rebase = true
+
 [format]
 	signoff = true
 
@@ -25,6 +28,9 @@
 	helper = gcloud.sh
 
 [github]
+	user = JP-Ellis
+
+[gitlab]
 	user = JP-Ellis
 
 [magithub]
@@ -47,5 +53,4 @@
 [filter "dropoutput_nb"]
 	clean = mathematica-notebook-filter
 	smudge = cat
-[gitlab]
-	user = JP-Ellis
+
