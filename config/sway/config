@@ -10,7 +10,7 @@
 # is used in the bar {} block below.
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
-font pango:Open Sans 12
+font pango:Open Sans 10
 
 # Background image
 output * bg /home/josh/.local/share/background.png fill
@@ -56,7 +56,7 @@ set $mod Mod4
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec alacritty
+bindsym $mod+Return exec kitty
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -218,7 +218,7 @@ bar {
 ################################################################################
 
 # Startup
-exec --no-startup-id swaymsg "workspace 10; exec termite"
+exec --no-startup-id swaymsg "workspace 10; exec kitty"
 exec --no-startup-id swaymsg "workspace 2; exec emacs"
 exec --no-startup-id swaymsg "workspace 1; exec firefox-developer-edition"
 exec --no-startup-id swaymsg "workspace 1; exec signal-desktop"
