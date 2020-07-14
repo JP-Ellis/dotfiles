@@ -7,17 +7,16 @@ name = "awesome"
 [[block]]
 block = "net"
 device = "ens9"
-interval = 5
-ip = false
+interval = 2
 hide_inactive = true
 hide_missing = true
+format = "{ip} {speed_up} {speed_down}"
 
 [[block]]
 block = "net"
 device = "wlan0"
-interval = 5
-ip = false
-ssid = false
+interval = 2
+format = "{ssid} {ip} {speed_up} {speed_down}"
 
 [[block]]
 block = "disk_space"
