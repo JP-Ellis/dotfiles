@@ -44,14 +44,30 @@ export BROWSER='brave'
 ## Update the various PATH variables if the relevant subdirectories exist
 add_paths() {
     if [ -d "$1/bin" ] ; then
-        export PATH="$1/bin:$PATH"
+        if [ -z "$PATH" ] ; then
+            export PATH="$1/bin"
+        else
+            export PATH="$1/bin:$PATH"
+        fi
     fi
     if [ -d "$1/include" ] ; then
-        export CPATH="$1/include:$CPATH"
+        if [ -z "$CPATH" ] ; then
+            export CPATH="$1/include"
+        else
+            export CPATH="$1/include:$CPATH"
+        fi
     fi
     if [ -d "$1/lib" ] ; then
-        export LIBRARY_PATH="$1/lib:$LIBRARY_PATH"
-        export LD_LIBRARY_PATH="$1/lib:$LD_LIBRARY_PATH"
+        if [ -z "$LIBRARY_PATH" ] ; then
+            export LIBRARY_PATH="$1/lib"
+        else
+            export LIBRARY_PATH="$1/lib:$LIBRARY_PATH"
+        fi
+        if [ -z "$LD_LIBRARY_PATH" ] ; then
+            export LD_LIBRARY_PATH="$1/lib"
+        else
+            export LD_LIBRARY_PATH="$1/lib:$LD_LIBRARY_PATH"
+        fi
     fi
 }
 
