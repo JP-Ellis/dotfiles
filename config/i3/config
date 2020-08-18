@@ -204,7 +204,8 @@ bindsym XF86AudioPlay               exec playerctl play-pause
 bindsym $mod+Ctrl+l exec "xautolock -locknow"
 
 # Papis
-bindsym $mod+p exec "papis rofi"
+bindsym $mod+p exec "papis rofi '.'"
+bindsym $mod+shift+p exec "papis -l books rofi '.'"
 
 # Bitwarden rofi
 bindsym $mod+b exec "bwmenu"
@@ -236,7 +237,6 @@ bar {
 
 # Startup
 exec --no-startup-id i3-msg "exec kitty"
-# exec --no-startup-id i3-msg "exec firefox-developer-edition"
 exec --no-startup-id i3-msg "exec brave"
 exec --no-startup-id i3-msg "exec signal-desktop"
 exec --no-startup-id i3-msg "layout tabbed"
@@ -245,6 +245,7 @@ exec --no-startup-id i3-msg "layout tabbed"
 # exec --no-startup-id systemctl --user start gpg-agent
 # exec --no-startup-id systemctl --user start screensaver
 exec --no-startup-id systemctl --user restart udiskie
+exec --no-startup-id systemctl --user restart polkit
 exec --no-startup-id nm-applet
 
 ################################################################################
