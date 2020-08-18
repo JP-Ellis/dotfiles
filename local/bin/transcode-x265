@@ -43,7 +43,7 @@ for codec in $codecs ; do
         VIDEO_OPTS+=(-c:v:$i copy)
     else
         NEEDS_TRANSCODING=true
-        VIDEO_OPTS+=(-c:v:$i libx265)
+        VIDEO_OPTS+=(-c:v:$i libx265 -preset veryslow)
     fi
     ((i++))
 done
