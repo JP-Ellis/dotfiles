@@ -12,10 +12,10 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-## Source zplugin
-# if [[ -s "$HOME/.zplugin" ]]; then
-#     source "$HOME/.zplugin/bin/zplugin.zsh"
-#     source "$HOME/.zpluginrc"
+## Source zinit
+# if [[ -s "$HOME/.zinit" ]]; then
+#     source "$HOME/.zinit/bin/zinit.zsh"
+#     source "$HOME/.zinitrc"
 # fi
 
 
