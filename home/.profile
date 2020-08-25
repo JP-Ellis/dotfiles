@@ -75,13 +75,6 @@ for dir in "$HOME/.local" "/scratch/$USER/local" "/scratch/$SUSER/local" ; do
 done
 
 
-## Rust
-################################################################################
-
-if [ -n "$CARGO_HOME" ]; then
-    export PATH="$CARGO_HOME/bin:$PATH"
-fi
-
 ## gpg-agent and ssh
 ################################################################################
 
