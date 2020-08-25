@@ -120,7 +120,11 @@ else
 fi
 
 if [ "$SESSION_TYPE" = "remote/ssh" ]; then
-    export $(find $HOME/.config/environment.d/ -type f -exec cat '{}' + | sed '/^[ \t]*#/d' | xargs)
+    set -o allexport
+    for f in $(find $HOME/.config/environment.d/ -type f); do
+        source $f
+    done
+    set +o allexport
 fi
 
 
