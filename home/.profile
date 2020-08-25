@@ -127,7 +127,7 @@ else
 fi
 
 if [ "$SESSION_TYPE" = "remote/ssh" ]; then
-    export $(systemctl --user show-environment | xargs)
+    export $(find $HOME/.config/environment.d -type f -exec cat '{}' + | xargs)
 fi
 
 
@@ -148,3 +148,6 @@ for p in $(printf %s "$PATH" | tr ':' '\n') ; do
     fi
 done
 export PATH="$clean_path"
+
+## Customizations
+################################################################################
