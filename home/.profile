@@ -120,11 +120,7 @@ else
 fi
 
 if [ "$SESSION_TYPE" = "remote/ssh" ]; then
-    set -o allexport
-    for f in $(find $HOME/.config/environment.d/ -type f); do
-        source $f
-    done
-    set +o allexport
+    export $(/usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator)
 fi
 
 
