@@ -119,19 +119,13 @@ else
     esac
 fi
 
-if [ "$SESSION_TYPE" = "remote/ssh" ]; then
-    if [ -x /usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator ]; then
-        export $(/usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator)
-    else
-        if [ -d "$HOME/.config/environment.d" ]; then
-            set -o allexport
-            for conf in $(ls "$HOME/.config/environment.d"/*.conf)
-            do
-                source "$conf"
-            done
-            set +o allexport
-        fi
-    fi
+if [ "$SESSION_TYPE" = "remote/ssh" -a -d "$HOME/.config/environment.d" ]; then
+    set -o allexport
+    for conf in $(ls "$HOME/.config/environment.d"/*.conf)
+    do
+        source "$conf"
+    done
+    set +o allexport
 fi
 
 
