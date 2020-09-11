@@ -97,11 +97,11 @@ codecs=(
 )
 i=0
 for codec in $codecs ; do
-    if [[ -z "$FORCE_VIDEO" || $codec == "hevc" ]]; then
-        VIDEO_OPTS+=(-c:v:$i copy)
-    else
+    if [[ -n "$FORCE_VIDEO" || $codec != "hevc" ]]; then
         NEEDS_TRANSCODING=true
         VIDEO_OPTS+=(-c:v:$i libx265 -preset veryslow)
+    else
+        VIDEO_OPTS+=(-c:v:$i copy)
     fi
     ((i++))
 done
@@ -120,9 +120,7 @@ codecs=(
 )
 i=0
 for codec in $codecs ; do
-    if [[ -z "$FORCE_AUDIO" || $codec == "opus" ]]; then
-        AUDIO_OPTS+=(-c:a:$i copy)
-    else
+    if [[ -n "$FORCE_AUDIO" || $codec != "opus" ]]; then
         NEEDS_TRANSCODING=true
         AUDIO_OPTS+=(-c:a:$i libopus -b:a:$i 128k)
 
@@ -165,6 +163,8 @@ for codec in $codecs ; do
                     exit 1
             esac
         fi
+    else
+        AUDIO_OPTS+=(-c:a:$i copy)
     fi
     ((i++))
 done
@@ -173,7 +173,7 @@ done
 ## Run FFmpeg
 if $NEEDS_TRANSCODING ; then
     set -x
-    echo ffmpeg -hide_banner \
+    ffmpeg -hide_banner \
            -n \
            -i "$INPUT_FILE" \
            -map_metadata 0 \
@@ -183,4 +183,7 @@ if $NEEDS_TRANSCODING ; then
            "${(@)AUDIO_OPTS}" \
            "$OUTPUT_FILE"
     set +x
+else
+    echo "No transcoding needed." >&2
+    exit -1
 fi
