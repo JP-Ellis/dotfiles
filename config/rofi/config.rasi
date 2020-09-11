@@ -1,0 +1,17 @@
+configuration {
+	font: "Roboto 18";
+	terminal: "alacritty";
+	ssh-client: "ssh";
+	ssh-command: "{terminal} -e {ssh-client} {host}";
+	run-command: "{cmd}";
+	run-list-command: "";
+	run-shell-command: "{terminal} -e {cmd}";
+	disable-history: false;
+	case-sensitive: false;
+	sidebar-mode: false;
+	auto-select: false;
+	parse-hosts: true;
+	parse-known-hosts: true;
+	combi-modi: "window,run";
+	tokenize: true;
+}
