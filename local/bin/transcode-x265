@@ -1,27 +1,87 @@
 #!/usr/bin/zsh
 
-## Get the input filename, and either get or generate the output filename
-if [[ $# -ge 1 ]]; then
-    INPUT_FILE="$1"
+set -x
+
+zparseopts -E -D -- \
+    h=HELP \
+    -help=HELP \
+    i:=INPUT_FILE \
+    -input:=INPUT_FILE \
+    o:=OUTPUT_FILE \
+    -output::=OUTPUT_FILE \
+    f=FORCE \
+    -force=FORCE \
+    fv=FORCE_VIDEO \
+    -force-video=FORCE_VIDEO \
+    fa=FORCE_AUDIO \
+    -force-audio=FORCE_AUDIO
+
+if [[ ! -z "$HELP" ]]; then
+    echo "${0:t} [options] INPUT [OUTPUT]"
+    echo "Options"
+    echo "  -h, --help           Print help message"
+    echo "  -i, --input [FILE]   Set the input file"
+    echo "  -o, --output [FILE]  Set the output file"
+    echo "      If this is not specified, it is determined from the input file"
+    echo "      based on the following rules:"
+    echo "      - If the INPUT_FILE's extension is .mkv, the output file uses"
+    echo "        the same base name with x265.mkv as the extension."
+    echo "      - If the INPUT_FILE's extensions is not .mkv, the output file"
+    echo "        uses the same base name with the .mkv."
+    echo "  -f, --force          Force transcoding even if it is already in"
+    echo "      in the desired target codec, for both video and audio."
+    echo "  -fv, --force-video   Force transcoding video."
+    echo "  -fa, --force-audio   Force transcoding audio."
+    echo ""
+    echo "If the input file is specified with an option, then any positional"
+    echo "argument will be taken to be the output file."
+
+    exit 0
+fi
+
+# Get the input file
+if [[ -z "$INPUT_FILE[2]" ]]; then
+    if [[ -z "$1" ]]; then
+        echo "Input file must be provided." >&2
+        exit 1
+    else
+        INPUT_FILE="$1"
+        shift
+    fi
 else
-    echo "Input file must be provided." >&2
+    INPUT_FILE="$INPUT_FILE[2]"
+fi
+
+# Get the output file
+if [[ -z "$OUTPUT_FILE[2]" ]]; then
+    OUTPUT_FILE="$1"
+    shift
+else
+    OUTPUT_FILE="$OUTPUT_FILE[2]"
+fi
+
+# If there are more arguments, give a warning
+if [[ $# -ge 1 ]]; then
+    echo "Unknown arguments: $@" >&2
     exit 1
 fi
 
-shift
-if [[ $# -ge 1 ]]; then
-    OUTPUT_FILE="$1"
-else
-    OUTPUT_FILE="$INPUT_FILE"
-fi
-if [[ "${OUTPUT_FILE:e}" = "mkv" && -e "$OUTPUT_FILE" ]]; then
-    OUTPUT_FILE="${OUTPUT_FILE:r}.x265.mkv"
-else
-    if [[ "${OUTPUT_FILE:e}" = "" ]]; then
-        OUTPUT_FILE="$OUTPUT_FILE.mkv"
+# Generate the output file name if it isn't given
+if [[ -z "$OUTPUT_FILE" ]]; then
+    if [[ "${INPUT_FILE:e}" = "mkv" ]]; then
+        OUTPUT_FILE="${INPUT_FILE:r}.x265.mkv"
     else
-        OUTPUT_FILE="${OUTPUT_FILE:r}.mkv"
+        OUTPUT_FILE="${INPUT_FILE:r}.mkv"
     fi
+fi
+
+# If --force is given, force-audio and force-video are both enabled.
+if [[ -n "$FORCE[2]" ]]; then
+    FORCE_AUDIO="$FORCE[2]"
+    FORCE_VIDEO="$FORCE[2]"
+else
+    FORCE_AUDIO="$FORCE_AUDIO[2]"
+    FORCE_VIDEO="$FORCE_VIDEO[2]"
 fi
 
 NEEDS_TRANSCODING=false
@@ -39,7 +99,7 @@ codecs=(
 )
 i=0
 for codec in $codecs ; do
-    if [[ $codec == "hevc" ]]; then
+    if [[ -z "$FORCE_AUDIO" && $codec == "hevc" ]]; then
         VIDEO_OPTS+=(-c:v:$i copy)
     else
         NEEDS_TRANSCODING=true
@@ -62,7 +122,7 @@ codecs=(
 )
 i=0
 for codec in $codecs ; do
-    if [[ $codec == "opus" ]]; then
+    if [[ -z "$FORCE_VIDEO" && $codec == "opus" ]]; then
         AUDIO_OPTS+=(-c:a:$i copy)
     else
         NEEDS_TRANSCODING=true
@@ -115,7 +175,7 @@ done
 ## Run FFmpeg
 if $NEEDS_TRANSCODING ; then
     set -x
-    ffmpeg -hide_banner \
+    echo ffmpeg -hide_banner \
            -n \
            -i "$INPUT_FILE" \
            -map_metadata 0 \
