@@ -74,12 +74,12 @@ if [[ -z "$OUTPUT_FILE" ]]; then
 fi
 
 # If --force is given, force-audio and force-video are both enabled.
-if [[ -n "$FORCE[2]" ]]; then
-    FORCE_AUDIO="$FORCE[2]"
-    FORCE_VIDEO="$FORCE[2]"
+if [[ -n "$FORCE[1]" ]]; then
+    FORCE_AUDIO="$FORCE[1]"
+    FORCE_VIDEO="$FORCE[1]"
 else
-    FORCE_AUDIO="$FORCE_AUDIO[2]"
-    FORCE_VIDEO="$FORCE_VIDEO[2]"
+    FORCE_AUDIO="$FORCE_AUDIO[1]"
+    FORCE_VIDEO="$FORCE_VIDEO[1]"
 fi
 
 NEEDS_TRANSCODING=false
