@@ -208,7 +208,7 @@ bindsym $mod+p exec "papis rofi '.'"
 bindsym $mod+shift+p exec "papis -l books rofi '.'"
 
 # Bitwarden rofi
-bindsym $mod+b exec "bwmenu"
+bindsym $mod+b exec "bwmenu --auto-lock 14400"
 
 ################################################################################
 ## Bar
