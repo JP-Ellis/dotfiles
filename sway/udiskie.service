@@ -1,0 +1,10 @@
+[Unit]
+Description=Automatic Userspace Disk Mounting
+Documentation=man:udiskie(1)
+PartOf=graphical-session.target
+
+[Install]
+WantedBy=sway-session.target
+
+[Service]
+ExecStart=/usr/bin/udiskie

@@ -1,0 +1,62 @@
+[sway.files]
+"sway/background.png" = "~/.config/sway/background.png"
+"sway/config" = "~/.config/sway/config"
+"sway/sway-session.target" = "~/.config/systemd/user/sway-session.target"
+"sway/swayidle.service" = "~/.config/systemd/user/swayidle.service"
+"sway/swaylock" = "~/.config/sway/swaylock"
+"sway/mako.service" = "~/.config/systemd/user/mako.service"
+"sway/mako" = "~/.config/mako/config"
+"sway/waybar.css" = "~/.config/waybar/style.css"
+"sway/waybar.json" = "~/.config/waybar/config"
+"sway/waybar.service" = "~/.config/systemd/user/waybar.service"
+"sway/udiskie.service" = "~/.config/systemd/user/udiskie.service"
+"sway/udiskie.yml" = "~/.config/udiskie/config.yml"
+[sway.variables]
+terminal = "kitty"
+
+[fonts.files]
+"fontconfig/conf.d/40-monospace.conf" = "~/.config/fontconfig/conf.d/40-monospace.conf"
+"fontconfig/conf.d/40-sans-serif.conf" = "~/.config/fontconfig/conf.d/40-sans-serif.conf"
+"fontconfig/conf.d/40-serif.conf" = "~/.config/fontconfig/conf.d/40-serif.conf"
+
+[bash.files]
+"bash/bashrc" = "~/.bashrc"
+"bash/bash_profile" = "~/.bash_profile"
+
+[general.files]
+"general/environment.d/10-applications.conf" = "~/.config/environment.d/10-applications.conf"
+"general/environment.d/10-xdg.conf" = "~/.config/environment.d/10-xdg.conf"
+"general/environment.d/90-make.conf" = "~/.config/environment.d/90-make.conf"
+"general/environment.d/90-python.conf" = "~/.config/environment.d/90-python.conf"
+"general/environment.d/90-rust.conf" = "~/.config/environment.d/90-rust.conf"
+"general/polkit-gnome-authentication-agent.service" = "~/.config/systemd/user/polkit-gnome-authentication-agent.service"
+"general/home-josh-media-macbook.automount" = "~/.config/systemd/user/home-josh-media-macbook.automount"
+"general/home-josh-media-macbook.mount" = "~/.config/systemd/user/home-josh-media-macbook.mount"
+"general/home-josh-media-cxin.mount" = "~/.config/systemd/user/home-josh-media-cxin.mount"
+"general/profile" = "~/.profile"
+"general/sshconfig" = "~/.ssh/config"
+[general.variables]
+app-editor = "vim"
+app-visual = "code -w"
+app-pager = "bat"
+app-browser = "brave"
+nproc = 12
+
+[kitty.files]
+"kitty/kitty.conf" = "~/.config/kitty/kitty.conf"
+"kitty/light.theme.conf" = "~/.config/kitty/light.theme.conf"
+"kitty/dark.theme.conf" = "~/.config/kitty/dark.theme.conf"
+
+[git.files]
+"git/attributes" = "~/.config/git/attributes"
+"git/config" = "~/.config/git/config"
+"git/ipynb_output_filter.py" = "~/.config/git/ipynb_output_filter.py"
+[git.variables]
+signingkey = "josh@jpellis.me"
+
+[gpg.files]
+"gpg/sshcontrol" = "~/.gnupg/sshcontrol"
+"gpg/gpg-agent.conf" = "~/.gnupg/gpg-agent.conf"
+
+[mopidy.files]
+"mopidy/mopidy.conf" = "~/.config/mopidy/mopidy.conf"

@@ -1,0 +1,68 @@
+#!/bin/bash
+
+################################################################################
+## Executes commands at the start of an interactive session.
+################################################################################
+
+## Commands
+################################################################################
+
+## Shorten `xdg-open` to just `open`, and if given multiple arguments open each
+## of them individually.
+open() {
+  local arg
+  for arg in "$@"; do
+    xdg-open "$arg"
+  done
+}
+
+## ls substitution
+if command -v exa 2>&1 1>/dev/null ; then
+  alias ls='exa --group-directories-first --git --binary'  # default
+  alias li='ls --git-ignore'                               # use gitignore
+  alias l='ls --oneline --all'                             # list for parsing
+  alias ll='ls --long --header'                            # default with a bit more
+  alias lr='ll --tree'                                     # recurse
+  alias la='ll --all'                                      # show all
+  alias lx='ll --sort=extension'                           # sort by e_x_tension
+  alias lb='ll --sort=size'                                # sort by _b_ytes
+  alias lc='ll --sort=created --time=created'              # sort by _c_reation date
+  alias lm='ll --sort=modified --time=modified'            # sort by _m_odification date
+  alias lt='lm'                                            # sort by (modification) _t_ime
+  alias sl=ls                                              # typo fix
+else
+  alias ls='ls --group-directories-first --color=auto'     # default
+  alias l='ls -1 --almost-all'                             # list for parsing
+  alias ll='ls -l --human-readable'                        # default with a bit more
+  alias lr='ll --recursive'                                # recurse
+  alias la='ll --almost-all'                               # show all
+  alias lx='ll --sort=extension'                           # sort by e_x_tension
+  alias lb='ll --sort=size'                                # sort by _b_ytes
+  alias lc='ll --sort=time --time=created'                 # sort by _c_reation date
+  alias lm='ll --sort=time --time=modified'                # sort by _m_odification date
+  alias lt='lm'                                            # sort by (modification) _t_ime
+  alias sl=ls                                              # typo fix
+fi
+
+## Set xclip to default to using the clipboard
+alias xclip='\xclip -selection clipboard'
+
+## Run ls after entering a directory
+cd() {
+  builtin cd "$1" && ls
+}
+
+## Shortcut to make and cd into a new directory
+mkcd() {
+  mkdir "$1" && cd "$1"
+}
+
+## Use bat to format man page
+if command -v bat 2>&1 1>/dev/null ; then
+  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+fi
+
+## Load starship
+if command -v starship 2>&1 1>/dev/null ; then
+  eval "$(starship init bash)"
+fi

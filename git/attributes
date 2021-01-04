@@ -1,0 +1,17 @@
+*.ipynb    filter=dropoutput_ipynb
+*.nb       filter=dropoutput_nb
+
+# Compressed files
+*.gz       diff=gzip
+*.bz2      diff=bzip2
+*.xz       diff=gzip
+*.zst      diff=zstd
+
+# Archives
+*.tar      diff=tar
+*.tgz      diff=tar-gz
+*.tar.gz   diff=tar-gz
+*.tar.bz2  diff=tar-bz2
+*.tar.zst  diff=tar-zst
+*.tar.xz   diff=tar-xz
+*.zip      diff=zip

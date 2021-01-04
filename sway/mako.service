@@ -1,0 +1,10 @@
+[Unit]
+Description=Mako notifications for Sway
+Documentation=man:mako(1)
+PartOf=graphical-session.target
+
+[Install]
+WantedBy=sway-session.target
+
+[Service]
+ExecStart=mako

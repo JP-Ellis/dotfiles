@@ -1,0 +1,8 @@
+[Unit]
+Description=CXIn SSH Mount
+
+[Mount]
+What=jellis@cxin01.cloud.coepp.org.au:/
+Type=fuse.sshfs
+Where=/home/josh/media/cxin/
+Options=_netdev,

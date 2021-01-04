@@ -1,0 +1,86 @@
+[user]
+	email = josh@jpellis.me
+	name = JP-Ellis
+	signingkey = josh@jpellis.me
+
+[commit]
+	gpgsign = true
+
+[pull]
+	rebase = true
+
+[format]
+	signoff = true
+
+[alias]
+	lg = log \
+		--graph \
+		--abbrev-commit \
+		--decorate \
+		--date=relative \
+		--all \
+		--format=format:'%C(red)%h%C(reset) - %C(white)%s%C(reset) %C(green)(%ar)%C(reset) %C(blue)<%an>%C(reset)%C(yellow)%d%C(reset)'
+	pull-all = "!f() { git pull && git submodule update --init --recursive \"$@\"; }; f"
+
+# Credentials / Integration
+################################################################################
+[credential "https://source.developers.google.com"]
+	helper = gcloud.sh
+
+[github]
+	user = JP-Ellis
+
+[gitlab]
+	user = JP-Ellis
+
+[magithub]
+	online = true
+
+[magithub "status"]
+	includeStatusHeader = true
+	includePullRequestsSection = true
+	includeIssuesSection = true
+
+# Filters for files containing outputs which shouldn't be committed
+################################################################################
+[filter "dropoutput_ipynb"]
+	clean = ~/.config/git/ipynb_output_filter.py
+	smudge = cat
+
+[filter "dropoutput_nb"]
+	clean = mathematica-notebook-filter
+	smudge = cat
+
+# Compressed files
+[diff "gzip"]
+    binary = true
+    textconv = /bin/zcat
+[diff "bz2"]
+    binary = true
+    textconv = /bin/bzcat
+[diff "xz"]
+    binary = true
+    textconv = /bin/xzcat
+[diff "zstd"]
+    binary = true
+    textconv = /bin/zstdcat
+
+ # Archives
+[diff "tar"]
+    binary = true
+    textconv = tar --to-stdout -tvf
+[diff "tar-gz"]
+    binary = true
+    textconv = tar --to-stdout --gzip -tvf
+[diff "tar-bz2"]
+    binary = true
+    textconv = tar --to-stdout --bzip2 -tvf
+[diff "tar-xz"]
+    binary = true
+    textconv = tar --to-stdout --xz -tvf
+[diff "tar-zst"]
+    binary = true
+    textconv = tar --to-stdout --zstd -tvf
+[diff "zip"]
+    binary = true
+    textconv = unzip -v

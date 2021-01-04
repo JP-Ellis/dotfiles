@@ -1,0 +1,120 @@
+#!/bin/sh
+
+## User name
+################################################################################
+## If $USER is some long@username.institution.edu, define $SUSER to be the part
+## before the '@' (or leave it unchanged if there is no '@').
+export SUSER="${USER%@*}"
+
+
+## Temporary directory
+################################################################################
+## Remove trailing slash from $TMPDIR if present
+export TMPDIR="${TMPDIR%/}"
+
+## If $TMPDIR is unset, set it to /tmp/$SUSER
+if [ -z "$TMPDIR" ] ; then
+  export TMPDIR="/tmp/$SUSER"
+fi
+
+## Make sure that $TMPDIR ends with $SUSER
+if [ "${TMPDIR%$SUSER}" = "$TMPDIR" ] ; then
+  export TMPDIR="$TMPDIR/$SUSER"
+fi
+
+## Ensure $TMPDIR is only readable to the current user
+mkdir -p -m 700 "$TMPDIR"
+chown "$USER:$USER" "$TMPDIR"
+chmod 700 "$TMPDIR"
+
+if command -v setfacl 2>&1 1>/dev/null ; then
+  setfacl -m "user:${USER}:rwx,group::---,mask::---,other::---" $TMPDIR
+fi
+
+## Paths
+################################################################################
+
+add_path() {
+  if [ $# -ne 2 -a $# -ne 3 ]; then
+    echo "add_path PATH_VAR PATH [append]" >&2
+    return
+  fi
+
+  # Remove trailing slash
+  local p
+  p="${2%/}"
+
+  case "${!1}" in
+    *"$p"*)
+      # Path already present, do nothing
+      ;;
+    "")
+      # Empty path var, initialize it
+      export "$1"="$p"
+      ;;
+    *)
+      # Prepend by default, unless specified to append
+      if [ -z "$3" ]; then
+        export "$1"="$p:${!1}"
+      else
+        export "$1"="${!1}:$p"
+      fi
+      ;;
+  esac
+}
+
+for dir in "$HOME/.local" "/scratch/$USER/local" "/scratch/$SUSER/local" ; do
+  if [ -d "$dir/bin" ]; then
+    add_path PATH "$dir/bin"
+  fi
+  if [ -d "$dir/lib" ]; then
+    add_path LD_LIBRARY_PATH "$dir/lib"
+  fi
+done
+
+
+## SSH Socket from GPG Agent
+################################################################################
+
+if [ -z "$SSH_AUTH_SOCK" ] && command -v gpgconf 2>&1 1>/dev/null ; then
+  export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+fi
+
+
+## Interactive Shell
+################################################################################
+# Last couple of things to check when we have an interactive shell
+case $- in
+  *i*)
+    # Give a warning if $TMPDIR might be readable to other users
+    if [ \
+       $(( $(stat --printf='%a' $TMPDIR) % 1000 )) != 700 \
+       -o "$(id -u)" -ne "$(stat --printf='%u' $TMPDIR)" \
+       -o "$(id -g)" -ne "$(stat --printf='%g' $TMPDIR)" \
+    ] ; then
+      echo "TMPDIR may be readable to others." >&2
+    fi
+    ;;
+  *)
+    ;;
+esac
+
+
+## Load environment variables from .config/environment.d
+################################################################################
+# Pending on the outcome of https://github.com/systemd/systemd/issues/7641
+if [ -d "$HOME/.config/environment.d" ]; then
+  if [ -x /usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator ]; then
+    export "$(/usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator)"
+  else
+    set -o allexport
+    for conf in $(ls "$HOME/.config/environment.d"/*.conf); do
+      source "$conf"
+    done
+    set +o allexport
+  fi
+fi
+
+
+## Customizations
+################################################################################

@@ -1,0 +1,8 @@
+[Unit]
+Description=JP-Ellis Macbook SSH Mount
+
+[Mount]
+What=josh@jpellis-macbook:/
+Type=fuse.sshfs
+Where=/home/josh/media/macbook/
+Options=_netdev,

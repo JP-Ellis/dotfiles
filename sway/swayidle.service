@@ -1,0 +1,15 @@
+[Unit]
+Description=Idle manager for Wayland
+Documentation=man:swayidle(1)
+PartOf=graphical-session.target
+
+[Install]
+WantedBy=sway-session.target
+
+[Service]
+ExecStart=/usr/bin/swayidle -d -w \
+    timeout 290 "notify-send -u critical -t 9900 'Locking in 10 seconds.'" \
+    timeout 300 "swaylock -f -d -C $HOME/.config/sway/swaylock" \
+    timeout 600 "swaymsg 'output * dpms off'" \
+    resume "swaymsg 'output * dpms on'" \
+    before-sleep "swaylock -f -d -C $HOME/.config/sway/swaylock"

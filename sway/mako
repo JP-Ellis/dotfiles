@@ -1,0 +1,20 @@
+layer=top
+anchor=top-right
+max-visible=8
+
+sort=-priority
+sort=-time
+
+font=Noto 12
+icons=1
+
+background-color=#ffffff66
+text-color=#dddddd
+progress-color=over #5588AAFF
+
+border-radius=10
+border-size=0
+padding=10
+
+[urgency="high"]
+background-color=#ff999966
