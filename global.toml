@@ -60,3 +60,6 @@ signingkey = "josh@jpellis.me"
 
 [mopidy.files]
 "mopidy/mopidy.conf" = "~/.config/mopidy/mopidy.conf"
+
+[mathematica.files]
+"Mathematica/Kernel.m" = "~/.Mathematica/Kernel/init.m"
