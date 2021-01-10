@@ -38,7 +38,7 @@ terminal = "kitty"
 [general.variables]
 app-editor = "vim"
 app-visual = "code -w"
-app-pager = "bat"
+app-pager = "less"
 app-browser = "brave"
 nproc = 12
 
