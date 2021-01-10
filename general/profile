@@ -104,15 +104,15 @@ esac
 ################################################################################
 # Pending on the outcome of https://github.com/systemd/systemd/issues/7641
 if [ -d "$HOME/.config/environment.d" ]; then
+  set -o allexport
   if [ -x /usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator ]; then
-    export "$(/usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator)"
+    eval $(systemctl --user show-environment)
   else
-    set -o allexport
     for conf in $(ls "$HOME/.config/environment.d"/*.conf); do
       source "$conf"
     done
-    set +o allexport
   fi
+  set +o allexport
 fi
 
 
