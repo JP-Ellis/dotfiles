@@ -36,6 +36,7 @@ terminal = "kitty"
 "general/profile" = "~/.profile"
 "general/sshconfig" = "~/.ssh/config"
 [general.variables]
+tmpdir = "/tmp/josh"
 app-editor = "vim"
 app-visual = "code -w"
 app-pager = "less"
