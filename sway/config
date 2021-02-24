@@ -225,7 +225,7 @@ smart_gaps on
 # App Specific
 # ============
 
-for_window [title="^Picture-in-Picture$"] floating enable,  sticky enable
+for_window [title="^Picture-in-picture$"] floating enable, sticky enable
 
 # Launch sway-session.target
 # ==========================
