@@ -31,47 +31,6 @@ if command -v setfacl 2>&1 1>/dev/null ; then
   setfacl -m "user:${USER}:rwx,group::---,mask::---,other::---" $TMPDIR
 fi
 
-## Paths
-################################################################################
-
-add_path() {
-  if [ $# -ne 2 -a $# -ne 3 ]; then
-    echo "add_path PATH_VAR PATH [append]" >&2
-    return
-  fi
-
-  # Remove trailing slash
-  local p
-  p="${2%/}"
-
-  case "${!1}" in
-    *"$p"*)
-      # Path already present, do nothing
-      ;;
-    "")
-      # Empty path var, initialize it
-      export "$1"="$p"
-      ;;
-    *)
-      # Prepend by default, unless specified to append
-      if [ -z "$3" ]; then
-        export "$1"="$p:${!1}"
-      else
-        export "$1"="${!1}:$p"
-      fi
-      ;;
-  esac
-}
-
-for dir in "$HOME/.local" "/scratch/$USER/local" "/scratch/$SUSER/local" ; do
-  if [ -d "$dir/bin" ]; then
-    add_path PATH "$dir/bin"
-  fi
-  if [ -d "$dir/lib" ]; then
-    add_path LD_LIBRARY_PATH "$dir/lib"
-  fi
-done
-
 
 ## SSH Socket from GPG Agent
 ################################################################################
@@ -106,7 +65,7 @@ esac
 if [ -d "$HOME/.config/environment.d" ]; then
   set -o allexport
   if [ -x /usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator ]; then
-    eval $(systemctl --user show-environment)
+    eval $(systemctl --user show-environment | rg -v '^PATH=')
   else
     for conf in $(ls "$HOME/.config/environment.d"/*.conf); do
       source "$conf"
@@ -114,6 +73,48 @@ if [ -d "$HOME/.config/environment.d" ]; then
   fi
   set +o allexport
 fi
+
+
+## Paths
+################################################################################
+
+add_path() {
+  if [ $# -ne 2 -a $# -ne 3 ]; then
+    echo "add_path PATH_VAR PATH [append]" >&2
+    return
+  fi
+
+  # Remove trailing slash
+  local p
+  p="${2%/}"
+
+  case "${!1}" in
+    *"$p"*)
+      # Path already present, do nothing
+      ;;
+    "")
+      # Empty path var, initialize it
+      eval export "$1"="$p"
+      ;;
+    *)
+      # Prepend by default, unless specified to append
+      if [ -z "$3" ]; then
+        eval export "$1"="$p:${!1}"
+      else
+        eval export "$1"="${!1}:$p"
+      fi
+      ;;
+  esac
+}
+
+for dir in "$HOME/.local" "/scratch/$USER/local" "/scratch/$SUSER/local" "$CARGO_HOME"; do
+  if [ -d "$dir/bin" ]; then
+    add_path PATH "$dir/bin"
+  fi
+  if [ -d "$dir/lib" ]; then
+    add_path LD_LIBRARY_PATH "$dir/lib"
+  fi
+done
 
 
 ## Customizations
