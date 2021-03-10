@@ -129,7 +129,7 @@ Host physics-devel-staff
 #
 # You should not hand-edit this section, unless you are deleting it.
 #
-Host eth-staker.us-west1-b.eth-staking-297123
+Host eth-staker
     HostName 34.83.216.144
     IdentityFile /home/josh/.ssh/google_compute_engine
     UserKnownHostsFile=/home/josh/.ssh/google_compute_known_hosts
