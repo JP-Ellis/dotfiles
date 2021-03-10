@@ -5,7 +5,7 @@ Host *
     ForwardAgent no
     ForwardX11 no
     ControlMaster auto
-    ControlPath ${XDG_RUNTIME_DIR}/ssh-%r@%h:%p.socket
+    ControlPath ${XDG_RUNTIME_DIR}/ssh-%C.socket
     ControlPersist 30m
 
 ## Personal
