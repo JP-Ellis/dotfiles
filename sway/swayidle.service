@@ -11,6 +11,6 @@ ExecStart=/usr/bin/swayidle -d -w \
     timeout 290 "notify-send -u critical -t 9900 'Locking in 10 seconds.'" \
     timeout 300 "swaylock -f -d -C $HOME/.config/sway/swaylock" \
     timeout 600 "swaymsg 'output * dpms off'" \
+         resume "swaymsg 'output * dpms on'" \
     timeout 1800 "systemctl suspend" \
-    resume "swaymsg 'output * dpms on'" \
     before-sleep "swaylock -f -d -C $HOME/.config/sway/swaylock"
