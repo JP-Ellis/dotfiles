@@ -1,0 +1,7 @@
+[Unit]
+Description=Update Rustup
+Requisite=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/rustup update
