@@ -1,0 +1,10 @@
+[Unit]
+Description=Monitor router transmission service
+
+[Timer]
+OnCalendar=hourly
+Persistent=false
+RandomizedDelaySec=3600
+
+[Install]
+WantedBy=timers.target

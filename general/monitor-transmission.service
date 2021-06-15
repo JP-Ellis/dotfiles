@@ -1,0 +1,7 @@
+[Unit]
+Description=Check router transmission service
+#Requisite=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/josh/.config/systemd/user/monitor-transmission.zsh
