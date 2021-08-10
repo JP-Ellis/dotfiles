@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-HTTP_CODE="$(curl -sI http://router.ellis:9091/transmission/rpc | head -1 | cut -f2 -d' ')"
+HTTP_CODE="$(timeout 15m curl -sI http://router.ellis:9091/transmission/rpc | head -1 | cut -f2 -d' ')"
 echo "HTTP Code: $HTTP_CODE"
 
 case $HTTP_CODE in
