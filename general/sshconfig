@@ -56,6 +56,11 @@ Host cxin??
 #     HostName bakeruni.ph.unimelb.edu.au
 #     User joshuae@unimelb.edu.au
 
+Host computational-remote
+    HostName 6400dlt19266111
+    User jellis@student.unimelb.eu.au
+    ProxyJump spartan-student
+
 Host bakerlab10
     HostName 6400dlt19266110.mobility.unimelb.net.au
     User jellis@student.unimelb.edu.au
