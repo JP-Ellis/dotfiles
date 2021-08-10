@@ -1,6 +1,5 @@
 [Unit]
 Description=Update Rustup
-Requisite=network-online.target
 
 [Service]
 Type=oneshot
