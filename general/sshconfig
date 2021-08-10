@@ -135,7 +135,7 @@ Host physics-devel-staff
 # You should not hand-edit this section, unless you are deleting it.
 #
 Host eth-staker
-    HostName 34.83.216.144
+    HostName 34.83.195.22
     IdentityFile /home/josh/.ssh/google_compute_engine
     UserKnownHostsFile=/home/josh/.ssh/google_compute_known_hosts
     HostKeyAlias=compute.156539328043488611
