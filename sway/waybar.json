@@ -6,14 +6,14 @@
     "modules-left": [
         "sway/workspaces",
         "sway/mode"
-        // "mpd"
     ],
     "modules-center": [
         "sway/window"
     ],
     "modules-right": [
         "pulseaudio",
-        "network",
+        "network#wifi",
+        "network#eth",
         "cpu",
         "memory",
         "disk",
@@ -59,9 +59,17 @@
         "format": "{percentage_used}% ",
         "tooltip-format": "{used} of {total} used"
     },
-    "network": {
-        "format-wifi": "{essid} ({signalStrength}%) ",
-        "format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
+    "network#wifi": {
+        "interface": "wlan0",
+        "format-wifi": "{essid} {ipaddr}/{cidr} ({frequency}MHz {signalStrength}%) ",
+        "format-ethernet": "{ipaddr}/{cidr} ",
+        "format-linked": "{}",
+        "format-disconnected": "Disconnected ⚠"
+    },
+    "network#eth": {
+        "interface": "enp6s0",
+        "format-ethernet": "{ipaddr}/{cidr} ",
+        "format-linked": "{}",
         "format-disconnected": "Disconnected ⚠"
     },
     "pulseaudio": {
