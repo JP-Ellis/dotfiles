@@ -54,6 +54,12 @@
 	clean = mathematica-notebook-filter
 	smudge = cat
 
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+
 # Compressed files
 [diff "gzip"]
     binary = true
