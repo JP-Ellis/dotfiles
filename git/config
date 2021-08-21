@@ -22,6 +22,9 @@
 		--format=format:'%C(red)%h%C(reset) - %C(white)%s%C(reset) %C(green)(%ar)%C(reset) %C(blue)<%an>%C(reset)%C(yellow)%d%C(reset)'
 	pull-all = "!f() { git pull && git submodule update --init --recursive \"$@\"; }; f"
 
+[init]
+    defaultBranch = main
+
 # Credentials / Integration
 ################################################################################
 [credential "https://source.developers.google.com"]
