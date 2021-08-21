@@ -23,7 +23,7 @@
 	pull-all = "!f() { git pull && git submodule update --init --recursive \"$@\"; }; f"
 
 [init]
-    defaultBranch = main
+    defaultBranch = main 
 
 # Credentials / Integration
 ################################################################################
