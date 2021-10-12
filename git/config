@@ -4,7 +4,7 @@
 	signingkey = {{signingkey}}
 
 [commit]
-	gpgsign = {{#if (eq len(signingkey) 0)}}false{{else}}true{{/if}}
+	gpgsign = {{#if signingkey}}true{{else}}false{{/if}}
 
 [pull]
 	rebase = true
