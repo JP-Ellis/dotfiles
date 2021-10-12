@@ -25,16 +25,20 @@ terminal = "kitty"
 "bash/bash_profile" = "~/.bash_profile"
 
 [general.files]
+"general/profile" = "~/.profile"
+"general/sshconfig" = "~/.ssh/config"
+
 "general/environment.d/10-applications.conf" = "~/.config/environment.d/10-applications.conf"
 "general/environment.d/10-xdg.conf" = "~/.config/environment.d/10-xdg.conf"
 "general/environment.d/90-make.conf" = "~/.config/environment.d/90-make.conf"
 "general/environment.d/90-python.conf" = "~/.config/environment.d/90-python.conf"
 "general/environment.d/90-rust.conf" = "~/.config/environment.d/90-rust.conf"
+
+"general/borgmatic.service" = "~/.config/systemd/user/borgmatic.service"
+"general/borgmatic.timer" = "~/.config/systemd/user/borgmatic.timer"
+"general/home-josh-media-cxin.mount" = "~/.config/systemd/user/home-josh-media-cxin.mount"
 "general/home-josh-media-macbook.automount" = "~/.config/systemd/user/home-josh-media-macbook.automount"
 "general/home-josh-media-macbook.mount" = "~/.config/systemd/user/home-josh-media-macbook.mount"
-"general/home-josh-media-cxin.mount" = "~/.config/systemd/user/home-josh-media-cxin.mount"
-"general/profile" = "~/.profile"
-"general/sshconfig" = "~/.ssh/config"
 "general/monitor-transmission.service" = "~/.config/systemd/user/monitor-transmission.service"
 "general/monitor-transmission.timer" = "~/.config/systemd/user/monitor-transmission.timer"
 "general/monitor-transmission.zsh" = "~/.config/systemd/user/monitor-transmission.zsh"
