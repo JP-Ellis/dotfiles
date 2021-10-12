@@ -72,7 +72,7 @@ signingkey = "josh@jpellis.me"
 "mopidy/mopidy.conf" = "~/.config/mopidy/mopidy.conf"
 
 [mathematica.files]
-"Mathematica/Kernel.m" = "~/.Mathematica/Kernel/init.m"
+"Mathematica/Kernel.m" = { target = "~/.Mathematica/Kernel/init.m", type = "symbolic" }
 
 [zsh.files]
 "zsh/zshrc" = "~/.zshrc"
