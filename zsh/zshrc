@@ -1,0 +1,74 @@
+################################################################################
+## Executes commands at the start of an interactive session.
+################################################################################
+
+# Load ZSH options
+source ~/.zshopts
+
+# Load Zinit
+source ~/.zinitrc
+
+# Load profile
+if [[ -e "$HOME/.profile" ]]; then
+  source "$HOME/.profile"
+fi
+
+## Commands
+################################################################################
+
+## Shorten `xdg-open` to just `open`, and if given multiple arguments open each
+## of them individually.
+open() {
+  local arg
+  for arg in "$@"; do
+    xdg-open "$arg"
+  done
+}
+
+## ls substitution
+if (( $+commands[exa] )) ; then
+  alias ls='exa --group-directories-first --git --binary'  # default
+  alias li='ls --git-ignore'                               # use gitignore
+  alias l='ls --oneline --all'                             # list for parsing
+  alias ll='ls --long --header'                            # default with a bit more
+  alias lr='ll --tree'                                     # recurse
+  alias la='ll --all'                                      # show all
+  alias lx='ll --sort=extension'                           # sort by e_x_tension
+  alias lb='ll --sort=size'                                # sort by _b_ytes
+  alias lc='ll --sort=created --time=created'              # sort by _c_reation date
+  alias lm='ll --sort=modified --time=modified'            # sort by _m_odification date
+  alias lt='lm'                                            # sort by (modification) _t_ime
+  alias sl=ls                                              # typo fix
+else
+  alias ls='ls --group-directories-first --color=auto'     # default
+  alias l='ls -1 --almost-all'                             # list for parsing
+  alias ll='ls -l --human-readable'                        # default with a bit more
+  alias lr='ll --recursive'                                # recurse
+  alias la='ll --almost-all'                               # show all
+  alias lx='ll --sort=extension'                           # sort by e_x_tension
+  alias lb='ll --sort=size'                                # sort by _b_ytes
+  alias lc='ll --sort=time --time=created'                 # sort by _c_reation date
+  alias lm='ll --sort=time --time=modified'                # sort by _m_odification date
+  alias lt='lm'                                            # sort by (modification) _t_ime
+  alias sl=ls                                              # typo fix
+fi
+
+## Run ls after entering a directory
+cd() {
+  builtin cd "$1" && ls
+}
+
+## Shortcut to make and cd into a new directory
+mkcd() {
+  mkdir "$1" && cd "$1"
+}
+
+## Use bat to format man page
+if (( $+commands[bat] )) ; then
+  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+fi
+
+# Load starship
+if (( $+commands[starship] )); then
+    eval "$(starship init zsh)"
+fi

@@ -77,3 +77,4 @@ signingkey = "josh@jpellis.me"
 [zsh.files]
 "zsh/zshrc" = "~/.zshrc"
 "zsh/zinitrc" = "~/.zinitrc"
+"zsh/zshopts" = "~/.zshopts"
