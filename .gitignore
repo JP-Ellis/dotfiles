@@ -1,1 +1,2 @@
-/.dotter
+/.dotter/*
+!/.dotter/global.toml
