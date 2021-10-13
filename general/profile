@@ -88,7 +88,10 @@ add_path() {
   local p
   p="${2%/}"
 
-  case "${!1}" in
+  local expanded
+  expanded=$(eval echo "\$$1")
+
+  case "$expanded" in
     *"$p"*)
       # Path already present, do nothing
       ;;
@@ -99,9 +102,9 @@ add_path() {
     *)
       # Prepend by default, unless specified to append
       if [ -z "$3" ]; then
-        eval export "$1"="$p:${!1}"
+        eval export "$1"="$p:$expanded"
       else
-        eval export "$1"="${!1}:$p"
+        eval export "$1"="$expanded:$p"
       fi
       ;;
   esac
