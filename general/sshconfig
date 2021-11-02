@@ -11,9 +11,11 @@ Host *
 ## Personal
 ################################################################################
 
-Host rpi3
-    HostName rpi3.ellis
-    User rpi3
+Host rpi3.ellis
+    Compression no
+
+Host router.ellis
+    User root
     Compression no
 
 # Host rcw
