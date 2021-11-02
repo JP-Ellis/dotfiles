@@ -12,4 +12,5 @@ ExecStart=/usr/bin/swayidle -d -w \
     timeout 300 "swaylock -f -d -C $HOME/.config/sway/swaylock" \
     timeout 600 "swaymsg 'output * dpms off'" \
          resume "swaymsg 'output * dpms on'" \
-    before-sleep "swaylock -f -d -C $HOME/.config/sway/swaylock"
+    before-sleep "swaylock -f -d -C $HOME/.config/sway/swaylock" \
+    idlehint 900
