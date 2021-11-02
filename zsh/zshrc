@@ -5,8 +5,10 @@
 # Load ZSH options
 # source ~/.zshopts
 
-# Load Zinit
-source ~/.zinitrc
+# Load Sheldon
+if [[ -e ~/.config/sheldon ]]; then
+  eval "$(sheldon source)"
+fi
 
 # Load profile
 if [[ -e "$HOME/.profile" ]]; then
