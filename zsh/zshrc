@@ -3,7 +3,7 @@
 ################################################################################
 
 # Load ZSH options
-source ~/.zshopts
+# source ~/.zshopts
 
 # Load Zinit
 source ~/.zinitrc
@@ -12,6 +12,39 @@ source ~/.zinitrc
 if [[ -e "$HOME/.profile" ]]; then
   source "$HOME/.profile"
 fi
+
+## ZSH Preferences
+################################################################################
+## The options below are documented in https://zsh.sourceforge.io/Doc/Release/Options.html
+
+## Enable history
+HISTFILE="$HOME/.cache/zsh_history"
+HISTSIZE=1000000
+SAVEHIST=1000000
+
+setopt BANG_HIST
+setopt EXTENDED_HISTORY
+setopt HIST_ALLOW_CLOBBER
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_FCNTL_LOCK
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_LEX_WORDS
+setopt HIST_SAVE_BY_COPY
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_VERIFY
+setopt SHARE_HISTORY
+
+## Confirm before overwriting output files
+unsetopt CLOBBER
+
+## Completion
+setopt COMPLETE_IN_WORD
+setopt GLOB_COMPLETE
+setopt MENU_COMPLETE
+
+
 
 ## Commands
 ################################################################################
