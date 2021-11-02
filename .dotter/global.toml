@@ -1,80 +1,98 @@
-[sway.files]
-"sway/background.png" = "~/.config/sway/background.png"
-"sway/config" = "~/.config/sway/config"
-"sway/mako.service" = "~/.config/systemd/user/mako.service"
-"sway/mako" = "~/.config/mako/config"
-"sway/polkit-gnome-authentication-agent.service" = "~/.config/systemd/user/polkit-gnome-authentication-agent.service"
-"sway/sway-session.target" = "~/.config/systemd/user/sway-session.target"
-"sway/swayidle.service" = "~/.config/systemd/user/swayidle.service"
-"sway/swaylock" = "~/.config/sway/swaylock"
-"sway/udiskie.service" = "~/.config/systemd/user/udiskie.service"
-"sway/udiskie.yml" = "~/.config/udiskie/config.yml"
-"sway/waybar.css" = "~/.config/waybar/style.css"
-"sway/waybar.json" = "~/.config/waybar/config"
-"sway/waybar.service" = "~/.config/systemd/user/waybar.service"
-[sway.variables]
-terminal = "kitty"
+[bash]
+    [bash.files]
+    "bash/bashrc" = "~/.bashrc"
+    "bash/bash_profile" = "~/.bash_profile"
 
-[fonts.files]
-"fontconfig/conf.d/40-monospace.conf" = "~/.config/fontconfig/conf.d/40-monospace.conf"
-"fontconfig/conf.d/40-sans-serif.conf" = "~/.config/fontconfig/conf.d/40-sans-serif.conf"
-"fontconfig/conf.d/40-serif.conf" = "~/.config/fontconfig/conf.d/40-serif.conf"
+[borgmatic]
+    [borgmatic.files]
+    "borgmatic/config.yaml" = "~/.config/borgmatic/config.yaml"
+    "borgmatic/patterns" = "~/.config/borgmatic/patterns"
 
-[bash.files]
-"bash/bashrc" = "~/.bashrc"
-"bash/bash_profile" = "~/.bash_profile"
+[fonts]
+    [fonts.files]
+    "fontconfig/conf.d/40-monospace.conf" = "~/.config/fontconfig/conf.d/40-monospace.conf"
+    "fontconfig/conf.d/40-sans-serif.conf" = "~/.config/fontconfig/conf.d/40-sans-serif.conf"
+    "fontconfig/conf.d/40-serif.conf" = "~/.config/fontconfig/conf.d/40-serif.conf"
 
-[general.files]
-"general/profile" = "~/.profile"
-"general/sshconfig" = "~/.ssh/config"
+[general]
+    [general.files]
+    "general/profile" = "~/.profile"
+    "general/sshconfig" = "~/.ssh/config"
 
-"general/environment.d/10-applications.conf" = "~/.config/environment.d/10-applications.conf"
-"general/environment.d/10-xdg.conf" = "~/.config/environment.d/10-xdg.conf"
-"general/environment.d/90-make.conf" = "~/.config/environment.d/90-make.conf"
-"general/environment.d/90-python.conf" = "~/.config/environment.d/90-python.conf"
-"general/environment.d/90-rust.conf" = "~/.config/environment.d/90-rust.conf"
+    "general/environment.d/10-applications.conf" = "~/.config/environment.d/10-applications.conf"
+    "general/environment.d/10-xdg.conf" = "~/.config/environment.d/10-xdg.conf"
+    "general/environment.d/90-make.conf" = "~/.config/environment.d/90-make.conf"
+    "general/environment.d/90-python.conf" = "~/.config/environment.d/90-python.conf"
+    "general/environment.d/90-rust.conf" = "~/.config/environment.d/90-rust.conf"
 
-"general/borgmatic.service" = "~/.config/systemd/user/borgmatic.service"
-"general/borgmatic.timer" = "~/.config/systemd/user/borgmatic.timer"
-"general/home-josh-media-cxin.mount" = "~/.config/systemd/user/home-josh-media-cxin.mount"
-"general/home-josh-media-macbook.automount" = "~/.config/systemd/user/home-josh-media-macbook.automount"
-"general/home-josh-media-macbook.mount" = "~/.config/systemd/user/home-josh-media-macbook.mount"
-"general/monitor-transmission.service" = "~/.config/systemd/user/monitor-transmission.service"
-"general/monitor-transmission.timer" = "~/.config/systemd/user/monitor-transmission.timer"
-"general/monitor-transmission.zsh" = "~/.config/systemd/user/monitor-transmission.zsh"
-"general/rustup-update.service" = "~/.config/systemd/user/rustup-update.service"
-"general/rustup-update.timer" = "~/.config/systemd/user/rustup-update.timer"
-[general.variables]
-tmpdir = "/tmp/josh"
-app-editor = "vim"
-app-visual = "code -w"
-app-pager = "less"
-app-browser = "brave"
-nproc = 12
+    "general/borgmatic.service" = "~/.config/systemd/user/borgmatic.service"
+    "general/borgmatic.timer" = "~/.config/systemd/user/borgmatic.timer"
+    "general/home-josh-media-cxin.mount" = "~/.config/systemd/user/home-josh-media-cxin.mount"
+    "general/home-josh-media-macbook.automount" = "~/.config/systemd/user/home-josh-media-macbook.automount"
+    "general/home-josh-media-macbook.mount" = "~/.config/systemd/user/home-josh-media-macbook.mount"
+    "general/monitor-transmission.service" = "~/.config/systemd/user/monitor-transmission.service"
+    "general/monitor-transmission.timer" = "~/.config/systemd/user/monitor-transmission.timer"
+    "general/monitor-transmission.zsh" = "~/.config/systemd/user/monitor-transmission.zsh"
+    "general/rustup-update.service" = "~/.config/systemd/user/rustup-update.service"
+    "general/rustup-update.timer" = "~/.config/systemd/user/rustup-update.timer"
+    
+    [general.variables]
+    tmpdir = "/tmp/josh"
+    app-editor = "vim"
+    app-visual = "code -w"
+    app-pager = "less"
+    app-browser = "brave"
+    nproc = 12
 
-[kitty.files]
-"kitty/kitty.conf" = "~/.config/kitty/kitty.conf"
-"kitty/light.theme.conf" = "~/.config/kitty/light.theme.conf"
-"kitty/dark.theme.conf" = "~/.config/kitty/dark.theme.conf"
+[git]
+    [git.files]
+    "git/attributes" = "~/.config/git/attributes"
+    "git/config" = "~/.config/git/config"
+    "git/ipynb_output_filter.py" = "~/.config/git/ipynb_output_filter.py"
 
-[git.files]
-"git/attributes" = "~/.config/git/attributes"
-"git/config" = "~/.config/git/config"
-"git/ipynb_output_filter.py" = "~/.config/git/ipynb_output_filter.py"
-[git.variables]
-signingkey = "josh@jpellis.me"
+    [git.variables]
+    signingkey = "josh@jpellis.me"
 
-[gpg.files]
-"gpg/sshcontrol" = "~/.gnupg/sshcontrol"
-"gpg/gpg-agent.conf" = "~/.gnupg/gpg-agent.conf"
+[gpg]
+    [gpg.files]
+    "gpg/sshcontrol" = "~/.gnupg/sshcontrol"
+    "gpg/gpg-agent.conf" = "~/.gnupg/gpg-agent.conf"
 
-[mopidy.files]
-"mopidy/mopidy.conf" = "~/.config/mopidy/mopidy.conf"
+[kitty]
+    [kitty.files]
+    "kitty/kitty.conf" = "~/.config/kitty/kitty.conf"
+    "kitty/light.theme.conf" = "~/.config/kitty/light.theme.conf"
+    "kitty/dark.theme.conf" = "~/.config/kitty/dark.theme.conf"
 
-[mathematica.files]
-"Mathematica/Kernel.m" = { target = "~/.Mathematica/Kernel/init.m", type = "symbolic" }
+[mathematica]
+    [mathematica.files]
+    "Mathematica/Kernel.m" = { target = "~/.Mathematica/Kernel/init.m", type = "symbolic" }
 
-[zsh.files]
-"zsh/zshrc" = "~/.zshrc"
-"zsh/zinitrc" = "~/.zinitrc"
-"zsh/zshopts" = "~/.zshopts"
+[mopidy]
+    [mopidy.files]
+    "mopidy/mopidy.conf" = "~/.config/mopidy/mopidy.conf"
+
+[sway]
+    [sway.files]
+    "sway/background.png" = "~/.config/sway/background.png"
+    "sway/config" = "~/.config/sway/config"
+    "sway/mako.service" = "~/.config/systemd/user/mako.service"
+    "sway/mako" = "~/.config/mako/config"
+    "sway/polkit-gnome-authentication-agent.service" = "~/.config/systemd/user/polkit-gnome-authentication-agent.service"
+    "sway/sway-session.target" = "~/.config/systemd/user/sway-session.target"
+    "sway/swayidle.service" = "~/.config/systemd/user/swayidle.service"
+    "sway/swaylock" = "~/.config/sway/swaylock"
+    "sway/udiskie.service" = "~/.config/systemd/user/udiskie.service"
+    "sway/udiskie.yml" = "~/.config/udiskie/config.yml"
+    "sway/waybar.css" = "~/.config/waybar/style.css"
+    "sway/waybar.json" = "~/.config/waybar/config"
+    "sway/waybar.service" = "~/.config/systemd/user/waybar.service"
+
+    [sway.variables]
+    terminal = "kitty"
+
+[zsh]
+    [zsh.files]
+    "zsh/zshrc" = "~/.zshrc"
+    "zsh/zinitrc" = "~/.zinitrc"
+    "zsh/zshopts" = "~/.zshopts"
