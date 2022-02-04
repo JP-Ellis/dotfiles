@@ -15,7 +15,6 @@ set $term {{terminal}}
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
 set $menu ulauncher
-for_window [app_id="ulauncher"] floating enable, border none
 
 # Output configuration
 # ====================
@@ -34,15 +33,6 @@ output DP-3 pos 0    0
 # ===================
 # You can get the names of your inputs by running: swaymsg -t get_inputs
 # Read `man 5 sway-input` for more information about this section.
-#
-# Example configuration:
-#
-#   input "2:14:SynPS/2_Synaptics_TouchPad" {
-#       dwt enabled
-#       tap enabled
-#       natural_scroll enabled
-#       middle_emulation enabled
-#   }
 
 input "9610:51:Glorious_Model_D" scroll_factor 4
 input "9610:51:SINOWEALTH_Wired_Gaming_Mouse" scroll_factor 4
@@ -199,12 +189,12 @@ bindsym Shift+Print exec grim - | wl-copy
 
 # System Configuration
 # ====================
-include @sysconfdir@/sway/config.d/*
+include /etc/sway/config.d/*
 
 # Display
 # =======
 
-font noto:11
+font "Noto Sans" 15px
 
 set $bg         #3a3c49ff
 set $focused    #ccccccff
@@ -220,15 +210,17 @@ client.unfocused         $bg     $bg         $unfocused  $indicator  $bg
 client.urgent            $bg     $bg         $urgent     $indicator  $bg
 
 default_border none
-default_floating_border normal 1
+default_floating_border normal 2
 
 gaps inner 10
 smart_gaps on
+smart_borders on
 
 # App Specific
 # ============
 
 for_window [title="^Picture-in-picture$"] floating enable, sticky enable
+for_window [app_id="ulauncher"] floating enable, border none
 
 # Launch sway-session.target
 # ==========================
