@@ -22,7 +22,7 @@ if (( $+commands[direnv] )); then
 fi
 
 # Load Sheldon
-if (( $+commands[sheldon] )) ; then
+if (( $+commands[sheldon] )); then
   # Additional configurations
   zstyle ':autocomplete:*' recent-dirs zoxide
   zstyle ':autocomplete:*' fzf-completion yes
@@ -33,7 +33,6 @@ fi
 ## ZSH Preferences
 ################################################################################
 ## The options below are documented in https://zsh.sourceforge.io/Doc/Release/Options.html
-
 
 ## Use Emacs key bindings
 bindkey -v
@@ -65,7 +64,7 @@ setopt no_clobber
 setopt complete_in_word
 setopt glob_complete
 setopt menu_complete
-setopt glob_dots     # no special treatment for file names with a leading dot
+setopt glob_dots # no special treatment for file names with a leading dot
 setopt auto_menu
 setopt auto_cd
 
@@ -87,7 +86,6 @@ zstyle ':completion:*' substitute 1
 zstyle ':completion:*' use-compctl true
 zstyle ':completion:*' verbose true
 
-
 ## Commands
 ################################################################################
 
@@ -101,31 +99,31 @@ open() {
 }
 
 ## ls substitution
-if (( $+commands[exa] )) ; then
-  alias ls='exa --group-directories-first --git --binary'  # default
-  alias li='ls --git-ignore'                               # use gitignore
-  alias l='ls --oneline --all'                             # list for parsing
-  alias ll='ls --long --header'                            # default with a bit more
-  alias lr='ll --tree'                                     # recurse
-  alias la='ll --all'                                      # show all
-  alias lx='ll --sort=extension'                           # sort by e_x_tension
-  alias lb='ll --sort=size'                                # sort by _b_ytes
-  alias lc='ll --sort=created --time=created'              # sort by _c_reation date
-  alias lm='ll --sort=modified --time=modified'            # sort by _m_odification date
-  alias lt='lm'                                            # sort by (modification) _t_ime
-  alias sl=ls                                              # typo fix
+if (( $+commands[exa] )); then
+  alias ls='exa --group-directories-first --git --binary' # default
+  alias li='ls --git-ignore'                              # use gitignore
+  alias l='ls --oneline --all'                            # list for parsing
+  alias ll='ls --long --header'                           # default with a bit more
+  alias lr='ll --tree'                                    # recurse
+  alias la='ll --all'                                     # show all
+  alias lx='ll --sort=extension'                          # sort by e_x_tension
+  alias lb='ll --sort=size'                               # sort by _b_ytes
+  alias lc='ll --sort=created --time=created'             # sort by _c_reation date
+  alias lm='ll --sort=modified --time=modified'           # sort by _m_odification date
+  alias lt='lm'                                           # sort by (modification) _t_ime
+  alias sl=ls                                             # typo fix
 else
-  alias ls='ls --group-directories-first --color=auto'     # default
-  alias l='ls -1 --almost-all'                             # list for parsing
-  alias ll='ls -l --human-readable'                        # default with a bit more
-  alias lr='ll --recursive'                                # recurse
-  alias la='ll --almost-all'                               # show all
-  alias lx='ll --sort=extension'                           # sort by e_x_tension
-  alias lb='ll --sort=size'                                # sort by _b_ytes
-  alias lc='ll --sort=time --time=created'                 # sort by _c_reation date
-  alias lm='ll --sort=time --time=modified'                # sort by _m_odification date
-  alias lt='lm'                                            # sort by (modification) _t_ime
-  alias sl=ls                                              # typo fix
+  alias ls='ls --group-directories-first --color=auto' # default
+  alias l='ls -1 --almost-all'                         # list for parsing
+  alias ll='ls -l --human-readable'                    # default with a bit more
+  alias lr='ll --recursive'                            # recurse
+  alias la='ll --almost-all'                           # show all
+  alias lx='ll --sort=extension'                       # sort by e_x_tension
+  alias lb='ll --sort=size'                            # sort by _b_ytes
+  alias lc='ll --sort=time --time=created'             # sort by _c_reation date
+  alias lm='ll --sort=time --time=modified'            # sort by _m_odification date
+  alias lt='lm'                                        # sort by (modification) _t_ime
+  alias sl=ls                                          # typo fix
 fi
 
 ## Run ls after entering a directory
@@ -139,11 +137,11 @@ mkcd() {
 }
 
 ## Use bat to format man page
-if (( $+commands[bat] )) ; then
+if (( $+commands[bat] )); then
   export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 fi
 
 # Load starship
 if (( $+commands[starship] )); then
-    eval "$(starship init zsh)"
+  eval "$(starship init zsh)"
 fi
