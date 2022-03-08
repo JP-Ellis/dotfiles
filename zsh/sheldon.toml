@@ -1,0 +1,53 @@
+# `sheldon` configuration file
+# ----------------------------
+#
+# You can modify this file directly or you can use one of the following
+# `sheldon` commands which are provided to assist in editing the config file:
+#
+# - `sheldon add` to add a new plugin to the config file
+# - `sheldon edit` to open up the config file in the default editor
+# - `sheldon remove` to remove a plugin from the config file
+#
+# See the documentation for more https://github.com/rossmacarthur/sheldon#readme
+
+shell = "zsh"
+
+[plugins]
+
+    [plugins.zsh-defer]
+        # As this plugin is used to defer the loading of other plugins, it must
+        # be loaded first so as to be available.
+        github = "romkatv/zsh-defer"
+
+    [plugins.zsh-fzy]
+        github = "aperezdc/zsh-fzy"
+        apply = ["defer"]
+
+
+    [plugins.zsh-completions]
+        github = "zsh-users/zsh-completions"
+        apply = ["defer"]
+
+    [plugins.async]
+        github = "mafredri/zsh-async"
+        apply = ["defer"]
+
+
+    [plugins.enhancd]
+        github = "b4b4r07/enhancd"
+        apply = ["defer"]
+
+    ## The following plugins need to be loaded last as the wrap other widgets
+
+    [plugins.zsh-syntax-highlighting]
+        github = "zsh-users/zsh-syntax-highlighting"
+        apply = ["defer"]
+
+    [plugins.zsh-autocomplete]
+        github = "marlonrichert/zsh-autocomplete"
+        apply = ["defer"]
+
+[templates]
+    [templates.defer]
+        value = 'zsh-defer source "{{ file }}"'
+        each = true
