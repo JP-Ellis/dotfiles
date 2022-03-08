@@ -16,6 +16,11 @@ if (( $+commands[zoxide] )); then
   eval "$(zoxide init zsh)"
 fi
 
+# Load direnv
+if (( $+commands[direnv] )); then
+  eval "$(direnv hook zsh)"
+fi
+
 # Load Sheldon
 if (( $+commands[sheldon] )) ; then
   # Additional configurations
