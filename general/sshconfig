@@ -103,6 +103,46 @@ Host bakerlab19
     HostName 6400dlt19266119.mobility.unimelb.net.au
     User jellis@student.unimelb.edu.au
     ProxyJump spartan-student
+Host bakerlab20
+    HostName 6400dlt19266120.mobility.unimelb.net.au
+    User jellis@student.unimelb.edu.au
+    ProxyJump spartan-student
+Host bakerlab21
+    HostName 6400dlt19266121.mobility.unimelb.net.au
+    User jellis@student.unimelb.edu.au
+    ProxyJump spartan-student
+Host bakerlab22
+    HostName 6400dlt19266122.mobility.unimelb.net.au
+    User jellis@student.unimelb.edu.au
+    ProxyJump spartan-student
+Host bakerlab23
+    HostName 6400dlt19266123.mobility.unimelb.net.au
+    User jellis@student.unimelb.edu.au
+    ProxyJump spartan-student
+Host bakerlab24
+    HostName 6400dlt19266124.mobility.unimelb.net.au
+    User jellis@student.unimelb.edu.au
+    ProxyJump spartan-student
+Host bakerlab25
+    HostName 6400dlt19266125.mobility.unimelb.net.au
+    User jellis@student.unimelb.edu.au
+    ProxyJump spartan-student
+Host bakerlab26
+    HostName 6400dlt19266126.mobility.unimelb.net.au
+    User jellis@student.unimelb.edu.au
+    ProxyJump spartan-student
+Host bakerlab27
+    HostName 6400dlt19266127.mobility.unimelb.net.au
+    User jellis@student.unimelb.edu.au
+    ProxyJump spartan-student
+Host bakerlab28
+    HostName 6400dlt19266128.mobility.unimelb.net.au
+    User jellis@student.unimelb.edu.au
+    ProxyJump spartan-student
+Host bakerlab29
+    HostName 6400dlt19266129.mobility.unimelb.net.au
+    User jellis@student.unimelb.edu.au
+    ProxyJump spartan-student
 
 ## Various personal desktop computers
 Host uni-josh
