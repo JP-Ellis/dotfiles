@@ -1,12 +1,3 @@
 if [ -e "$HOME/.profile" ]; then
     . $HOME/.profile
 fi
-
-export HISTCONTROL=ignoreboth # Ignore commands starting with space and duplicates
-export HISTSIZE=-1
-export HISTFILE=$HOME/.cache/bash_history
-export HISTFILESIZE=5000
-
-# Append to history after every command
-shopt -s histappend
-export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
