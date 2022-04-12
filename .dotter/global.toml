@@ -3,6 +3,11 @@
     "bash/bash_profile" = "~/.bash_profile"
     "bash/bashrc" = "~/.bashrc"
 
+[bin]
+    [bin.files]
+    "bin/screen-share" = "~/.local/bin/screen-share"
+    "bin/transcode-hevc" = "~/.local/bin/transcode-hevc"
+
 [borgmatic]
     [borgmatic.files]
     "borgmatic/config.yaml" = "~/.config/borgmatic/config.yaml"

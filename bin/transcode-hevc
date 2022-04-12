@@ -1,0 +1,450 @@
+#!/usr/bin/zsh
+
+source ~/.local/share/zsh/print-fn
+
+zparseopts -E -D -- \
+    h=HELP \
+    -help=HELP \
+    i:=INPUT_FILE \
+    -input:=INPUT_FILE \
+    o:=OUTPUT_FILE \
+    -output::=OUTPUT_FILE \
+    c=CHECK \
+    -check=CHECK \
+    r=REPLACE \
+    -replace=REPLACE \
+    f=FORCE \
+    -force=FORCE \
+    fv=FORCE_VIDEO \
+    -force-video=FORCE_VIDEO \
+    fa=FORCE_AUDIO \
+    -force-audio=FORCE_AUDIO \
+    s+:=INPUT_SUBTITLES \
+    -subtitle+:=INPUT_SUBTITLES \
+    hw=HW_ACCELERATION \
+    -hardware-acceleration=HW_ACCELERATION \
+    -rescale:=RESCALE
+
+
+if [[ ! -z "$HELP" ]]; then
+    echo "${0:t} [options] INPUT [OUTPUT]"
+    cat <<EOF
+Options
+
+  -h, --help            Print this help message
+  -i, --input FILE      Set the input file
+  -o, --output FILE     Set the output file
+                        If this is not specified, it is determined from the
+                        input file based on the following rules:
+                        - If the input file's extension is '.mkv', the output
+                          file uses the same base name with '.x265.mkv' as the
+                          new extension.
+                        - Otherwise, the output file uses the same base name as
+                          the input file, but with '.mkv' as the extension.
+                        This option can be overriden by the '--replace' option.
+  -c, --check           Check whether the input file needs any transcoding.
+                        Returns 0 if no transcoding is needed, and 1 otherwise.
+                        As this does no actualy transcoding, it will ignore
+                        the --output and --replace options.  Note that this
+                        option is incompatible with --force as the check
+                        will always return 1 in that case.
+  -r, --replace         Replace the input file.  This option overrides any 
+                        output file specified.  If the input file is already
+                        has a '.mkv' extension, the file will be replaced.
+                        Otherwise, the replacement file will have the '.mkv'
+                        extension and the original file will be deleted.
+  -f, --force           Force transcoding even if it already in the desired
+                        codec, for both video and audio.
+  -fv, --force-video    Force transcoding the video streams even if they are in
+                        the desired codec.
+  -fa, --force-audio    Force transcoding the audio streams even if they are in
+                        the desired codec.
+  -s, --subtitle FILE   Add a subtitle file to the input file.
+                        This option can be specified multiple times.
+                        If '.' is given, then this will find all subtitle files
+                        within the input file's directory.
+  -hw, --hardware-acceleration
+                        Use hardware acceleration for transcoding.
+  --rescale RES         Downscale the output to the specified resolution.
+
+EOF
+    exit -1
+fi
+
+# Get the input file
+if [[ -z "$INPUT_FILE[2]" ]]; then
+    if [[ -z "$1" ]]; then
+        echo "Input file must be provided." >&2
+        exit -1
+    else
+        INPUT_FILE="$1"
+        shift
+    fi
+else
+    INPUT_FILE="$INPUT_FILE[2]"
+fi
+
+# Get the output file.  If we are using a replacement, we ignore what's
+# specified in the arguments.  We also ignore the output file if we're just
+# doing a check.
+if [[ -n "$REPLACE[1]" ]]; then
+    # If we are replacing the input file, providing an output file is an error
+    # as it is unclear what the user wants.
+    if [[ -n "$OUTPUT_FILE[2]" || -n "$1" ]]; then
+        echo "--replace ignores the output file." >&2
+        exit -1
+    fi
+
+    # Set the output file to be a random file
+    OUTPUT_FILE="$(mktemp -t "${INPUT_FILE:t:r}-XXX.mkv")"
+    rm "$OUTPUT_FILE"
+elif [[ -n "$CHECK[1]" ]]; then
+    # If we are only doing a check, providing an output file is an error as it
+    # is unclear what the user wants.
+    if [[ -n "$OUTPUT_FILE[2]" || -n "$1" ]]; then
+        echo "--check ignores the output file." >&2
+        exit -1
+    fi
+    OUTPUT_FILE="/dev/null"
+else
+    # Get the output file from either --output or the 2nd position argument.
+    if [[ -z "$OUTPUT_FILE[2]" ]]; then
+        if [[ -z "$1" ]]; then
+            echo "Output file must be provided." >&2
+            exit -1
+        fi
+        OUTPUT_FILE="$1"
+        shift
+    else
+        OUTPUT_FILE="$OUTPUT_FILE[2]"
+    fi
+fi
+
+# If there are more arguments, give a warning
+if [[ $# -ge 1 ]]; then
+    echo "Unknown arguments: $@" >&2
+    exit -1
+fi
+
+# Generate the output file name if it isn't given
+if [[ -z "$OUTPUT_FILE" ]]; then
+    if [[ "${INPUT_FILE:e}" = "mkv" ]]; then
+        OUTPUT_FILE="${INPUT_FILE:r}.x265.mkv"
+    else
+        OUTPUT_FILE="${INPUT_FILE:r}.mkv"
+    fi
+fi
+
+# If --force is given, force-audio and force-video are both enabled.
+if [[ -n "$FORCE[1]" ]]; then
+    FORCE_AUDIO="$FORCE[1]"
+    FORCE_VIDEO="$FORCE[1]"
+else
+    FORCE_AUDIO="$FORCE_AUDIO[1]"
+    FORCE_VIDEO="$FORCE_VIDEO[1]"
+fi
+
+HW_ACCELERATION="$HW_ACCELERATION[1]"
+
+HW_ACCELERATION_OPTS=()
+if [[ -n "$HW_ACCELERATION" ]]; then
+    HW_ACCELERATION_OPTS=(
+        -hwaccel_output_format vaapi
+    )
+fi
+
+NEEDS_TRANSCODING=false
+
+# Check whether we are rescaling
+if [[ -n "$RESCALE[1]" ]]; then
+    case "$RESCALE[2]" in
+        (720)
+            # RESCALE_FILTER="-filter:v scale=min(iw,1280):-1 -sws_flags spline+accurate_rnd"
+            RESCALE_WIDTH=1280
+            RESCALE_FILTER="scale=w='min($RESCALE_WIDTH,iw)':h=-1:flags=spline+accurate_rnd"
+            ;;
+        (1080)
+            RESCALE_WIDTH=1920
+            RESCALE_FILTER="scale=w='min($RESCALE_WIDTH,iw)':h=-1:flags=spline+accurate_rnd"
+            ;;
+        (2160)
+            RESCALE_WIDTH=3840
+            RESCALE_FILTER="scale=w='min($RESCALE_WIDTH,iw)':h=-1:flags=spline+accurate_rnd"
+            ;;
+        (*)
+            echo "Unsupported scaling '$RESCALE[1]'." >&2
+            exit -1
+            ;;
+    esac
+else
+    # If we are not rescaling, just set the threshold width to be really large
+    RESCALE_WIDTH=999999999
+fi
+
+## Create the video options
+typeset -a VIDEO_OPTS
+codecs=(
+    $(
+    ffprobe "$INPUT_FILE" \
+            -v error \
+            -select_streams v \
+            -show_entries stream=codec_name \
+            -print_format default=nk=1:nw=1
+    )
+)
+stream_idx=0
+for codec in $codecs ; do
+    stream_width=$(
+        ffprobe "$INPUT_FILE" \
+            -v error \
+            -select_streams v:$stream_idx \
+            -show_entries stream=width \
+            -print_format default=nk=1:nw=1
+                )
+    if [[ -n "$FORCE_VIDEO" || $codec != "hevc" || $stream_width -gt $RESCALE_WIDTH ]]; then
+        case $codec in
+            # Don't transcode image
+            (mjpeg)
+                VIDEO_OPTS+=(-map 0:v:$stream_idx -codec:v:$stream_idx copy)
+                ;;
+            (*)
+                NEEDS_TRANSCODING=true
+                # If we are rescaling, we have additional flags
+                if [[ $stream_width -gt $RESCALE_WIDTH ]]; then
+                    if [[ -n "$HW_ACCELERATION" ]]; then
+                        VIDEO_OPTS+=(-map 0:v:$stream_idx -filter:v:$stream_idx "$RESCALE_FILTER,format=nv12|vaapi,hwupload" -codec:v:$stream_idx hevc_vaapi -rc_mode CQP)
+                    else
+                        VIDEO_OPTS+=(-map 0:v:$stream_idx -filter:v:$stream_idx "$RESCALE_FILTER" -codec:v:$stream_idx libx265 -preset slow -x265-params aq-mode=3)
+                    fi
+                else
+                    if [[ -n "$HW_ACCELERATION" ]]; then
+                        VIDEO_OPTS+=(-map 0:v:$stream_idx -filter:v:$stream_idx 'format=nv12|vaapi,hwupload' -codec:v:$stream_idx hevc_vaapi -rc_mode CQP)
+                    else
+                        VIDEO_OPTS+=(-map 0:v:$stream_idx -codec:v:$stream_idx libx265 -preset slow -x265-params aq-mode=3)
+                    fi
+                fi
+                ;;
+        esac
+    else
+        VIDEO_OPTS+=(-map 0:v:$stream_idx -codec:v:$stream_idx copy)
+    fi
+    ((stream_idx++))
+done
+
+
+# Create the audio options
+typeset -a AUDIO_OPTS
+codecs=(
+    $(
+    ffprobe "$INPUT_FILE" \
+            -v error \
+            -select_streams a \
+            -show_entries stream=codec_name \
+            -print_format default=nk=1:nw=1
+    )
+)
+stream_idx=0
+for codec in $codecs ; do
+    if [[ -n "$FORCE_AUDIO" || $codec != "opus" ]]; then
+        NEEDS_TRANSCODING=true
+        AUDIO_OPTS+=(-map 0:a:$stream_idx -codec:a:$stream_idx libopus -b:a:$stream_idx 128k)
+
+        # Libopus doesn't understand `5.1(side)` channels, but does understand
+        # `5.1`; so we adjust this if need be.
+        # https://trac.ffmpeg.org/ticket/5718
+        channels=$(
+            ffprobe "$INPUT_FILE" \
+                    -v error \
+                    -select_streams a:$stream_idx \
+                    -show_entries stream=channel_layout \
+                    -print_format default=nk=1:nw=1
+                )
+        if [[ "$channels" =~ "^.*\(side\)$" ]]; then
+            AUDIO_OPTS+=(-filter:a:$stream_idx aformat=channel_layouts="${channels%%\(side\)}")
+        elif [[ "$channels" = "unknown" ]]; then
+            # If the layout is unknown, use the number of channels to infer the layout
+            channels=$(
+                ffprobe "$INPUT_FILE" \
+                    -v error \
+                    -select_streams a:$i \
+                    -show_entries stream=channels \
+                    -print_format default=nk=1:nw=1
+                    )
+            case $channels in
+                (1)
+                    AUDIO_OPTS+=(-filter:a:$stream_idx aformat=channel_layouts="mono")
+                    ;;
+                (2)
+                    AUDIO_OPTS+=(-filter:a:$stream_idx aformat=channel_layouts="stereo")
+                    ;;
+                (6)
+                    AUDIO_OPTS+=(-filter:a:$stream_idx aformat=channel_layouts="5.1")
+                    ;;
+                (8)
+                    AUDIO_OPTS+=(-filter:a:$stream_idx aformat=channel_layouts="7.1")
+                    ;;
+                (*)
+                    printf "Unknown channel layout with %d channels.\n" $channels >&2
+                    exit -1
+            esac
+        fi
+    else
+        AUDIO_OPTS+=(-map 0:a:$stream_idx -codec:a:$stream_idx copy)
+    fi
+    ((stream_idx++))
+done
+
+
+## Create the subtitle options
+typeset -a SUBTITLE_OPTS
+codecs=(
+    $(
+    ffprobe "$INPUT_FILE" \
+            -v error \
+            -select_streams s \
+            -show_entries stream=codec_name \
+            -print_format default=nk=1:nw=1
+    )
+)
+stream_idx=0
+for codec in $codecs ; do
+    case $codec in
+        ("webvtt")
+            SUBTITLE_OPTS+=(-map 0:s:$stream_idx -codec:s:$stream_idx copy)
+            ;;
+        ("hdmv_pgs_subtitle")
+            # Picture based subtitle
+            SUBTITLE_OPTS+=(-map 0:s:$stream_idx -codec:s:$stream_idx copy)
+            ;;
+        ("dvd_subtitle")
+            # Picture based subtitle
+            SUBTITLE_OPTS+=(-map 0:s:$stream_idx -codec:s:$stream_idx copy)
+            ;;
+        (*)
+            NEEDS_TRANSCODING=true
+            SUBTITLE_OPTS+=(-map 0:s:$stream_idx -codec:s:$stream_idx webvtt)
+            ;;
+    esac
+    ((stream_idx++))
+done
+
+# Look for subtitles in the directory
+typeset -a SUBTITLE_FILES_ARGS
+if [[ ${#INPUT_SUBTITLES} -ne 0 ]]; then 
+    typeset -aU SUBTITLE_FILES
+    for i in $(seq  2 2 ${#INPUT_SUBTITLES}) ; do
+        if [[ "$INPUT_SUBTITLES[$i]" = "." ]] ; then
+            SUBTITLE_FILES+=($(
+                find "${INPUT_FILE:h}" \
+                    -type f \
+                    -name "*.srt" \
+                    -o -name "*.sub" \
+                    -o -name "*.ttml" \
+                    -o -name "*.sbv" \
+                    -o -name "*.dfxp" \
+                    -o -name "*.vtt"
+            ))
+        else
+            SUBTITLE_FILES+=("$INPUT_SUBTITLES[$i]")
+        fi
+    done
+
+    file_idx=1
+    for file in $SUBTITLE_FILES ; do
+        codecs=(
+            $(
+            ffprobe "$file" \
+                    -v error \
+                    -select_streams s \
+                    -show_entries stream=codec_name \
+                    -print_format default=nk=1:nw=1
+            )
+        )
+        SUBTITLE_FILES_ARGS+=(-i "$file")
+        in_stream_idx=0
+        for codec in $codecs ; do
+            case $codec in
+                ("webvtt")
+                    NEEDS_TRANSCODING=true
+                    SUBTITLE_OPTS+=(-map ${file_idx}:s:$in_stream_idx -codec:s:$stream_idx copy -metadata:s:s:$stream_idx title="${${file:r:t}//_/ }")
+                    ;;
+                ("hdmv_pgs_subtitle")
+                    # Cannot be converted to VTT
+                    NEEDS_TRANSCODING=true
+                    SUBTITLE_OPTS+=(-map ${file_idx}:s:$in_stream_idx -codec:s:$stream_idx copy -metadata:s:s:$stream_idx title="${${file:r:t}//_/ }")
+                    ;;
+                (*)
+                    NEEDS_TRANSCODING=true
+                    SUBTITLE_OPTS+=(-map ${file_idx}:s:$in_stream_idx -codec:s:$stream_idx webvtt -metadata:s:s:$stream_idx title="${${file:r:t}//_/ }")
+                    ;;
+            esac
+            ((in_stream_idx++))
+            ((stream_idx++))
+        done
+    done
+fi
+
+# If we were just performing a check, we just need to check the transcoding
+# status.
+if [[ -n "$CHECK[1]" ]]; then
+    if $NEEDS_TRANSCODING; then
+        return 1
+    else;
+        return 0
+    fi
+fi
+
+
+## Run FFmpeg
+if $NEEDS_TRANSCODING ; then
+    msg "Transcoding $INPUT_FILE to $OUTPUT_FILE"
+    echo ffmpeg -n \
+        -hide_banner \
+        -hwaccel vaapi \
+        -vaapi_device /dev/dri/renderD128 \
+        "${(@)HW_ACCELERATION_OPTS}" \
+        -i "$INPUT_FILE" \
+        "${(@)SUBTITLE_FILES_ARGS}" \
+        "${(@)VIDEO_OPTS}" \
+        "${(@)AUDIO_OPTS}" \
+        "${(@)SUBTITLE_OPTS}" \
+        -map_metadata 0 \
+        -map_chapters 0 \
+        "$OUTPUT_FILE"
+    systemd-inhibit --who="ffmpeg" --why="Transcoding ${INPUT_FILE:t:r}" --what="sleep:shutdown" nice ffmpeg -n \
+        -hide_banner \
+        -hwaccel vaapi \
+        -vaapi_device /dev/dri/renderD128 \
+        "${(@)HW_ACCELERATION_OPTS}" \
+        -i "$INPUT_FILE" \
+        "${(@)SUBTITLE_FILES_ARGS}" \
+        "${(@)VIDEO_OPTS}" \
+        "${(@)AUDIO_OPTS}" \
+        "${(@)SUBTITLE_OPTS}" \
+        -map_metadata 0 \
+        -map_chapters 0 \
+        "$OUTPUT_FILE"
+
+    if [[ $? -ne 0 ]]; then
+        msg "Transcoding $INPUT_FILE to $OUTPUT_FILE failed."
+        exit -1
+    fi
+
+    if [[ -n "$REPLACE[1]" ]]; then
+        msg "Moving $OUTPUT_FILE to ${INPUT_FILE:r}.mkv"
+        mv "$OUTPUT_FILE" "${INPUT_FILE:r}.mkv"
+
+        if [[ $? -ne 0 ]]; then
+            msg "Moving $OUTPUT_FILE to ${INPUT_FILE:r}.mkv failed."
+            exit -1
+        fi
+        
+        if [[ "${INPUT_FILE:e}" != "mkv" ]]; then
+            msg "Deleting $INPUT_FILE"
+            rm "$INPUT_FILE"
+        fi
+    fi
+else
+    msg "No transcoding needed."
+    exit 0
+fi

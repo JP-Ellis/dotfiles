@@ -1,0 +1,25 @@
+#!/bin/zsh
+
+source $HOME/.local/share/zsh/print-fn
+
+
+
+title "Finding video loopback devices"
+DEVICES=()
+for dev in $(ls /dev/video*); do
+    if v4l2-ctl --device $dev --info | rg -q 'v4l2 loopback' ; then
+        msg "Found $dev"
+        DEVICES+=("$dev")
+    fi
+done
+
+title "Setting up screen share"
+PIDS=()
+for i in {1..$(swaymsg -t get_outputs | jq length)}; do
+    { sleep 0.2 ; echo y ; sleep 0.2 ; echo $i ; } | wf-recorder --muxer=v4l2 --codec=rawvideo --pixel-format yuv420p --force-yuv --no-damage --file "${DEVICES[$i]}" &
+    PIDS+=("$!")
+    sleep 1
+done
+
+msg "Use Ctrl+C to stop screen sharing"
+wait "${PIDS[@]}"
