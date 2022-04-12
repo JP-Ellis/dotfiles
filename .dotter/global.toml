@@ -1,7 +1,7 @@
 [bash]
     [bash.files]
-    "bash/bashrc" = "~/.bashrc"
     "bash/bash_profile" = "~/.bash_profile"
+    "bash/bashrc" = "~/.bashrc"
 
 [borgmatic]
     [borgmatic.files]
@@ -21,6 +21,7 @@
 
     "general/environment.d/10-applications.conf" = "~/.config/environment.d/10-applications.conf"
     "general/environment.d/10-xdg.conf" = "~/.config/environment.d/10-xdg.conf"
+    "general/environment.d/90-go.conf" = "~/.config/environment.d/90-go.conf"
     "general/environment.d/90-make.conf" = "~/.config/environment.d/90-make.conf"
     "general/environment.d/90-python.conf" = "~/.config/environment.d/90-python.conf"
     "general/environment.d/90-rust.conf" = "~/.config/environment.d/90-rust.conf"
@@ -35,14 +36,14 @@
     "general/monitor-transmission.zsh" = "~/.config/systemd/user/monitor-transmission.zsh"
     "general/rustup-update.service" = "~/.config/systemd/user/rustup-update.service"
     "general/rustup-update.timer" = "~/.config/systemd/user/rustup-update.timer"
-    
+
     [general.variables]
-    tmpdir = "/tmp/josh"
-    app-editor = "vim"
-    app-visual = "code -w"
-    app-pager = "less"
     app-browser = "brave"
+    app-editor = "vim"
+    app-pager = "less"
+    app-visual = "code -w"
     nproc = 12
+    tmpdir = "/tmp/josh"
 
 [git]
     [git.files]
@@ -55,14 +56,14 @@
 
 [gpg]
     [gpg.files]
-    "gpg/sshcontrol" = "~/.gnupg/sshcontrol"
     "gpg/gpg-agent.conf" = "~/.gnupg/gpg-agent.conf"
+    "gpg/sshcontrol" = "~/.gnupg/sshcontrol"
 
 [kitty]
     [kitty.files]
+    "kitty/dark.theme.conf" = "~/.config/kitty/dark.theme.conf"
     "kitty/kitty.conf" = "~/.config/kitty/kitty.conf"
     "kitty/light.theme.conf" = "~/.config/kitty/light.theme.conf"
-    "kitty/dark.theme.conf" = "~/.config/kitty/dark.theme.conf"
 
 [mathematica]
     [mathematica.files]
@@ -76,8 +77,8 @@
     [sway.files]
     "sway/background.png" = "~/.config/sway/background.png"
     "sway/config" = "~/.config/sway/config"
-    "sway/mako.service" = "~/.config/systemd/user/mako.service"
     "sway/mako" = "~/.config/mako/config"
+    "sway/mako.service" = "~/.config/systemd/user/mako.service"
     "sway/polkit-gnome-authentication-agent.service" = "~/.config/systemd/user/polkit-gnome-authentication-agent.service"
     "sway/sway-session.target" = "~/.config/systemd/user/sway-session.target"
     "sway/swayidle.service" = "~/.config/systemd/user/swayidle.service"
@@ -93,6 +94,5 @@
 
 [zsh]
     [zsh.files]
+    "zsh/sheldon.toml" = { target = "~/.config/sheldon/plugins.toml", type = "symbolic" }
     "zsh/zshrc" = "~/.zshrc"
-    "zsh/zinitrc" = "~/.zinitrc"
-    "zsh/zshopts" = "~/.zshopts"
