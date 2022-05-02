@@ -120,5 +120,12 @@ for dir in "$HOME/.local" "/scratch/$USER/local" "/scratch/$SUSER/local" "$CARGO
 done
 
 
+## Load environment variables into DBus and systemd
+################################################################################
+if command -v dbus-update-activation-environment 2>&1 1>/dev/null ; then
+  dbus-update-activation-environment --systemd SSH_AUTH_SOCK
+fi
+
+
 ## Customizations
 ################################################################################

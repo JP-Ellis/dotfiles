@@ -225,4 +225,4 @@ for_window [app_id="ulauncher"] floating enable, border none
 # Launch sway-session.target
 # ==========================
 
-exec "systemctl --user import-environment; systemctl --user start sway-session.target"
+exec "systemctl --user start sway-session.target"
