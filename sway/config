@@ -225,4 +225,5 @@ for_window [app_id="ulauncher"] floating enable, border none
 # Launch sway-session.target
 # ==========================
 
+exec "systemctl --user import-environment TMPDIR SSH_AUTH_SOCK"
 exec "systemctl --user start sway-session.target"
