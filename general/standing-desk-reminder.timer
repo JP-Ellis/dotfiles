@@ -1,0 +1,10 @@
+[Unit]
+Description=Reminder to stand up for a bit
+
+[Timer]
+OnCalendar=hourly
+Persistent=true
+RandomizedDelaySec=300
+
+[Install]
+WantedBy=timers.target

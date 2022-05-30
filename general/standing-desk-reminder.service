@@ -1,0 +1,6 @@
+[Unit]
+Description=Reminder to stand up for a bit
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/notify-send "Stand Up!" "It's been an hour, it's time to stretch your legs"
