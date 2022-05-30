@@ -1,0 +1,10 @@
+[Unit]
+Description=Update Sheldon plugins regularly
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+RandomizedDelaySec=600
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,6 @@
+[Unit]
+Description=Update Sheldon plugins
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sheldon lock --update

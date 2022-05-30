@@ -15,39 +15,33 @@ shell = "zsh"
 [plugins]
 
     [plugins.zsh-defer]
-        # As this plugin is used to defer the loading of other plugins, it must
-        # be loaded first so as to be available.
-        github = "romkatv/zsh-defer"
+    # As this plugin is used to defer the loading of other plugins, it must
+    # be loaded first so as to be available.
+    github = "romkatv/zsh-defer"
 
     [plugins.zsh-fzy]
-        github = "aperezdc/zsh-fzy"
-        apply = ["defer"]
-
+    apply  = ["defer"]
+    github = "aperezdc/zsh-fzy"
 
     [plugins.zsh-completions]
-        github = "zsh-users/zsh-completions"
-        apply = ["defer"]
+    apply  = ["defer"]
+    github = "zsh-users/zsh-completions"
 
-    [plugins.async]
-        github = "mafredri/zsh-async"
-        apply = ["defer"]
+    # [plugins.enhancd]
+    # apply  = ["defer"]
+    # github = "b4b4r07/enhancd"
 
-
-    [plugins.enhancd]
-        github = "b4b4r07/enhancd"
-        apply = ["defer"]
-
-    ## The following plugins need to be loaded last as the wrap other widgets
+    ## The following plugins need to be loaded last as they wrap other widgets
 
     [plugins.zsh-syntax-highlighting]
-        github = "zsh-users/zsh-syntax-highlighting"
-        apply = ["defer"]
+    apply  = ["defer"]
+    github = "zsh-users/zsh-syntax-highlighting"
 
     [plugins.zsh-autocomplete]
-        github = "marlonrichert/zsh-autocomplete"
-        apply = ["defer"]
+    apply  = ["defer"]
+    github = "marlonrichert/zsh-autocomplete"
 
 [templates]
     [templates.defer]
-        value = 'zsh-defer source "{{ file }}"'
-        each = true
+    each  = true
+    value = 'zsh-defer source "{{ file }}"'
