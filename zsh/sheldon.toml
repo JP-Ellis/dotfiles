@@ -27,9 +27,9 @@ shell = "zsh"
     apply  = ["defer"]
     github = "zsh-users/zsh-completions"
 
-    # [plugins.enhancd]
-    # apply  = ["defer"]
-    # github = "b4b4r07/enhancd"
+    [plugins.enhancd]
+    apply  = ["defer"]
+    github = "b4b4r07/enhancd"
 
     ## The following plugins need to be loaded last as they wrap other widgets
 

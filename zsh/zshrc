@@ -5,10 +5,12 @@
 # Load ZSH options
 # source ~/.zshopts
 
+autoload -Uz compinit
+compinit
+
 # Load profile
 if [[ -e "$HOME/.profile" ]]; then
   source "$HOME/.profile"
-  ENHANCD_HOOK_AFTER_CD="ls"
 fi
 
 # Load zoxide
@@ -23,8 +25,11 @@ fi
 
 # Load Sheldon
 if (( $+commands[sheldon] )); then
-  # Additional configurations
-  zstyle ':autocomplete:*' recent-dirs zoxide
+  export ENHANCD_FILTER=fzf:fzy
+  export ENHANCD_HOOK_AFTER_CD=ls
+  zstyle ':autocomplete:*' recent-dirs zoxide # Use zoxide for recent directories
+  zstyle ':autocomplete:*' insert-unambiguous yes # Insert substring common to all listed completions, if any
+  zstyle ':autocomplete:*' widget-style menu-select # The manner in which completions are selected
   zstyle ':autocomplete:*' fzf-completion yes
 
   eval "$(sheldon source)"
@@ -127,9 +132,9 @@ else
 fi
 
 ## Run ls after entering a directory
-cd() {
-  builtin cd "$1" && ls
-}
+# cd() {
+#   builtin cd "$1" && ls
+# }
 
 ## Shortcut to make and cd into a new directory
 mkcd() {
