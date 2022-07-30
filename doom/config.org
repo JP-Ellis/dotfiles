@@ -1,0 +1,171 @@
+#+title: Doom Config
+
+#+begin_src emacs-lisp
+;;; -*- lexical-binding: t; -*-
+#+end_src
+
+Here are some additional functions/macros that could help you configure Doom:
+
+- ~load!~ for loading external ~*.el~ files relative to this one
+- ~use-package!~ for configuring packages
+- ~after!~ for running code after a package has loaded
+- ~add-load-path!~ for adding directories to the ~load-path~, relative to this
+  file. Emacs searches the ~load-path~ when you load packages with ~require~ or
+  ~use-package~.
+- ~map!~ for binding new keys
+
+To get information about any of these functions/macros, move the cursor over the
+highlighted symbol at press ~K~ (non-evil users must press ~C-c c k~). This will
+open documentation for it, including demos of how they are used.
+
+You can also try ~gd~ (or ~C-c c d~) to jump to their definition and see how
+they are implemented.
+
+* User Configuration
+
+Some variables to identify the user, such as with GPG configuration, email, and
+various templates or snippets.
+
+#+begin_src emacs-lisp
+(setq user-full-name "{{ name }}"
+      user-mail-address "{{ email }}")
+#+end_src
+
+* Display
+
+Change the visual appearance of Doom Emacs
+
+** Font
+
+Doom exposes five (optional) variables for controlling fonts in Doom. Here
+are the three important ones:
+
+- ~doom-font~
+- ~doom-variable-pitch-font~
+- ~doom-big-font~ -- used for ~doom-big-font-mode~; use this for presentations
+  or streaming.
+
+They all accept either a font-spec, font string ~("Input Mono-12")~, or ~xlfd~
+font string. You generally only need the first two.
+
+#+begin_src emacs-lisp
+(setq doom-font (font-spec :family "Fira Mono" :size 14 :weight 'medium)
+      doom-variable-pitch-font (font-spec :family "sans" :size 14))
+#+end_src
+
+** Theme
+There are two ways to load a theme. Both assume the theme is installed and
+available. You can either set ~doom-theme~ or manually load a theme with the
+~load-theme~ function. This is the default:
+#+begin_src emacs-lisp
+(setq doom-them 'doom-one)
+#+end_src
+
+** Miscellaneous
+
+This determines the style of line numbers in effect. If set to ~nil~, line
+numbers are disabled, and ~t~ shows regular line numbers. For relative line
+numbers, set this to ~relative~.
+
+#+begin_src emacs-lisp
+(setq display-line-numbers-type 'relative)
+#+end_src
+
+* Package Configurations
+
+** Rust
+
+Enable inlay hints within Rust.
+
+#+begin_src emacs-lisp
+(setq lsp-rust-analyzer-server-display-inlay-hints t)
+#+end_src
+
+** Github Copilot
+
+In evil mode, only have copilot active during insert mode
+#+begin_src emacs-lisp
+(setq copilot-enable-predicates '(evil-insert-state-p))
+#+end_src
+
+Define a new command to accept completions suggested by Copilot if available, and defer to Company otherwise.
+#+begin_src emacs-lisp
+(defun copilot-completion-tab nil
+  "Accept the current Copilot completion if there is one, and defer to company-mode otherwise."
+  (interactive)
+  (or (copilot-accept-completion)
+      (company-indent-or-complete-common nil)))
+
+;; (with-eval-after-load 'company
+;;                                         ; disable inline previews
+;;   (delq 'company-preview-if-just-one-frontend company-frontends)
+;;                                         ; enable tab completion
+;;   (define-key company-mode-map (kbd "<tab>") 'copilot-completion-tab)
+;;   (define-key company-mode-map (kbd "TAB") 'copilot-completion-tab)
+;;   (define-key company-active-map (kbd "<tab>") 'copilot-completion-tab)
+;;   (define-key company-active-map (kbd "TAB") 'copilot-completion-tab))
+#+end_src
+
+#+begin_src emacs-lisp
+;; (use-package! copilot
+;;     :hook (prog-mode . copilode-mode)
+;;     :bind (("C-TAB" . 'copilot-accept-completion-by-word)
+;;            ("C-<tab>" . 'copilot-accept-completion-by-word)
+;;            :map company-active-map
+;;                 ("TAB" . 'copilot-completion-tab)
+;;                 ("<tab>" . 'copilot-completion-tab)
+;;            :map company-mode-map
+;;                 ("TAB" . 'copilot-completion-tab)
+;;                 ("<tab>" . 'copilot-completion-tab)))
+#+end_src
+
+
+** Language Server
+
+The language server has issues when a project might have a larger number of
+files to track. The following code originates from [[https://github.com/emacs-lsp/lsp-mode/issues/713#issuecomment-985653873][emacs-lsp/lsp-mode#713]] and
+configures LSP to ignore tracking files specified from the ~.gitignore~. This is
+particularly useful for project which use ~npm~.
+
+#+begin_src emacs-lisp
+(use-package! lsp-mode
+  :config
+  ;; Ignore setting up watches on gitignored paths
+  ;; https://github.com/emacs-lsp/lsp-mode/issues/713#issuecomment-985653873
+  (defun ++git-ignore-p (path)
+    (let* (; trailing / breaks git check-ignore if path is a symlink:
+           (path (directory-file-name path))
+           (default-directory (file-name-directory path))
+           (relpath (file-name-nondirectory path))
+           (cmd (format "git check-ignore '%s'" relpath))
+           (status (call-process-shell-command cmd)))
+      (eq status 0)))
+
+  (defun ++lsp--path-is-watchable-directory-a
+      (fn path dir ignored-directories)
+    (and (not (++git-ignore-p (f-join dir path)))
+         (funcall fn path dir ignored-directories)))
+
+  (advice-add 'lsp--path-is-watchable-directory
+              :around #'++lsp--path-is-watchable-directory-a))
+#+end_src
+
+** Org mode
+
+If you use ~org~ and don't want your org files in the default location below,
+change ~org-directory~. It must be set before org loads!
+
+#+begin_src emacs-lisp
+(setq org-directory "~/org/")
+#+end_src
+
+** Treemacs
+
+Enable git integration within Treemacs. The ~+treemacs-git-mode~ has the following options:
+- ~simple~ The files are highlighted based on their git status
+- ~extended~ Files and directories are highlighted (requires Python)
+- ~deferred~ Same as ~extended~, but asynchronous
+
+#+begin_src emacs-lisp
+(customize-set-variable '+treemacs-git-mode 'deferred)
+#+end_src
