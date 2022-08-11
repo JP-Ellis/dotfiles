@@ -17,10 +17,10 @@
 
 [doom]
     [doom.files]
-    "doom/config.org"   = "~/.doom.d/config.org"
-    "doom/init.el"      = "~/.doom.d/init.el"
-    "doom/packages.el"  = "~/.doom.d/packages.el"
-    "doom/packages.org" = "~/.doom.d/packages.org"
+    "doom/config.org"   = "~/.config/doom/config.org"
+    "doom/init.el"      = "~/.config/doom/init.el"
+    "doom/packages.el"  = "~/.config/doom/packages.el"
+    "doom/packages.org" = "~/.config/doom/packages.org"
 
     [doom.variables]
     "email" = "josh@jpellis.me"
