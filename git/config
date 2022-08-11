@@ -64,16 +64,16 @@
 # Compressed files
 [diff "gzip"]
     binary = true
-    textconv = /bin/zcat
+    textconv = zcat
 [diff "bz2"]
     binary = true
-    textconv = /bin/bzcat
+    textconv = bzcat
 [diff "xz"]
     binary = true
-    textconv = /bin/xzcat
+    textconv = xzcat
 [diff "zst"]
     binary = true
-    textconv = /bin/zstdcat
+    textconv = zstdcat
 
  # Archives
 [diff "tar"]
