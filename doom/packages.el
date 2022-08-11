@@ -2,6 +2,9 @@
 
 (package! pkgbuild-mode)
 
+(package! bicep-mode
+  :recipe (:host github :repo "christiaan-janssen/bicep-mode"))
+
 (package! copilot
   :recipe (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el")))
 

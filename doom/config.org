@@ -73,12 +73,10 @@ numbers, set this to ~relative~.
 
 * Package Configurations
 
-** Rust
-
-Enable inlay hints within Rust.
+** Bicep
 
 #+begin_src emacs-lisp
-(setq lsp-rust-analyzer-server-display-inlay-hints t)
+(use-package! bicep-mode)
 #+end_src
 
 ** Github Copilot
@@ -159,14 +157,6 @@ change ~org-directory~. It must be set before org loads!
 (setq org-directory "~/org/")
 #+end_src
 
-** Rust
-
-Enable inlay hints within Rust.
-
-#+begin_src emacs-lisp
-(setq lsp-rust-analyzer-server-display-inlay-hints t)
-#+end_src
-
 *** Roam
 
 #+begin_src emacs-lisp
@@ -180,6 +170,14 @@ Enable inlay hints within Rust.
          org-roam-ui-follow t
          org-roam-ui-update-on-save t
          org-roam-ui-open-on-start t))
+#+end_src
+
+** Rust
+
+Enable inlay hints within Rust.
+
+#+begin_src emacs-lisp
+(setq lsp-rust-analyzer-server-display-inlay-hints t)
 #+end_src
 
 ** Treemacs
