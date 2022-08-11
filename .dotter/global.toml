@@ -138,5 +138,4 @@
     "zsh/sheldon-update.service" = "~/.config/systemd/user/sheldon-update.service"
     "zsh/sheldon-update.timer"   = "~/.config/systemd/user/sheldon-update.timer"
     "zsh/sheldon.toml"           = { target = "~/.config/sheldon/plugins.toml", type = "symbolic" }
-    "zsh/zi"                     = "~/.config/zsh/zi/config"
     "zsh/zshrc"                  = "~/.zshrc"
