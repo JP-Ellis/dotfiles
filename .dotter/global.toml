@@ -127,6 +127,10 @@
     [sway.variables]
     terminal = "kitty"
 
+[windows-terminal]
+    [windows-terminal.files]
+    "windows-terminal/settings.json" = "~/AppData/Local/Packages/Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe/LocalState/settings.json"
+
 [zsh]
     [zsh.files]
     "zsh/sheldon-update.service" = "~/.config/systemd/user/sheldon-update.service"
