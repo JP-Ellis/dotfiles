@@ -150,13 +150,36 @@ particularly useful for project which use ~npm~.
               :around #'++lsp--path-is-watchable-directory-a))
 #+end_src
 
-** Org mode
+** Org
 
 If you use ~org~ and don't want your org files in the default location below,
 change ~org-directory~. It must be set before org loads!
 
 #+begin_src emacs-lisp
 (setq org-directory "~/org/")
+#+end_src
+
+** Rust
+
+Enable inlay hints within Rust.
+
+#+begin_src emacs-lisp
+(setq lsp-rust-analyzer-server-display-inlay-hints t)
+#+end_src
+
+*** Roam
+
+#+begin_src emacs-lisp
+(use-package! websocket
+  :after org-roam)
+
+(use-package! org-roam-ui
+  :after org-roam
+  :config
+   (setq org-roam-ui-sync-theme t
+         org-roam-ui-follow t
+         org-roam-ui-update-on-save t
+         org-roam-ui-open-on-start t))
 #+end_src
 
 ** Treemacs

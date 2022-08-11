@@ -99,6 +99,18 @@ release. The `unpin!' macro allows you to unpin single packages...
   :recipe (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el")))
 #+end_src
 
+** Org
+
+*** Roam
+
+The ~org-roam-ui~ packages tries to keep up with the latest changes from
+~org-roam~ and thus doesn't generally work with the pinned package in Doom.
+
+#+begin_src emacs-lisp
+(unpin! org-roam)
+(package! org-roam-ui)
+#+end_src
+
 ** Xah Wolfram Mode
 
 #+begin_src emacs-lisp
