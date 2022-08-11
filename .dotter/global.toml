@@ -84,7 +84,9 @@
     "git/ipynb_output_filter.py" = "~/.config/git/ipynb_output_filter.py"
 
     [git.variables]
-    signingkey = "josh@jpellis.me"
+    signingKey = "josh@jpellis.me"
+    usernameGithub = "JP-Ellis"
+    usernameGitlab = "JP-Ellis"
 
 [gpg]
     [gpg.files]

@@ -1,10 +1,10 @@
 [user]
-	email = josh@jpellis.me
-	name = JP-Ellis
-	signingkey = {{signingkey}}
+	email = {{email}}
+	name = {{name}}
+	signingkey = {{signingKey}}
 
 [commit]
-	gpgsign = {{#if signingkey}}true{{else}}false{{/if}}
+	gpgsign = {{#if signingKey}}true{{else}}false{{/if}}
 
 [pull]
 	rebase = true
@@ -31,11 +31,15 @@
 [credential "https://source.developers.google.com"]
 	helper = gcloud.sh
 
+{{#if usernameGithub}}
 [github]
-	user = JP-Ellis
+	user = {{usernameGithub}}
+{{/if}}
 
+{{#if usernameGitlab}}
 [gitlab]
-	user = JP-Ellis
+	user = {{usernameGitlab}}
+{{/if}}
 
 [magithub]
 	online = true
