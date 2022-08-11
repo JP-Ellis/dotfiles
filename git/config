@@ -71,7 +71,7 @@
 [diff "xz"]
     binary = true
     textconv = /bin/xzcat
-[diff "zstd"]
+[diff "zst"]
     binary = true
     textconv = /bin/zstdcat
 
