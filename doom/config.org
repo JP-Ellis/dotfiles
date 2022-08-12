@@ -132,11 +132,19 @@ If you use ~org~ and don't want your org files in the default location below,
 change ~org-directory~. It must be set before org loads!
 
 #+begin_src emacs-lisp
-(setq org-directory "~/org/")
+(make-directory "~/org" t)
+(setq org-directory "~/org")
 #+end_src
 
 *** Roam
 
+Adjust the directory in which org-roam stores files.
+#+begin_src emacs-lisp
+(make-directory "~/org/roam" t)
+(setq org-roam-directory "~/org/roam")
+#+end_src
+
+Configuration for org-roam-ui.
 #+begin_src emacs-lisp
 (use-package! websocket
   :after org-roam)
