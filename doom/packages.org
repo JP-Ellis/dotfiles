@@ -119,6 +119,10 @@ The ~org-roam-ui~ packages tries to keep up with the latest changes from
 (package! xah-wolfram-mode
   :recipe (:host github :repo "xahlee/xah-wolfram-mode"))
 #+end_src
+** Spell-Fu
+#+begin_src emacs-lisp
+(unpin! spell-fu)
+#+end_src
 ;; Local Variables:
 ;; eval: (add-hook 'after-save-hook #'org-babel-tangle 0 t)
 ;; End:

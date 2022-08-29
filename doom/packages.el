@@ -18,3 +18,5 @@
 
 (package! xah-wolfram-mode
   :recipe (:host github :repo "xahlee/xah-wolfram-mode"))
+
+(unpin! spell-fu)
