@@ -20,9 +20,7 @@ open documentation for it, including demos of how they are used.
 
 You can also try ~gd~ (or ~C-c c d~) to jump to their definition and see how
 they are implemented.
-
 * User Configuration
-
 Some variables to identify the user, such as with GPG configuration, email, and
 various templates or snippets.
 
@@ -30,13 +28,9 @@ various templates or snippets.
 (setq user-full-name "{{ name }}"
       user-mail-address "{{ email }}")
 #+end_src
-
 * Display
-
 Change the visual appearance of Doom Emacs
-
 ** Font
-
 Doom exposes five (optional) variables for controlling fonts in Doom. Here
 are the three important ones:
 
@@ -52,7 +46,6 @@ font string. You generally only need the first two.
 (setq doom-font (font-spec :family "Fira Code" :size 12 :weight 'light)
       doom-variable-pitch-font (font-spec :family "Fira Sans" :size 12))
 #+end_src
-
 ** Theme
 There are two ways to load a theme. Both assume the theme is installed and
 available. You can either set ~doom-theme~ or manually load a theme with the
@@ -78,9 +71,7 @@ numbers, set this to ~relative~.
 #+begin_src emacs-lisp
 (use-package! bicep-mode)
 #+end_src
-
 ** Github Copilot
-
 #+begin_src emacs-lisp
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
@@ -95,9 +86,7 @@ In evil mode, only have copilot active during insert mode
 #+begin_src emacs-lisp
 (setq copilot-enable-predicates '(evil-insert-state-p))
 #+end_src
-
 ** Language Server
-
 The language server has issues when a project might have a larger number of
 files to track. The following code originates from [[https://github.com/emacs-lsp/lsp-mode/issues/713#issuecomment-985653873][emacs-lsp/lsp-mode#713]] and
 configures LSP to ignore tracking files specified from the ~.gitignore~. This is
@@ -125,9 +114,7 @@ particularly useful for project which use ~npm~.
   (advice-add 'lsp--path-is-watchable-directory
               :around #'++lsp--path-is-watchable-directory-a))
 #+end_src
-
 ** Org
-
 If you use ~org~ and don't want your org files in the default location below,
 change ~org-directory~. It must be set before org loads!
 
@@ -135,9 +122,7 @@ change ~org-directory~. It must be set before org loads!
 (make-directory "~/org" t)
 (setq org-directory "~/org")
 #+end_src
-
 *** Roam
-
 Adjust the directory in which org-roam stores files.
 #+begin_src emacs-lisp
 (make-directory "~/org/roam" t)
@@ -157,17 +142,49 @@ Configuration for org-roam-ui.
          org-roam-ui-update-on-save t
          org-roam-ui-open-on-start t))
 #+end_src
+*** Ref
+#+begin_src emacs-lisp
+(use-package! org-ref
 
+  ;; Make sure Org-ref is loaded after Org
+  :after org
+
+  ;; Defer loading to not impact start up
+  :defer t
+
+  ;; This initialization bit puts the `orhc-bibtex-cache-file` into `~/.doom/.local/cache/orhc-bibtex-cache
+  ;; Not strictly required, but Org-ref will pollute your home directory otherwise, creating the cache file in ~/.orhc-bibtex-cache
+  :init
+  (let ((cache-dir (concat doom-cache-dir "org-ref")))
+    (unless (file-exists-p cache-dir)
+      (make-directory cache-dir t))
+    (setq orhc-bibtex-cache-file (concat cache-dir "/orhc-bibtex-cache"))))
+#+end_src
+
+*** Padding
+#+BEGIN_SRC emacs-lisp
+(use-package! org-padding
+  :after org
+  :defer t
+  :hook (org-mode . org-padding-mode))
+
+(setq org-padding-block-begin-line-padding   '(2.0 . nil)
+      org-padding-block-end-line-padding      '(nil . 1.0)
+      org-padding-heading-padding-alist      '((2.0 . 0.5)
+                                               (1.7 . 0.5)
+                                               (1.6 . 0.5)
+                                               (1.5 . 0.5)
+                                               (1.4 . 0.5)
+                                               (1.3 . 0.5)
+                                               (1.2 . 0.5)
+                                               (1.0 . 0.5)))
+#+end_src
 ** Rust
-
 Enable inlay hints within Rust.
-
 #+begin_src emacs-lisp
 (setq lsp-rust-analyzer-server-display-inlay-hints t)
 #+end_src
-
 ** Treemacs
-
 Enable git integration within Treemacs. The ~+treemacs-git-mode~ has the following options:
 - ~simple~ The files are highlighted based on their git status
 - ~extended~ Files and directories are highlighted (requires Python)

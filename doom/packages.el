@@ -11,5 +11,10 @@
 (unpin! org-roam)
 (package! org-roam-ui)
 
+(package! org-ref)
+
+(package! org-padding
+  :recipe (:host github :repo "TonCherAmi/org-padding"))
+
 (package! xah-wolfram-mode
   :recipe (:host github :repo "xahlee/xah-wolfram-mode"))
