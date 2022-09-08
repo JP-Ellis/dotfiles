@@ -1,9 +1,7 @@
 #+title: Doom Config
-
 #+begin_src emacs-lisp
 ;;; -*- lexical-binding: t; -*-
 #+end_src
-
 Here are some additional functions/macros that could help you configure Doom:
 
 - ~load!~ for loading external ~*.el~ files relative to this one
@@ -23,7 +21,6 @@ they are implemented.
 * User Configuration
 Some variables to identify the user, such as with GPG configuration, email, and
 various templates or snippets.
-
 #+begin_src emacs-lisp
 (setq user-full-name "{{ name }}"
       user-mail-address "{{ email }}")
@@ -41,7 +38,6 @@ are the three important ones:
 
 They all accept either a font-spec, font string ~("Input Mono-12")~, or ~xlfd~
 font string. You generally only need the first two.
-
 #+begin_src emacs-lisp
 (setq doom-font (font-spec :family "Fira Code" :size 12 :weight 'light)
       doom-variable-pitch-font (font-spec :family "Fira Sans" :size 12))
@@ -53,21 +49,15 @@ available. You can either set ~doom-theme~ or manually load a theme with the
 #+begin_src emacs-lisp
 (setq doom-them 'doom-one)
 #+end_src
-
 ** Miscellaneous
-
 This determines the style of line numbers in effect. If set to ~nil~, line
 numbers are disabled, and ~t~ shows regular line numbers. For relative line
 numbers, set this to ~relative~.
-
 #+begin_src emacs-lisp
 (setq display-line-numbers-type 'relative)
 #+end_src
-
 * Package Configurations
-
 ** Bicep
-
 #+begin_src emacs-lisp
 (use-package! bicep-mode)
 #+end_src
@@ -91,7 +81,6 @@ The language server has issues when a project might have a larger number of
 files to track. The following code originates from [[https://github.com/emacs-lsp/lsp-mode/issues/713#issuecomment-985653873][emacs-lsp/lsp-mode#713]] and
 configures LSP to ignore tracking files specified from the ~.gitignore~. This is
 particularly useful for project which use ~npm~.
-
 #+begin_src emacs-lisp
 (use-package! lsp-mode
   :config
@@ -117,7 +106,6 @@ particularly useful for project which use ~npm~.
 ** Org
 If you use ~org~ and don't want your org files in the default location below,
 change ~org-directory~. It must be set before org loads!
-
 #+begin_src emacs-lisp
 (make-directory "~/org" t)
 (setq org-directory "~/org")
@@ -128,7 +116,6 @@ Adjust the directory in which org-roam stores files.
 (make-directory "~/org/roam" t)
 (setq org-roam-directory "~/org/roam")
 #+end_src
-
 Default to creating encrypted files. Snippet take from [[https://www.orgroam.com/manual.html#Encryption][the Org Roam manual]].
 #+begin_src emacs-lisp
 (setq org-roam-capture-templates
@@ -141,7 +128,6 @@ Default to creating encrypted files. Snippet take from [[https://www.orgroam.com
                        :target (file+head "%<%Y-%m-%d>.org.gpg"
                                           "#+title: %<%Y-%m-%d>\n"))))
 #+end_src
-
 Configuration for org-roam-ui.
 #+begin_src emacs-lisp
 (use-package! websocket
@@ -199,17 +185,16 @@ Configuration for org-roam-ui.
                                                (1.2 . 0.5)
                                                (1.0 . 0.5)))
 #+end_src
-** Rust
-Enable inlay hints within Rust.
-#+begin_src emacs-lisp
-(setq lsp-rust-analyzer-server-display-inlay-hints t)
-#+end_src
 ** Treemacs
 Enable git integration within Treemacs. The ~+treemacs-git-mode~ has the following options:
 - ~simple~ The files are highlighted based on their git status
 - ~extended~ Files and directories are highlighted (requires Python)
 - ~deferred~ Same as ~extended~, but asynchronous
-
 #+begin_src emacs-lisp
 (customize-set-variable '+treemacs-git-mode 'deferred)
+#+end_src
+** Rust
+Enable inlay hints within Rust.
+#+begin_src emacs-lisp
+(setq lsp-rust-analyzer-server-display-inlay-hints t)
 #+end_src
