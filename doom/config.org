@@ -70,8 +70,10 @@ numbers, set this to ~relative~.
          :map copilot-completion-map
          ("<tab>"    . 'copilot-accept-completion)
          ("TAB"      . 'copilot-accept-completion)))
-#+end_src
 
+(when IS-WINDOWS
+  (setq copilot-node-executable "~/scoop/apps/nodejs-lts/current/node.exe"))
+#+end_src
 In evil mode, only have copilot active during insert mode
 #+begin_src emacs-lisp
 (setq copilot-enable-predicates '(evil-insert-state-p))
