@@ -134,6 +134,13 @@ Default to creating encrypted files. Snippet take from [[https://www.orgroam.com
                        :target (file+head "%<%Y-%m-%d>.org"
                                           "#+title: %<%Y-%m-%d>\n"))))
 #+end_src
+Adjust the org buffer sections:
+#+begin_src emacs-lisp
+(setq org-roam-mode-sections
+      (list #'org-roam-backlinks-section
+            #'org-roam-reflinks-section
+            #'org-roam-unlinked-references-section))
+#+end_src
 Configuration for org-roam-ui.
 #+begin_src emacs-lisp
 (use-package! websocket
