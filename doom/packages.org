@@ -92,6 +92,11 @@ release. The `unpin!' macro allows you to unpin single packages...
 (package! bicep-mode
   :recipe (:host github :repo "christiaan-janssen/bicep-mode"))
 #+end_src
+** Doom Themes
+Unpin the doom themes to get the latest version.
+#+begin_src emacs-lisp
+(unpin! doom-themes)
+#+end_src
 ** Github Copilot
 #+begin_src emacs-lisp
 (package! copilot

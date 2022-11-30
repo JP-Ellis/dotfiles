@@ -5,6 +5,8 @@
 (package! bicep-mode
   :recipe (:host github :repo "christiaan-janssen/bicep-mode"))
 
+(unpin! doom-themes)
+
 (package! copilot
   :recipe (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el")))
 
