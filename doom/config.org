@@ -112,6 +112,10 @@ change ~org-directory~. It must be set before org loads!
 (make-directory "~/org" t)
 (setq org-directory "~/org")
 #+end_src
+Enable ~auto-fill-mode~ in Org mode by default.
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook 'turn-on-auto-fill)
+#+end_src
 *** Roam
 Adjust the directory in which org-roam stores files.
 #+begin_src emacs-lisp
