@@ -126,12 +126,12 @@ Default to creating encrypted files. Snippet take from [[https://www.orgroam.com
 #+begin_src emacs-lisp
 (setq org-roam-capture-templates
       '(("d" "default" plain "%?"
-                       :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org.gpg"
+                       :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
                                           "#+title: ${title}")
                        :unnarrowed t)))
 (setq org-roam-dailies-capture-templates
       '(("d" "default" entry "* %?"
-                       :target (file+head "%<%Y-%m-%d>.org.gpg"
+                       :target (file+head "%<%Y-%m-%d>.org"
                                           "#+title: %<%Y-%m-%d>\n"))))
 #+end_src
 Configuration for org-roam-ui.
