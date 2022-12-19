@@ -122,6 +122,19 @@ Use LualaTeX as the default compiler
 (after! ox-latex
         (setq org-latex-compiler "lualatex"))
 #+end_src
+Add a new KPMG class and set it as default
+#+begin_src emacs-lisp
+(after! ox-latex
+        (add-to-list 'org-latex-classes         ;
+                     '("kpmg"
+                       "\\documentclass[11pt]{kpmg}"
+                       ("\\section{%s}"       . "\\section*{%s}")
+                       ("\\subsection{%s}"    . "\\subsection*{%s}")
+                       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                       ("\\paragraph{%s}"     . "\\paragraph*{%s}")
+                       ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
+        (setq org-latex-default-class "kpmg"))
+#+end_src
 *** Roam
 Adjust the directory in which org-roam stores files.
 #+begin_src emacs-lisp
