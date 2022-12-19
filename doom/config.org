@@ -109,8 +109,8 @@ particularly useful for project which use ~npm~.
 If you use ~org~ and don't want your org files in the default location below,
 change ~org-directory~. It must be set before org loads!
 #+begin_src emacs-lisp
-(make-directory "~/org" t)
-(setq org-directory "~/org")
+(setq org-directory (file-truename "~/org"))
+(make-directory org-directory t)
 #+end_src
 Enable ~auto-fill-mode~ in Org mode by default.
 #+begin_src emacs-lisp
@@ -119,8 +119,8 @@ Enable ~auto-fill-mode~ in Org mode by default.
 *** Roam
 Adjust the directory in which org-roam stores files.
 #+begin_src emacs-lisp
-(make-directory "~/org/roam" t)
-(setq org-roam-directory "~/org/roam")
+(setq org-roam-directory (file-name-concat org-directory "roam"))
+(make-directory org-roam-directory t)
 #+end_src
 Default to creating encrypted files. Snippet take from [[https://www.orgroam.com/manual.html#Encryption][the Org Roam manual]].
 #+begin_src emacs-lisp
