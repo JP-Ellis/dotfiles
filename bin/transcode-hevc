@@ -266,7 +266,7 @@ for codec in $codecs ; do
             channels=$(
                 ffprobe "$INPUT_FILE" \
                     -v error \
-                    -select_streams a:$i \
+                    -select_streams a:$stream_idx \
                     -show_entries stream=channels \
                     -print_format default=nk=1:nw=1
                     )
