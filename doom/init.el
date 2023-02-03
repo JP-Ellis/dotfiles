@@ -218,7 +218,8 @@
  ;; qt                         ; the 'cutest' gui framework ever
  ;; racket                     ; a DSL for DSLs
  ;; raku                       ; the artist formerly known as perl6
- rest                          ; Emacs as a REST client
+ (rest                         ; Emacs as a REST client
+  +jq)                         ; With support for jq
  rst                           ; ReST in peace
  (ruby
   +rails
