@@ -11,12 +11,18 @@ Host *
 ## Personal
 ################################################################################
 
-Host rpi3.ellis
+Host *.ellis
     Compression no
 
 Host router.ellis
     User root
     Compression no
+
+Host media
+    Hostname media.ellis
+    User josh
+    RequestTTY yes
+    RemoteCommand tmux new -A -s jpellis
 
 # Host rcw
 #     HostName rutherglenclocks.com.au
