@@ -105,6 +105,11 @@ particularly useful for project which use ~npm~.
   (advice-add 'lsp--path-is-watchable-directory
               :around #'++lsp--path-is-watchable-directory-a))
 #+end_src
+** Magit
+Enable the use of Gravatars
+#+begin_src emacs-lisp
+(setq magit-revision-show-gravatars t)
+#+end_src
 ** Org
 If you use ~org~ and don't want your org files in the default location below,
 change ~org-directory~. It must be set before org loads!
