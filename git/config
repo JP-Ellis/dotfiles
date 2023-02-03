@@ -28,6 +28,9 @@
 
 # Credentials / Integration
 ################################################################################
+[credential]
+	useHttpPath = true
+
 [credential "https://source.developers.google.com"]
 	helper = gcloud.sh
 
