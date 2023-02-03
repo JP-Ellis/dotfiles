@@ -1,5 +1,7 @@
 ;; -*- no-byte-compile: t; -*-
 
+(unpin! t)
+
 (package! pkgbuild-mode)
 
 (package! bicep-mode
