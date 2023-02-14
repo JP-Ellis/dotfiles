@@ -39,7 +39,8 @@
         "face": "FiraCode NF",
         "size": 11,
         "weight": "light"
-      }
+      },
+      "startingDirectory": "%USERPROFILE%"
     },
     "list": [
       {
