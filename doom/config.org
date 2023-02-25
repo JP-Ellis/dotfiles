@@ -69,11 +69,6 @@ numbers, set this to ~relative~.
          ("<tab>"   . 'copilot-accept-completion)
          ("TAB"     . 'copilot-accept-completion)
          ("C-TAB"   . 'copilot-accept-completion-by-word)
-         ("C-<tab>" . 'copilot-accept-completion-by-word)
-         :map sp-pair-overlay-keymap
-         ("<tab>"   . 'copilot-accept-completion)
-         ("TAB"     . 'copilot-accept-completion)
-         ("C-TAB"   . 'copilot-accept-completion-by-word)
          ("C-<tab>" . 'copilot-accept-completion-by-word)))
 #+end_src
 On Windows, point to the correct node version.
