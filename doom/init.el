@@ -48,19 +48,19 @@
  minimap                       ; show a map of the code on the side
  modeline                      ; snazzy, Atom-inspired modeline, plus API
  nav-flash                     ; blink cursor line after big motions
- ;; neotree                    ; a project drawer, like NERDTree for vim
+ neotree                       ; a project drawer, like NERDTree for vim
  ophints                       ; highlight the region an operation acts on
  (popup                        ; tame sudden yet inevitable temporary windows
   +defaults)
  ;; tabs                       ; a tab bar for Emacs
  (treemacs                     ; a project drawer, like neotree but cooler
   +lsp)
- ;; unicode                    ; extended unicode support for various languages
+ unicode                       ; extended unicode support for various languages
  vc-gutter                     ; vcs diff in the fringe
  vi-tilde-fringe               ; fringe tildes to mark beyond EOB
- ;; (window-select
- ;;   +numbers
- ;;   +switch-window)          ; visually switch windows
+ (window-select
+   +numbers
+   +switch-window)             ; visually switch windows
  workspaces                    ; tab emulation, persistence & separate workspaces
  zen                           ; distraction-free coding or writing
 
@@ -93,7 +93,7 @@
 
  :term
  eshell                        ; the elisp shell that works everywhere
- ;; shell                      ; simple shell REPL for Emacs
+ (:if IS-WINDOWS shell)        ; simple shell REPL for Emacs
  ;; term                       ; basic terminal emulator for Emacs
  (:if (not IS-WINDOWS) vterm)  ; the best terminal emulation in Emacs
 
@@ -158,7 +158,7 @@
  ;; ess                        ; emacs speaks statistics
  ;; factor
  ;; faust                      ; dsp, but you get to keep your soul
- fortran                       ; in FORTRAN, GOD is REAL (unless declared INTEGER)
+ ;; fortran                       ; in FORTRAN, GOD is REAL (unless declared INTEGER)
  ;; fsharp                     ; ML stands for Microsoft's Language
  ;; fstar                      ; (dependent) types and (monadic) effects and Z3
  ;; gdscript                   ; the language you waited for
@@ -237,7 +237,7 @@
  ;; solidity                   ; do you need a blockchain? No.
  ;; (swift
  ;;  +tree-sitter)             ; who asked for emoji variables?
- terra                         ; Earth and Moon in alignment for performance.
+ ;; terra                         ; Earth and Moon in alignment for performance.
  (web                          ; the tubes
   +tree-sitter)
  (yaml                         ; JSON, but readable
