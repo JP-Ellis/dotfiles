@@ -2,6 +2,9 @@
 
 (unpin! t)
 
+(package! ghub)
+(package! sqlite)
+
 (package! pkgbuild-mode)
 
 (package! bicep-mode
