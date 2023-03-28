@@ -148,6 +148,13 @@ Adjust the directory in which org-roam stores files.
 (setq org-roam-directory (file-name-concat org-directory "roam"))
 (make-directory org-roam-directory t)
 #+end_src
+Use the ~sqlite-builtin~ database connector (only for Emacs 29 and up)
+#+begin_src emacs-lisp
+(if (version< emacs-version "29.0")
+    (setq org-roam-database-connector 'sqlite)
+    (setq org-roam-database-connector 'sqlite-builtin))
+
+#+end_src
 Default to creating encrypted files. Snippet take from [[https://www.orgroam.com/manual.html#Encryption][the Org Roam manual]].
 #+begin_src emacs-lisp
 (setq org-roam-capture-templates
