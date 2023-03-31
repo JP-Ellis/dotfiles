@@ -23,6 +23,11 @@ if (( $+commands[direnv] )); then
   eval "$(direnv hook zsh)"
 fi
 
+# Load github-copilot-cli
+if (( $+commands[github-copilot-cli] )); then
+  eval "$(github-copilot-cli alias -- "$0")"
+fi
+
 # Load Sheldon
 if (( $+commands[sheldon] )); then
   export ENHANCD_FILTER=fzf:fzy
