@@ -9,6 +9,12 @@
 [pull]
 	rebase = true
 
+[merge]
+	autostash = true
+
+[rebase]
+	autostash = true
+
 [format]
 	signoff = true
 
