@@ -61,14 +61,8 @@ release. The `unpin!' macro allows you to unpin single packages...
 (unpin! pinned-package another-pinned-package)
 #+end_src
 ...Or *all* packages (NOT RECOMMENDED; will likely break things)
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (unpin! t)
-#+end_src
-** Unpin Fixes
-As unpinning is likely to break things, below are contained a few fixes
-#+begin_src emacs-lisp
-(package! ghub)
-(package! sqlite)
 #+end_src
 ** Arch Linux PKGBUILD
 #+begin_src emacs-lisp
