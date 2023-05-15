@@ -99,6 +99,12 @@ usernameGitlab = "JP-Ellis"
 "kitty/kitty.conf"       = "~/.config/kitty/kitty.conf"
 "kitty/light.theme.conf" = "~/.config/kitty/light.theme.conf"
 
+[kopia]
+[kopia.files]
+"kopia/kopia-home.service" = "~/.local/share/systemd/user/kopia-home.service"
+"kopia/kopia-home.timer"   = "~/.local/share/systemd/user/kopia-home.timer"
+"kopia/repository.config"  = "~/.config/kopia/repository.config"
+
 [mathematica]
 [mathematica.files]
 "Mathematica/Kernel.m" = { target = "~/.config/mathematica/Kernel/init.m", type = "symbolic" }

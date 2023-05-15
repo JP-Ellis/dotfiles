@@ -1,0 +1,10 @@
+[Unit]
+Description=Run kopia backup (home)
+
+[Timer]
+OnCalendar=*-*-* *:00,20,40:00
+Persistent=true
+RandomizedDelaySec=2m
+
+[Install]
+WantedBy=timers.target
