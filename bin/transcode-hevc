@@ -411,7 +411,7 @@ if $NEEDS_TRANSCODING ; then
         -map_metadata 0 \
         -map_chapters 0 \
         "$OUTPUT_FILE"
-    systemd-inhibit --who="ffmpeg" --why="Transcoding ${INPUT_FILE:t:r}" --what="sleep:shutdown" nice ffmpeg -n \
+    nice ffmpeg -n \
         -hide_banner \
         -hwaccel vaapi \
         -vaapi_device /dev/dri/renderD128 \
