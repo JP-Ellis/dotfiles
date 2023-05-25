@@ -302,16 +302,10 @@ let-env config = {
 
   hooks: {
     pre_prompt: [
-      { # direnv
-        code: "
-          let direnv = (direnv export json | from json)
-          let direnv = if ($direnv | length) == 1 { $direnv } else { {} }
-          $direnv | load-env
-        "
-      }
+      { || $nothing }
     ]
 
-    pre_execution: [{
+    pre_execution: [{ ||
       $nothing  # replace with source code to run before the repl input is run
     }]
 
@@ -321,7 +315,7 @@ let-env config = {
       }]
     }
 
-    display_output: {
+    display_output: { ||
       if (term size).columns >= 100 { table -e } else { table }
     }
   }
