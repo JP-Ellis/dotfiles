@@ -1,9 +1,0 @@
-[Unit]
-Description=JP-Ellis Macbook SSH Automount
-
-[Install]
-WantedBy=default.target
-
-[Automount]
-Where=/home/josh/media/macbook/
-TimeoutIdleSec=300
