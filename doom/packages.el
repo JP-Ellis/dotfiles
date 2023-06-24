@@ -1,5 +1,14 @@
 ;; -*- no-byte-compile: t; -*-
 
+(unpin! t)
+
+(package! code-review
+    :recipe (:host github
+             :repo "phelrine/code-review"
+             :branch "fix/closql-update"
+             :files ("graphql" "code-review*.el")))
+(package! sqlite3)
+
 (package! pkgbuild-mode)
 
 (package! bicep-mode
