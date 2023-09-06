@@ -7,6 +7,12 @@
 export SUSER="${USER%@*}"
 
 
+## Load Brew
+################################################################################
+if command -v /opt/homebrew/bin/brew 2>&1 1>/dev/null ; then
+  eval $(/opt/homebrew/bin/brew shellenv)
+fi
+
 ## Temporary directory
 ################################################################################
 ## Remove trailing slash from $TMPDIR if present
@@ -126,6 +132,12 @@ if command -v dbus-update-activation-environment 2>&1 1>/dev/null ; then
   dbus-update-activation-environment --systemd SSH_AUTH_SOCK
 fi
 
+## Podman and Docker
+################################################################################
+## If podman is installed and docker is not, alias docker to podman
+if command -v podman 2>&1 1>/dev/null && ! command -v docker 2>&1 1>/dev/null ; then
+  alias docker=podman
+fi
 
 ## Customizations
 ################################################################################
