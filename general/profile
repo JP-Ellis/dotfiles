@@ -30,7 +30,15 @@ fi
 
 ## Ensure $TMPDIR is only readable to the current user
 mkdir -p -m 700 "$TMPDIR"
-chown "$USER:$USER" "$TMPDIR"
+# Only set the group if the current user has a group
+case "$(groups)" in
+  *$USER*)
+    chown "$USER:$USER" "$TMPDIR"
+    ;;
+  *)
+    chown "$USER:$(id -gn)" "$TMPDIR"
+    ;;
+esac
 chmod 700 "$TMPDIR"
 
 if command -v setfacl 2>&1 1>/dev/null ; then
