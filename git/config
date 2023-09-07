@@ -6,6 +6,11 @@
 [commit]
 	gpgsign = {{#if signingKey}}true{{else}}false{{/if}}
 
+{{#if (is_executable "/opt/homebrew/bin/gpg") }}
+[gpg]
+	program = /opt/homebrew/bin/gpg
+{{/if}}
+
 [pull]
 	rebase = true
 
