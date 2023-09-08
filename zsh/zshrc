@@ -109,8 +109,8 @@ open() {
 }
 
 ## ls substitution
-if (( $+commands[exa] )); then
-  alias ls='exa --group-directories-first --git --binary' # default
+if (( $+commands[eza] )); then
+  alias ls='eza --group-directories-first --git --binary' # default
   alias li='ls --git-ignore'                              # use gitignore
   alias l='ls --oneline --all'                            # list for parsing
   alias ll='ls --long --header'                           # default with a bit more
