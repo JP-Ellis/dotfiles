@@ -129,6 +129,11 @@ case "$(uname -s)" in
     fi
     ;;
 esac
+
+## Node Version Manager
+################################################################################
+if [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] ; then
+  source "/opt/homebrew/opt/nvm/nvm.sh"
 fi
 
 ## Podman and Docker
