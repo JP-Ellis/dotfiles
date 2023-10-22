@@ -117,8 +117,18 @@ done
 
 ## Load environment variables into DBus and systemd
 ################################################################################
-if command -v dbus-update-activation-environment 2>&1 1>/dev/null ; then
-  dbus-update-activation-environment --systemd SSH_AUTH_SOCK
+case "$(uname -s)" in
+  Darwin)
+    if command -v launchctl 2>&1 1>/dev/null ; then
+      launchctl setenv SSH_AUTH_SOCK "$SSH_AUTH_SOCK"
+    fi
+    ;;
+  Linux)
+    if command -v dbus-update-activation-environment 2>&1 1>/dev/null ; then
+      dbus-update-activation-environment --systemd SSH_AUTH_SOCK
+    fi
+    ;;
+esac
 fi
 
 ## Podman and Docker
