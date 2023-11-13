@@ -15,6 +15,10 @@
 "borgmatic/config.yaml"       = "~/.config/borgmatic/config.yaml"
 "borgmatic/patterns"          = "~/.config/borgmatic/patterns"
 
+[direnv]
+[direnv.files]
+"direnv/direnvrc" = "~/.config/direnv/direnvrc"
+
 [doom]
 [doom.files]
 "doom/config.org"   = "~/.config/doom/config.org"
