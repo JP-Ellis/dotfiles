@@ -1,5 +1,10 @@
-# Automatically add the virtualenv's bin directory to PATH when entering the
-# directory.
+################################################################################
+## Layouts
+################################################################################
+# Layouts load a number of environment variables and/or functions such as when
+# loading Python virtual environments.
+
+# Find and load a Poetry virtual environment.
 layout_poetry() {
   if [[ ! -f pyproject.toml ]]; then
     log_error 'No pyproject.toml found.  Use `poetry new` or `poetry init` to create one first.'
@@ -12,6 +17,7 @@ layout_poetry() {
   PATH_add "$VENV"
 }
 
+# Find and load a Hatch virtual environment.
 layout_hatch() {
   if [[ ! -f pyproject.toml ]]; then
     log_error 'No pyproject.toml found.  Use `hatch init` to create one first.'
