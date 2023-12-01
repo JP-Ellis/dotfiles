@@ -5,6 +5,17 @@
 # Load ZSH options
 # source ~/.zshopts
 
+# Load completions
+if (( $+commands[brew] )) && [[ -d "$(brew --prefix)/share/zsh/site-functions" ]]; then
+  chmod go-w "$(brew --prefix)/share"
+  chmod go-w "$(brew --prefix)/share/zsh"
+  chmod -R go-w "$(brew --prefix)/share/zsh/site-functions"
+  fpath=(
+    "$(brew --prefix)/share/zsh-functions"
+    $fpath
+  )
+fi
+
 autoload -Uz compinit
 compinit
 
