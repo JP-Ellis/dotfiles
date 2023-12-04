@@ -9,8 +9,8 @@ export SUSER="${USER%@*}"
 
 ## Load Brew
 ################################################################################
-if command -v /opt/homebrew/bin/brew 2>&1 1>/dev/null ; then
-  eval $(/opt/homebrew/bin/brew shellenv)
+if [ -x /opt/homebrew/bin/brew ] ; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
 ## Temporary directory
@@ -41,7 +41,7 @@ case "$(groups)" in
 esac
 chmod 700 "$TMPDIR"
 
-if command -v setfacl 2>&1 1>/dev/null ; then
+if command -v setfacl 1>/dev/null 2>&1 ; then
   setfacl -m "user:${USER}:rwx,group::---,mask::---,other::---" $TMPDIR
 fi
 
@@ -49,7 +49,7 @@ fi
 ## SSH Socket from GPG Agent
 ################################################################################
 
-if [ -z "$SSH_AUTH_SOCK" ] && command -v gpgconf 2>&1 1>/dev/null ; then
+if [ -z "$SSH_AUTH_SOCK" ] && command -v gpgconf 1>/dev/null 2>&1 ; then
   export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 fi
 
@@ -119,12 +119,12 @@ done
 ################################################################################
 case "$(uname -s)" in
   Darwin)
-    if command -v launchctl 2>&1 1>/dev/null ; then
+    if command -v launchctl 1>/dev/null 2>&1 ; then
       launchctl setenv SSH_AUTH_SOCK "$SSH_AUTH_SOCK"
     fi
     ;;
   Linux)
-    if command -v dbus-update-activation-environment 2>&1 1>/dev/null ; then
+    if command -v dbus-update-activation-environment 1>/dev/null 2>&1 ; then
       dbus-update-activation-environment --systemd SSH_AUTH_SOCK
     fi
     ;;
@@ -139,7 +139,7 @@ fi
 ## Podman and Docker
 ################################################################################
 ## If podman is installed and docker is not, alias docker to podman
-if command -v podman 2>&1 1>/dev/null && ! command -v docker 2>&1 1>/dev/null ; then
+if command -v podman 1>/dev/null 2>&1 && ! command -v docker 1>/dev/null 2>&1 ; then
   alias docker=podman
 fi
 
