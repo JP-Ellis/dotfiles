@@ -41,13 +41,6 @@ fi
 
 # Load Sheldon
 if (( $+commands[sheldon] )); then
-  export ENHANCD_FILTER=fzf:fzy
-  export ENHANCD_HOOK_AFTER_CD=ls
-  zstyle ':autocomplete:*' recent-dirs zoxide # Use zoxide for recent directories
-  zstyle ':autocomplete:*' insert-unambiguous yes # Insert substring common to all listed completions, if any
-  zstyle ':autocomplete:*' widget-style menu-select # The manner in which completions are selected
-  zstyle ':autocomplete:*' fzf-completion yes
-
   eval "$(sheldon source)"
 fi
 

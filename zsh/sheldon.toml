@@ -14,32 +14,48 @@ shell = "zsh"
 
 [plugins]
 
-    [plugins.zsh-defer]
-    # As this plugin is used to defer the loading of other plugins, it must
-    # be loaded first so as to be available.
-    github = "romkatv/zsh-defer"
+[plugins.zsh-defer]
+# As this plugin is used to defer the loading of other plugins, it must
+# be loaded first so as to be available.
+github = "romkatv/zsh-defer"
 
-    [plugins.zsh-fzy]
-    apply  = ["defer"]
-    github = "aperezdc/zsh-fzy"
+[plugins.zsh-fzy]
+apply  = ["defer"]
+github = "aperezdc/zsh-fzy"
 
-    [plugins.zsh-completions]
-    apply  = ["defer"]
-    github = "zsh-users/zsh-completions"
+[plugins.zsh-completions]
+apply  = ["defer"]
+github = "zsh-users/zsh-completions"
 
-    [plugins.enhancd]
-    apply  = ["defer"]
-    github = "b4b4r07/enhancd"
+[plugins.enhancd]
+apply  = ["defer"]
+github = "babarot/enhancd"
+[plugins.enhancd.hooks]
+pre    = """
+export ENHANCD_FILTER=fzf:fzy
+export ENHANCED_HOOK_AFTER_CD=ls
+"""
 
-    ## The following plugins need to be loaded last as they wrap other widgets
+## The following plugins need to be loaded last as they wrap other widgets
 
-    [plugins.zsh-syntax-highlighting]
-    apply  = ["defer"]
-    github = "zsh-users/zsh-syntax-highlighting"
+[plugins.zsh-syntax-highlighting]
+apply  = ["defer"]
+github = "zsh-users/zsh-syntax-highlighting"
 
-    [plugins.zsh-autocomplete]
-    apply  = ["defer"]
-    github = "marlonrichert/zsh-autocomplete"
+[plugins.zsh-autocomplete]
+apply  = ["defer"]
+github = "marlonrichert/zsh-autocomplete"
+[plugins.zsh-autocomplete.hooks]
+pre    = """
+# Use zoxide for recent directories
+zstyle ':autocomplete:*' recent-dirs zoxide
+# Insert substring common to all listed completions, if any
+zstyle ':autocomplete:*' insert-unambiguous yes
+# The manner in which completions are selected
+zstyle ':autocomplete:*' widget-style menu-select
+# Enable fzf completion
+zstyle ':autocomplete:*' fzf-completion yes
+"""
 
 [templates]
 defer = "{% for file in files %}zsh-defer source \"{{ file }}\"\n{% endfor %}"
