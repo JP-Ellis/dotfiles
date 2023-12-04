@@ -42,7 +42,7 @@ esac
 chmod 700 "$TMPDIR"
 
 if command -v setfacl 1>/dev/null 2>&1 ; then
-  setfacl -m "user:${USER}:rwx,group::---,mask::---,other::---" $TMPDIR
+  setfacl -m "user:${USER}:rwx,group::---,mask::---,other::---" "$TMPDIR"
 fi
 
 
@@ -50,7 +50,7 @@ fi
 ################################################################################
 
 if [ -z "$SSH_AUTH_SOCK" ] && command -v gpgconf 1>/dev/null 2>&1 ; then
-  export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+  export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
 fi
 
 
@@ -60,10 +60,10 @@ fi
 if [ -d "$HOME/.config/environment.d" ]; then
   set -o allexport
   if [ -x /usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator ]; then
-    eval $(systemctl --user show-environment | rg -v '^PATH=')
+    eval "$(systemctl --user show-environment | rg -v '^PATH=')"
   else
-    for conf in $(ls "$HOME/.config/environment.d"/*.conf); do
-      source "$conf"
+    for conf in "$HOME/.config/environment.d"/*.conf ; do
+      . "$conf"
     done
   fi
   set +o allexport
@@ -74,7 +74,7 @@ fi
 ################################################################################
 
 add_path() {
-  if [ $# -ne 2 -a $# -ne 3 ]; then
+  if [ $# -ne 2 ] && [ $# -ne 3 ]; then
     echo "add_path PATH_VAR PATH [append]" >&2
     return
   fi
@@ -133,7 +133,7 @@ esac
 ## Node Version Manager
 ################################################################################
 if [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] ; then
-  source "/opt/homebrew/opt/nvm/nvm.sh"
+  . "/opt/homebrew/opt/nvm/nvm.sh"
 fi
 
 ## Java Version Manager
