@@ -105,7 +105,7 @@ add_path() {
   esac
 }
 
-for dir in "$HOME/.local" "/scratch/$USER/local" "/scratch/$SUSER/local" "$CARGO_HOME"; do
+for dir in "$HOME/.local" "/scratch/$USER/local" "/scratch/$SUSER/local" "$CARGO_HOME" "$HOME/.jenv/bin"; do
   if [ -d "$dir/bin" ]; then
     add_path PATH "$dir/bin"
   fi
@@ -134,6 +134,12 @@ esac
 ################################################################################
 if [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] ; then
   source "/opt/homebrew/opt/nvm/nvm.sh"
+fi
+
+## Java Version Manager
+################################################################################
+if command -v jenv 1>/dev/null 2>&1 ; then
+  eval "$(jenv init -)"
 fi
 
 ## Podman and Docker
