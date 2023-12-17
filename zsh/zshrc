@@ -16,6 +16,9 @@ if (( $+commands[brew] )) && [[ -d "$(brew --prefix)/share/zsh/site-functions" ]
   )
   [[ -e "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc" ]] && source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
 fi
+
+if [[ -d "$HOME/.local/share/zsh/site-functions" ]] ; then
+  fpath=("$HOME/.local/share/zsh/site-functions" $fpath)
 fi
 
 autoload -Uz compinit
