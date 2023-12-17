@@ -14,6 +14,8 @@ if (( $+commands[brew] )) && [[ -d "$(brew --prefix)/share/zsh/site-functions" ]
     "$(brew --prefix)/share/zsh-functions"
     $fpath
   )
+  [[ -e "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc" ]] && source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
+fi
 fi
 
 autoload -Uz compinit
@@ -160,6 +162,11 @@ if (( $+commands[gh] )); then
   alias \?\?='gh copilot suggest -t shell'
   alias gh\?='gh copilot suggest -t gh'
   alias git\?='gh copilot suggest -t git'
+fi
+
+## Brew Google Cloud
+if (( $+commands[brew] )) ; then
+  [[ -e "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc" ]] && source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
 fi
 
 # Load starship
