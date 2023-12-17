@@ -24,11 +24,12 @@ if [ -z "$TMPDIR" ] ; then
 fi
 
 ## Make sure that $TMPDIR ends with $SUSER
-if [ "${TMPDIR%$SUSER}" = "$TMPDIR" ] ; then
+if [ "${TMPDIR%"$SUSER"}" = "$TMPDIR" ] ; then
   export TMPDIR="$TMPDIR/$SUSER"
 fi
 
 ## Ensure $TMPDIR is only readable to the current user
+# shellcheck disable=SC2174
 mkdir -p -m 700 "$TMPDIR"
 # Only set the group if the current user has a group
 case "$(groups)" in
@@ -50,7 +51,8 @@ fi
 ################################################################################
 
 if [ -z "$SSH_AUTH_SOCK" ] && command -v gpgconf 1>/dev/null 2>&1 ; then
-  export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+  SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+  export SSH_AUTH_SOCK
 fi
 
 
@@ -63,6 +65,7 @@ if [ -d "$HOME/.config/environment.d" ]; then
     eval "$(systemctl --user show-environment | rg -v '^PATH=')"
   else
     for conf in "$HOME/.config/environment.d"/*.conf ; do
+      # shellcheck disable=SC1090
       . "$conf"
     done
   fi
@@ -79,11 +82,7 @@ add_path() {
     return
   fi
 
-  # Remove trailing slash
-  local p
   p="${2%/}"
-
-  local expanded
   expanded=$(eval echo "\$$1")
 
   case "$expanded" in
