@@ -115,7 +115,6 @@
  ein                           ; tame Jupyter notebooks with emacs
  (eval                         ; run code, run (also, repls)
   +overlay)
- gist                          ; interacting with github gists
  lookup                        ; navigate your code and its documentation
  (lsp                          ; M-x vscode
   +peek)
