@@ -93,9 +93,9 @@
 
  :term
  eshell                        ; the elisp shell that works everywhere
- (:if IS-WINDOWS shell)        ; simple shell REPL for Emacs
+ (:if (featurep :system 'windows) shell)        ; simple shell REPL for Emacs
  ;; term                       ; basic terminal emulator for Emacs
- (:if (not IS-WINDOWS) vterm)  ; the best terminal emulation in Emacs
+ (:if (not (featurep :system 'windows)) vterm)  ; the best terminal emulation in Emacs
 
  :checkers
  grammar                       ; tasing grammar mistake every you make
@@ -109,7 +109,7 @@
  ;; ansible
  biblio                        ; Writes a PhD for you (citation needed)
  debugger                      ; FIXME stepping through code, to help you add bugs
- (:if (not IS-WINDOWS) direnv)
+ (:if (not (featurep :system 'windows)) direnv)
  docker
  editorconfig                  ; let someone else argue about tabs vs spaces
  ein                           ; tame Jupyter notebooks with emacs
@@ -133,7 +133,7 @@
  upload                        ; map local to remote projects via ssh/ftp
 
  :os
- (:if IS-MAC macos)            ; improve compatibility with macOS
+ (:if (featurep :system 'macos) macos)            ; improve compatibility with macOS
  tty                           ; improve the terminal Emacs experience
 
  :lang
