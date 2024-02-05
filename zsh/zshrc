@@ -22,6 +22,10 @@ if [[ -d "$HOME/.local/share/zsh/site-functions" ]] ; then
   fpath=("$HOME/.local/share/zsh/site-functions" $fpath)
 fi
 
+if (( $+commands[aws_completer] )) ; then
+  complete -C "$(which aws_completer)" aws
+fi
+
 autoload -Uz compinit
 compinit
 
