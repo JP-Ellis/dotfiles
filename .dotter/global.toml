@@ -69,7 +69,7 @@
 app-browser = "brave"
 app-editor  = "vim"
 app-pager   = "less"
-app-visual  = "code -w"
+app-visual  = "code-insiders -w"
 nproc       = 12
 tmpdir      = "/tmp/josh"
 
