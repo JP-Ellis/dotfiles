@@ -114,13 +114,15 @@ zstyle ':completion:*' verbose true
 ################################################################################
 
 ## Shorten `xdg-open` to just `open`, and if given multiple arguments open each
-## of them individually.
-open() {
-  local arg
-  for arg in "$@"; do
-    xdg-open "$arg"
-  done
-}
+## of them individually
+if (( $+commands[xdg-open] && ! $+commands[open] )); then
+  open() {
+    local arg
+    for arg in "$@"; do
+      xdg-open "$arg"
+    done
+  }
+fi
 
 ## ls substitution
 if (( $+commands[eza] )); then
