@@ -22,11 +22,13 @@
  ;; layout                     ; auie,ctsrnm is the superior home row
 
  :completion
- (company                      ; the ultimate code completion backend
-  +childframe)
- ;;helm                        ; the *other* search engine for love and life
- ;;ido                         ; the other *other* search engine...
- ;;ivy                         ; a search engine for love and life
+ ;; (company                   ; the ultimate code completion backend
+ ;;  +childframe)
+ (corfu                        ; corfu completion backend
+  +icons)
+ ;; helm                       ; the *other* search engine for love and life
+ ;; ido                        ; the other *other* search engine...
+ ;; ivy                        ; a search engine for love and life
  (vertico                      ; the search engine of the future
   +icons)
 
@@ -41,10 +43,8 @@
   +unicode)                    ; 🙂
  hl-todo                       ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
  ;; hydra
- indent-guides                 ; highlighted indent columns
- ;;(ligatures                    ; ligatures and symbols to make your code pretty again
- ;; +fira
- ;; +extra)
+ ;; indent-guides              ; highlighted indent columns
+ ligatures                     ; ligatures and symbols to make your code pretty again
  minimap                       ; show a map of the code on the side
  modeline                      ; snazzy, Atom-inspired modeline, plus API
  nav-flash                     ; blink cursor line after big motions
@@ -56,11 +56,12 @@
  (treemacs                     ; a project drawer, like neotree but cooler
   +lsp)
  unicode                       ; extended unicode support for various languages
- vc-gutter                     ; vcs diff in the fringe
+ (vc-gutter                    ; vcs diff in the fringe
+  +pretty)
  vi-tilde-fringe               ; fringe tildes to mark beyond EOB
  (window-select
-   +numbers
-   +switch-window)             ; visually switch windows
+  +numbers
+  +switch-window)              ; visually switch windows
  workspaces                    ; tab emulation, persistence & separate workspaces
  zen                           ; distraction-free coding or writing
 
@@ -71,11 +72,11 @@
  fold                          ; (nigh) universal code folding
  (format                       ; automated prettiness
   +onsave)
- ;;god                         ; run Emacs commands without modifier keys
- ;;lispy                       ; vim for lisp, for people who don't like vim
+ ;; god                        ; run Emacs commands without modifier keys
+ ;; lispy                      ; vim for lisp, for people who don't like vim
  multiple-cursors              ; editing in many places at once
-                               ; objed             ; text object editing for the innocent
- parinfer                      ; turn lisp into python, sort of
+ ;; objed                      ; text object editing for the innocent
+ ;; parinfer                   ; turn lisp into python, sort of
  rotate-text                   ; cycle region at point between text candidates
  snippets                      ; my elves. They type so I don't have to
  word-wrap                     ; soft wrapping with language-aware indent
@@ -108,11 +109,13 @@
  :tools
  ;; ansible
  biblio                        ; Writes a PhD for you (citation needed)
- debugger                      ; FIXME stepping through code, to help you add bugs
+ ;; collab                     ; Collaborative editing via crdt
+ (debugger                     ; FIXME stepping through code, to help you add bugs
+  +lsp)
  (:if (not (featurep :system 'windows)) direnv)
  docker
  editorconfig                  ; let someone else argue about tabs vs spaces
- ein                           ; tame Jupyter notebooks with emacs
+ ;; ein                           ; tame Jupyter notebooks with emacs
  (eval                         ; run code, run (also, repls)
   +overlay)
  lookup                        ; navigate your code and its documentation
@@ -124,128 +127,127 @@
  ;; pass                       ; password manager for nerds
  pdf                           ; pdf enhancements
  ;; prodigy                    ; FIXME managing external services & code builders
- rgb                           ; creating color strings
- taskrunner                    ; taskrunner for all your projects
- ;; terraform                  ; infrastructure as code
- tmux                          ; an API for interacting with tmux
+ ;; (terraform                 ; infrastructure as code
+ ;;  +lsp)
+ ;; tmux                       ; an API for interacting with tmux
  tree-sitter
  upload                        ; map local to remote projects via ssh/ftp
 
  :os
  (:if (featurep :system 'macos) macos)            ; improve compatibility with macOS
- tty                           ; improve the terminal Emacs experience
+ (tty                          ; improve the terminal Emacs experience
+  +osc)
 
  :lang
- ;; (agda
- ;;  +tree-sitter)             ; types of types of types of types...
- ;; beancount                  ; mind the GAAP
- (cc                           ; C > C++ == 1
-  +lsp
-  +tree-sitter)
- ;; clojure                    ; java with a lisp
+ ;; (agda +tree-sitter)        ; types of types of types of types...
+ (beancount +lsp)           ; mind the GAAP
+ (cc +lsp +tree-sitter)        ; C > C++ == 1
+ ;; (clojure +lsp +tree-sitter) ; java with a lisp
  ;; common-lisp                ; if you've seen one lisp, you've seen them all
  ;; coq                        ; proofs-as-programs
  ;; crystal                    ; ruby at the speed of c
- ;; (csharp +tree-sitter)      ; unity, .NET, and mono shenanigans
- ;; (dart +flutter)            ; paint ui and not much else
+ ;; (csharp +lsp +tree-sitter  ; unity, .NET, and mono shenanigans
+ ;;  +dotnet
+ ;;  +unity)
+ ;; (dart +lsp                 ; paint ui and not much else
+ ;;  +flutter)
  data                          ; config/data formats
  ;; dhall
- ;; (elixir +tree-sitter)      ; erlang done right
- ;; (elm +tree-sitter)         ; care for a cup of TEA?
+ ;; (elixir +lsp +tree-sitter) ; erlang done right
+ ;; (elm +lsp +tree-sitter)         ; care for a cup of TEA?
  emacs-lisp                    ; drown in parentheses
- ;; erlang                     ; an elegant language for a more civilized age
- ;; ess                        ; emacs speaks statistics
+ ;; (erlang +lsp +tree-sitter) ; an elegant language for a more civilized age
+ ;; (ess +stan +tree-sitter)   ; emacs speaks statistics
  ;; factor
  ;; faust                      ; dsp, but you get to keep your soul
- ;; fortran                       ; in FORTRAN, GOD is REAL (unless declared INTEGER)
- ;; fsharp                     ; ML stands for Microsoft's Language
+ ;; (fortran +lsp)             ; in FORTRAN, GOD is REAL (unless declared INTEGER)
+ ;; (fsharp +lsp)              ; ML stands for Microsoft's Language
  ;; fstar                      ; (dependent) types and (monadic) effects and Z3
- ;; gdscript                   ; the language you waited for
+ ;; (gdscript +lsp)            ; the language you waited for
  ;; (go +lsp +tree-sitter)     ; the hipster dialect
- (graphql
-  +lsp)
- ;; (haskell +lsp)             ; a language that's lazier than I am
+ (graphql +lsp)
+ ;; (haskell +lsp +tree-sitter) ; a language that's lazier than I am
  ;; hy                         ; readability of scheme w/ speed of python
  ;; idris                      ; a language you can depend on
  (java +lsp +tree-sitter)      ; the poster child for carpal tunnel syndrome
- (javascript                   ; all(hope(abandon(ye(who(enter(here))))))
-  +lsp
-  +tree-sitter)
- (json                         ; At least it ain't XML
-  +lsp
-  +tree-sitter)
- ;; (julia
- ;;  +tree-sitter)             ; a better, faster MATLAB
- ;; kotlin                     ; a better, slicker Java(Script)
- (latex                        ; writing papers in Emacs has never been so fun
-  +latexmk
-  +cdlatex
-  +lsp
-  +fold)
+ (javascript +lsp +tree-sitter) ; all(hope(abandon(ye(who(enter(here))))))
+ (json +lsp +tree-sitter)      ; At least it ain't XML
+ ;; (julia +lsp +tree-sitter +snail)  ; a better, faster MATLAB
+ ;; (kotlin +lsp)              ; a better, slicker Java(Script)
+ (latex +lsp                   ; writing papers in Emacs has never been so fun
+        +latexmk
+        +cdlatex
+        +fold)
  ;; lean                       ; for folks with too much to prove
  ;; ledger                     ; be audit you can be
- lua                        ; one-based indices? one-based indices
+ (lua +lsp +tree-sitter)       ; one-based indices? one-based indices
  (markdown
   +grip)                       ; writing docs for people to ignore
  ;; nim                        ; python + lisp at the speed of c
- ;; (nix
- ;;  +tree-sitter)             ; I hereby declare "nix geht mehr!"
- ;; (ocaml
- ;;  +tree-sitter)             ; an objective camel
+ ;; (nix +lsp +tree-sitter)    ; I hereby declare "nix geht mehr!"
+ ;; (ocaml +lsp +tree-sitter)  ; an objective camel
  (org                          ; organize your plain life in plain text
   +brain
+  +contacts
   +dragndrop
+  +crypt
   +gnuplot
   +hugo
   +journal
   +jupyter
   +noter
   +pandox
+  +passwords
+  +pomodoro
   +present
   +pretty
   +roam2)
- ;; (php
- ;;  +tree-sitter)             ; perl's insecure younger brother
+ ;; (php +lsp +tree-sitter)    ; perl's insecure younger brother
  ;; plantuml                   ; diagrams for confusing people more
  ;; purescript                 ; javascript, but functional
- (python                       ; beautiful is better than ugly
-  +lsp
-  +tree-sitter
-  +pyright
-  +poetry
-  +pyenv)
+ (python +lsp +tree-sitter     ; beautiful is better than ugly
+         ;; +conda
+         ;; +cython
+         +poetry
+         +pyenv
+         +pyright)
  ;; qt                         ; the 'cutest' gui framework ever
- ;; racket                     ; a DSL for DSLs
+ ;; (racket +lsp +xp)          ; a DSL for DSLs
  ;; raku                       ; the artist formerly known as perl6
  (rest                         ; Emacs as a REST client
   +jq)                         ; With support for jq
  rst                           ; ReST in peace
- (ruby
-  +rails
-  +tree-sitter)                ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
- (rust                         ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-  +lsp
-  +tree-sitter)
- (scala +tree-sitter)          ; java, but good
- ;; (scheme
- ;;  +guile)                   ; a fully conniving family of lisps
- (sh                           ; she sells {ba,z,fi}sh shells on the C xor
-  +lsp
-  +tree-sitter)
+ (ruby +lsp +tree-sitter       ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
+       +chruby
+       +rails
+       +rbenv
+       +rvm)
+ (rust +lsp +tree-sitter)      ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+ (scala +lsp +tree-sitter)     ; java, but good
+ ;; (scheme                    ; a fully conniving family of lisps
+ ;;  +chez
+ ;;  +chibi
+ ;;  +chicken
+ ;;  +gambit
+ ;;  +gauche
+ ;;  +guile
+ ;;  +kawa
+ ;;  +mit
+ ;;  +racket)
+ (sh +lsp +tree-sitter         ; she sells {ba,z,fi}sh shells on the C xor
+     +fish
+     +powershell)
  ;; sml
  ;; solidity                   ; do you need a blockchain? No.
- ;; (swift
- ;;  +tree-sitter)             ; who asked for emoji variables?
- ;; terra                         ; Earth and Moon in alignment for performance.
- (web                          ; the tubes
-  +tree-sitter)
- (yaml                         ; JSON, but readable
-  +lsp)
- ;; (zig +tree-sitter)         ; C, but simpler
+ ;; (swift +lsp +tree-sitter)  ; who asked for emoji variables?
+ ;; terra                      ; Earth and Moon in alignment for performance.
+ (web +lsp +tree-sitter)       ; the tubes
+ (yaml +lsp +tree-sitter)      ; JSON, but readable
+ ;; (zig +lsp +tree-sitter)         ; C, but simpler
 
  :email
  ;; (mu4e +org +gmail)
- ;; notmuch
+ ;; (notmuch +afew +org)
  ;; (wanderlust +gmail)
 
  :app
@@ -254,10 +256,9 @@
  ;; everywhere                 ; *leave* Emacs!? You must be joking
  ;; irc                        ; how neckbeards socialize
  ;; (rss +org)                 ; emacs as an RSS reader
- ;; twitter                    ; twitter client https://twitter.com/vnought
 
  :config
  (default                      ; Reasonable default
-   +bindings                   ; Doom's default keybindings
-   +smartparens)               ; Doom's configuration for smartparesn
+  +bindings                   ; Doom's default keybindings
+  +smartparens)               ; Doom's configuration for smartparesn
  literate)                     ; Generate configs from org-mode
