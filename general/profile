@@ -26,10 +26,9 @@ check_cmd() {
 ## before the '@' (or leave it unchanged if there is no '@').
 export SUSER="${USER%@*}"
 
-
 ## Load Brew
 ################################################################################
-if [ -x /opt/homebrew/bin/brew ] ; then
+if [ -x /opt/homebrew/bin/brew ]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
@@ -39,7 +38,7 @@ fi
 export TMPDIR="${TMPDIR%/}"
 
 ## If $TMPDIR is unset, set it to /tmp/$SUSER
-if [ -z "$TMPDIR" ] ; then
+if [ -z "$TMPDIR" ]; then
   export TMPDIR="/tmp/$SUSER"
 fi
 
@@ -52,7 +51,7 @@ Darwin::/var/folders/*)
 esac
 
 ## Make sure that $TMPDIR ends with $SUSER
-if [ "${TMPDIR%"$SUSER"}" = "$TMPDIR" ] ; then
+if [ "${TMPDIR%"$SUSER"}" = "$TMPDIR" ]; then
   export TMPDIR="$TMPDIR/$SUSER"
 fi
 
@@ -61,19 +60,18 @@ fi
 mkdir -p -m 700 "$TMPDIR"
 # Only set the group if the current user has a group
 case "$(groups)" in
-  *$USER*)
-    chown "$USER:$USER" "$TMPDIR"
-    ;;
-  *)
-    chown "$USER:$(id -gn)" "$TMPDIR"
-    ;;
+*$USER*)
+  chown "$USER:$USER" "$TMPDIR"
+  ;;
+*)
+  chown "$USER:$(id -gn)" "$TMPDIR"
+  ;;
 esac
 chmod 700 "$TMPDIR"
 
 if check_cmd setfacl; then
   setfacl -m "user:${USER}:rwx,group::---,mask::---,other::---" "$TMPDIR"
 fi
-
 
 ## SSH Socket from GPG Agent
 ################################################################################
@@ -83,7 +81,6 @@ if [ -z "$SSH_AUTH_SOCK" ] && check_cmd gpgconf; then
   export SSH_AUTH_SOCK
 fi
 
-
 ## Load environment variables from .config/environment.d
 ################################################################################
 # Pending on the outcome of https://github.com/systemd/systemd/issues/7641
@@ -92,14 +89,13 @@ if [ -d "$HOME/.config/environment.d" ]; then
   if [ -x /usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator ]; then
     eval "$(systemctl --user show-environment | rg -v '^PATH=')"
   else
-    for conf in "$HOME/.config/environment.d"/*.conf ; do
+    for conf in "$HOME/.config/environment.d"/*.conf; do
       # shellcheck disable=SC1090
       . "$conf"
     done
   fi
   set +o allexport
 fi
-
 
 ## Paths
 ################################################################################
@@ -114,21 +110,21 @@ add_path() {
   expanded=$(eval echo "\$$1")
 
   case "$expanded" in
-    *"$p"*)
-      # Path already present, do nothing
-      ;;
-    "")
-      # Empty path var, initialize it
-      eval export "$1"="$p"
-      ;;
-    *)
-      # Prepend by default, unless specified to append
-      if [ -z "$3" ]; then
-        eval export "$1"="$p:$expanded"
-      else
-        eval export "$1"="$expanded:$p"
-      fi
-      ;;
+  *"$p"*)
+    # Path already present, do nothing
+    ;;
+  "")
+    # Empty path var, initialize it
+    eval export "$1"="$p"
+    ;;
+  *)
+    # Prepend by default, unless specified to append
+    if [ -z "$3" ]; then
+      eval export "$1"="$p:$expanded"
+    else
+      eval export "$1"="$expanded:$p"
+    fi
+    ;;
   esac
 }
 
@@ -140,7 +136,6 @@ for dir in "$HOME/.local" "/scratch/$USER/local" "/scratch/$SUSER/local" "$CARGO
     add_path LD_LIBRARY_PATH "$dir/lib"
   fi
 done
-
 
 ## Load environment variables into DBus and systemd
 ################################################################################
@@ -159,7 +154,7 @@ esac
 
 ## Node Version Manager
 ################################################################################
-if [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] ; then
+if [ -s "/opt/homebrew/opt/nvm/nvm.sh" ]; then
   . "/opt/homebrew/opt/nvm/nvm.sh"
 fi
 
@@ -174,6 +169,8 @@ fi
 ## If podman is installed and docker is not, alias docker to podman
 if check_cmd podman && ! check_cmd docker; then
   alias docker=podman
+  DOCKER_HOST="$(podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}')"
+  export DOCKER_HOST
 fi
 if check_cmd podman-compose && ! check_cmd docker-compose; then
   alias docker-compose=podman-compose
