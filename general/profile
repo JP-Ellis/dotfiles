@@ -1,4 +1,24 @@
 #!/bin/sh
+# shellcheck shell=sh
+
+# While most shells support `local`, it technically isn't POSIX. This will check
+# for `local` and alias it to `typeset` if it doesn't exist.
+# shellcheck disable=SC3043
+#            If a shell does not support `local`, it will be aliased to
+#            `typeset`, so this check is not needed.
+has_local() {
+  local _has_local
+}
+has_local 2>/dev/null || alias local=typeset
+
+################################################################################
+## Utility Functions
+################################################################################
+
+# Check if a command exists
+check_cmd() {
+  command -v "$1" >/dev/null 2>&1
+}
 
 ## User name
 ################################################################################
@@ -42,7 +62,7 @@ case "$(groups)" in
 esac
 chmod 700 "$TMPDIR"
 
-if command -v setfacl 1>/dev/null 2>&1 ; then
+if check_cmd setfacl; then
   setfacl -m "user:${USER}:rwx,group::---,mask::---,other::---" "$TMPDIR"
 fi
 
@@ -50,7 +70,7 @@ fi
 ## SSH Socket from GPG Agent
 ################################################################################
 
-if [ -z "$SSH_AUTH_SOCK" ] && command -v gpgconf 1>/dev/null 2>&1 ; then
+if [ -z "$SSH_AUTH_SOCK" ] && check_cmd gpgconf; then
   SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
   export SSH_AUTH_SOCK
 fi
@@ -117,16 +137,16 @@ done
 ## Load environment variables into DBus and systemd
 ################################################################################
 case "$(uname -s)" in
-  Darwin)
-    if command -v launchctl 1>/dev/null 2>&1 ; then
-      launchctl setenv SSH_AUTH_SOCK "$SSH_AUTH_SOCK"
-    fi
-    ;;
-  Linux)
-    if command -v dbus-update-activation-environment 1>/dev/null 2>&1 ; then
-      dbus-update-activation-environment --systemd SSH_AUTH_SOCK
-    fi
-    ;;
+Darwin)
+  if check_cmd launchctl; then
+    launchctl setenv SSH_AUTH_SOCK "$SSH_AUTH_SOCK"
+  fi
+  ;;
+Linux)
+  if check_cmd dbus-update-activation-environment; then
+    dbus-update-activation-environment --systemd SSH_AUTH_SOCK
+  fi
+  ;;
 esac
 
 ## Node Version Manager
@@ -137,17 +157,17 @@ fi
 
 ## Java Version Manager
 ################################################################################
-if command -v jenv 1>/dev/null 2>&1 ; then
+if check_cmd jenv; then
   eval "$(jenv init -)"
 fi
 
 ## Podman and Docker
 ################################################################################
 ## If podman is installed and docker is not, alias docker to podman
-if command -v podman 1>/dev/null 2>&1 && ! command -v docker 1>/dev/null 2>&1 ; then
+if check_cmd podman && ! check_cmd docker; then
   alias docker=podman
 fi
-if command -v podman-compose 1>/dev/null 2>&1 && ! command -v docker-compose 1>/dev/null 2>&1 ; then
+if check_cmd podman-compose && ! check_cmd docker-compose; then
   alias docker-compose=podman-compose
 fi
 

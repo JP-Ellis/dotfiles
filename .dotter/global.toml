@@ -38,7 +38,7 @@
 
 [general]
 [general.files]
-"general/profile"   = "~/.profile"
+"general/profile"   = { target = "~/.profile", type = "symbolic" }
 "general/sshconfig" = "~/.ssh/config"
 
 "general/environment.d/10-applications.conf" = "~/.config/environment.d/10-applications.conf"
