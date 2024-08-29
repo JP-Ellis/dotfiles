@@ -43,6 +43,14 @@ if [ -z "$TMPDIR" ] ; then
   export TMPDIR="/tmp/$SUSER"
 fi
 
+## On macOS, the default TMPDIR is /var/folders/... which is too long for
+## sockets. If TMPDIR is the default, set it to /tmp/$SUSER
+case "$(uname -s)::$TMPDIR" in
+Darwin::/var/folders/*)
+  export TMPDIR="/tmp/$SUSER"
+  ;;
+esac
+
 ## Make sure that $TMPDIR ends with $SUSER
 if [ "${TMPDIR%"$SUSER"}" = "$TMPDIR" ] ; then
   export TMPDIR="$TMPDIR/$SUSER"
