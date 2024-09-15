@@ -3,31 +3,20 @@
 ## Executes commands at the start of an interactive session.
 ################################################################################
 
-# Load ZSH options
-# source ~/.zshopts
-
 # Load completions
-if (( $+commands[brew] )) && [[ -d "$(brew --prefix)/share/zsh/site-functions" ]]; then
-  chmod go-w "$(brew --prefix)/share"
-  chmod go-w "$(brew --prefix)/share/zsh"
+if (($+commands[brew])) && [[ -d "$(brew --prefix)/share/zsh/site-functions" ]]; then
+  chmod go-w "$(brew --prefix)/share" "$(brew --prefix)/share/zsh"
   chmod -R go-w "$(brew --prefix)/share/zsh/site-functions"
-  fpath=(
-    "$(brew --prefix)/share/zsh-functions"
-    $fpath
-  )
-  [[ -e "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc" ]] && source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
+  fpath+=("$(brew --prefix)/share/zsh-functions")
 fi
 
-if [[ -d "$HOME/.local/share/zsh/site-functions" ]] ; then
-  fpath=("$HOME/.local/share/zsh/site-functions" $fpath)
+if [[ -d "$HOME/.local/share/zsh/site-functions" ]]; then
+  fpath+=("$HOME/.local/share/zsh/site-functions")
 fi
 
-if (( $+commands[aws_completer] )) ; then
+if (($+commands[aws_completer])); then
   complete -C "$(which aws_completer)" aws
 fi
-
-autoload -Uz compinit
-compinit
 
 # Load profile
 if [[ -e "$HOME/.profile" ]]; then
@@ -35,22 +24,22 @@ if [[ -e "$HOME/.profile" ]]; then
 fi
 
 # Load zoxide
-if (( $+commands[zoxide] )); then
+if (($+commands[zoxide])); then
   eval "$(zoxide init zsh)"
 fi
 
 # Load direnv
-if (( $+commands[direnv] )); then
+if (($+commands[direnv])); then
   eval "$(direnv hook zsh)"
 fi
 
 # Load github-copilot-cli
-if (( $+commands[github-copilot-cli] )); then
+if (($+commands[github-copilot-cli])); then
   eval "$(github-copilot-cli alias -- "$0")"
 fi
 
 # Load Sheldon
-if (( $+commands[sheldon] )); then
+if (($+commands[sheldon])); then
   eval "$(sheldon source)"
 fi
 
@@ -59,7 +48,7 @@ fi
 ## The options below are documented in https://zsh.sourceforge.io/Doc/Release/Options.html
 
 ## Use Emacs key bindings
-bindkey -v
+bindkey -e
 
 ## Enable history
 HISTFILE="$HOME/.cache/zsh_history"
@@ -90,7 +79,7 @@ setopt glob_complete
 setopt menu_complete
 setopt glob_dots # no special treatment for file names with a leading dot
 setopt auto_menu
-setopt auto_cd
+# setopt auto_cd
 
 # zstyle ':completion:*' auto-description 'Specify %d'
 zstyle ':completion:*' completer _list _oldlist _expand _complete _ignored _match _correct _approximate _prefix
@@ -115,7 +104,7 @@ zstyle ':completion:*' verbose true
 
 ## Shorten `xdg-open` to just `open`, and if given multiple arguments open each
 ## of them individually
-if (( $+commands[xdg-open] && ! $+commands[open] )); then
+if (($+commands[xdg-open] && !$+commands[open])); then
   open() {
     local arg
     for arg in "$@"; do
@@ -125,7 +114,7 @@ if (( $+commands[xdg-open] && ! $+commands[open] )); then
 fi
 
 ## ls substitution
-if (( $+commands[eza] )); then
+if (($+commands[eza])); then
   alias ls='eza --group-directories-first --git --binary' # default
   alias li='ls --git-ignore'                              # use gitignore
   alias l='ls --oneline --all'                            # list for parsing
@@ -163,23 +152,25 @@ mkcd() {
 }
 
 ## Use bat to format man page
-if (( $+commands[bat] )); then
+if (($+commands[bat])); then
   export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 fi
 
 ## Github Copilot alias
-if (( $+commands[gh] )); then
+if (($+commands[gh])); then
   alias \?\?='gh copilot suggest -t shell'
   alias gh\?='gh copilot suggest -t gh'
   alias git\?='gh copilot suggest -t git'
 fi
 
 ## Brew Google Cloud
-if (( $+commands[brew] )) ; then
-  [[ -e "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc" ]] && source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
+if (($+commands[brew])); then
+  if [[ -e "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc" ]]; then
+    source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
+  fi
 fi
 
 # Load starship
-if (( $+commands[starship] )); then
+if (($+commands[starship])); then
   eval "$(starship init zsh)"
 fi
