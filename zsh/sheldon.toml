@@ -8,10 +8,26 @@
 # - `sheldon edit` to open up the config file in the default editor
 # - `sheldon remove` to remove a plugin from the config file
 #
-# See the documentation for more https://github.com/rossmacarthur/sheldon#readme
+# See the documentation for more
+# <https://github.com/rossmacarthur/sheldon#readme>
 
 shell = "zsh"
 
+################################################################################
+[templates]
+# Use `zsh-defer` to source files once the shell is ready.
+# See <https://github.com/romkatv/zsh-defer>
+#
+# This relies on the `zsh-defer` plugin being loaded first.
+defer = """
+{{ hooks?.pre | nl }}
+{% for file in files %}
+    zsh-defer source "{{ file }}"
+{% endfor %}
+{{ hooks?.post | nl }}
+"""
+
+################################################################################
 [plugins]
 
 [plugins.zsh-defer]
@@ -19,43 +35,44 @@ shell = "zsh"
 # be loaded first so as to be available.
 github = "romkatv/zsh-defer"
 
-[plugins.zsh-fzy]
-apply  = ["defer"]
-github = "aperezdc/zsh-fzy"
+[plugins.colors]
+inline = "autoload -Uz colors && zsh-defer colors"
 
 [plugins.zsh-completions]
-apply  = ["defer"]
 github = "zsh-users/zsh-completions"
+apply  = ["defer"]
 
 [plugins.enhancd]
-apply  = ["defer"]
 github = "babarot/enhancd"
+apply  = ["defer"]
 [plugins.enhancd.hooks]
-pre    = """
+pre = """
+export ENHANCD_DIR="$HOME/.config/enhancd"
 export ENHANCD_FILTER=fzf:fzy
 export ENHANCED_HOOK_AFTER_CD=ls
+export ENHANCD_USE_ABBREV=true
 """
 
 ## The following plugins need to be loaded last as they wrap other widgets
 
 [plugins.zsh-syntax-highlighting]
-apply  = ["defer"]
 github = "zsh-users/zsh-syntax-highlighting"
+apply  = ["defer"]
 
 [plugins.zsh-autocomplete]
-apply  = ["defer"]
+# This will execute `compinit` and `autoload -Uz compinit` for you.
 github = "marlonrichert/zsh-autocomplete"
+apply  = ["defer"]
 [plugins.zsh-autocomplete.hooks]
-pre    = """
-# Use zoxide for recent directories
-zstyle ':autocomplete:*' recent-dirs zoxide
-# Insert substring common to all listed completions, if any
-zstyle ':autocomplete:*' insert-unambiguous yes
-# The manner in which completions are selected
-zstyle ':autocomplete:*' widget-style menu-select
-# Enable fzf completion
-zstyle ':autocomplete:*' fzf-completion yes
-"""
+pre = """
+# Always search history in default context
+zstyle ':autocomplete:*' default-context history-incremental-search-backward
+zstyle ':autocomplete:*' min-input 3
 
-[templates]
-defer = "{% for file in files %}zsh-defer source \"{{ file }}\"\n{% endfor %}"
+# Insert prefixes shared by all completions
+zstyle ':autocomplete:*:*' insert-unambiguous yes
+"""
+post = """
+# Tab accepts the completion, Enter executes the completion
+zsh-defer bindkey -M menuselect '\\r' .accept-line
+"""
