@@ -5,7 +5,7 @@ Host *
     ForwardAgent no
     ForwardX11 no
     ControlMaster auto
-    ControlPath ${XDG_RUNTIME_DIR}/ssh-%C.socket
+    ControlPath {{#if tmpdir}}{{tmpdir}}{{else}}/tmp{{/if}}/ssh-%C.socket
     ControlPersist 30m
 
 ## Personal
@@ -18,4 +18,3 @@ Host unifi.jpellis.me
 Host media.jpellis.me
     User josh
     RequestTTY yes
-    # RemoteCommand tmux new -A -s jpellis
