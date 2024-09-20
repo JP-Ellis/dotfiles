@@ -30,6 +30,7 @@ export SUSER="${USER%@*}"
 ################################################################################
 if [ -x /opt/homebrew/bin/brew ]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
+  export DYLD_FALLBACK_LIBRARY_PATH="$HOMEBREW_PREFIX/lib"
 fi
 
 ## Temporary directory
