@@ -10,8 +10,8 @@ fi
 
 # Load completions
 if (($+commands[brew])) && [[ -d "$(brew --prefix)/share/zsh/site-functions" ]]; then
-  chmod go-w "$(brew --prefix)/share" "$(brew --prefix)/share/zsh"
-  chmod -R go-w "$(brew --prefix)/share/zsh/site-functions"
+  zsh-defer chmod go-w "$(brew --prefix)/share" "$(brew --prefix)/share/zsh"
+  zsh-defer chmod -R go-w "$(brew --prefix)/share/zsh/site-functions"
   fpath+=("$(brew --prefix)/share/zsh-functions")
 fi
 
@@ -20,7 +20,7 @@ if [[ -d "$HOME/.local/share/zsh/site-functions" ]]; then
 fi
 
 if (($+commands[aws_completer])); then
-  complete -C "$(which aws_completer)" aws
+  zsh-defer complete -C "$(which aws_completer)" aws
 fi
 
 # Load profile
@@ -167,7 +167,7 @@ fi
 ## Brew Google Cloud
 if (($+commands[brew])); then
   if [[ -e "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc" ]]; then
-    source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
+    zsh-defer source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
   fi
 fi
 
