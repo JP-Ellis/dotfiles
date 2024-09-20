@@ -3,6 +3,11 @@
 ## Executes commands at the start of an interactive session.
 ################################################################################
 
+# Load Sheldon
+if (($+commands[sheldon])); then
+  eval "$(sheldon source)"
+fi
+
 # Load completions
 if (($+commands[brew])) && [[ -d "$(brew --prefix)/share/zsh/site-functions" ]]; then
   chmod go-w "$(brew --prefix)/share" "$(brew --prefix)/share/zsh"
@@ -39,10 +44,6 @@ if (($+commands[github-copilot-cli])); then
 fi
 
 # Load Sheldon
-if (($+commands[sheldon])); then
-  eval "$(sheldon source)"
-fi
-
 ## ZSH Preferences
 ################################################################################
 ## The options below are documented in https://zsh.sourceforge.io/Doc/Release/Options.html
