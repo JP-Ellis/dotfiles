@@ -66,11 +66,9 @@ apply  = ["defer"]
 [plugins.zsh-autocomplete.hooks]
 pre = """
 # Always search history in default context
-zstyle ':autocomplete:*' default-context history-incremental-search-backward
-zstyle ':autocomplete:*' min-input 3
 
-# Insert prefixes shared by all completions
-zstyle ':autocomplete:*:*' insert-unambiguous yes
+# Insert prefixes shared by all completions on tab complete
+zstyle ':autocomplete:*complete*:*' insert-unambiguous yes
 """
 post = """
 # Tab accepts the completion, Enter executes the completion

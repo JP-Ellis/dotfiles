@@ -3,6 +3,9 @@
 ## Executes commands at the start of an interactive session.
 ################################################################################
 
+## Use Emacs key bindings
+bindkey -v
+
 # Load Sheldon
 if (($+commands[sheldon])); then
   eval "$(sheldon source)"
@@ -47,9 +50,6 @@ fi
 ## ZSH Preferences
 ################################################################################
 ## The options below are documented in https://zsh.sourceforge.io/Doc/Release/Options.html
-
-## Use Emacs key bindings
-bindkey -e
 
 ## Enable history
 HISTFILE="$HOME/.cache/zsh_history"
