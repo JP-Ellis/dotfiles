@@ -152,9 +152,38 @@ mkcd() {
   mkdir "$1" && cd "$1"
 }
 
-## Use bat to format man page
 if (($+commands[bat])); then
+  ## Use bat to format man page
   export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
+  ## Shortcut to display help for a command in bat
+  alias bat-help='bat --plain --language=help'
+  help() {
+    if [[ -z "$1" ]]; then
+      echo "Usage: help <command>" >&2
+      return
+    fi
+    case "$1" in
+    --help)
+      echo "Usage: help <command>" >&2
+      return
+      ;;
+    esac
+
+    if "$@" --help >/dev/null 2>&1; then
+      "$@" --help | bat --plain --language=help
+      return
+    elif "$@" -h >/dev/null 2>&1; then
+      "$@" -h | bat --plain --language=help
+      return
+    elif man "$@" >/dev/null 2>&1; then
+      man "$@"
+      return
+    fi
+
+    echo "No help available for $@" >&2
+    return
+  }
 fi
 
 ## Github Copilot alias
