@@ -61,7 +61,7 @@ release. The `unpin!' macro allows you to unpin single packages...
 (unpin! pinned-package another-pinned-package)
 #+end_src
 ...Or *all* packages (NOT RECOMMENDED; will likely break things)
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 (unpin! t)
 #+end_src
 * Unpin Fixes
@@ -81,12 +81,8 @@ new library to interact with the system SQLite library
 * Packages
 ** Arch Linux PKGBUILD
 #+begin_src emacs-lisp
-(package! pkgbuild-mode)
-#+end_src
-** Bicep mode
-#+begin_src emacs-lisp
-(package! bicep-mode
-  :recipe (:host github :repo "christiaan-janssen/bicep-mode"))
+(package! pkgbuild-mode
+  :recipe (:host github :repo "juergenhoetzel/pkgbuild-mode"))
 #+end_src
 ** Doom Themes
 Unpin the doom themes to get the latest version.
@@ -96,7 +92,7 @@ Unpin the doom themes to get the latest version.
 ** Github Copilot
 #+begin_src emacs-lisp
 (package! copilot
-  :recipe (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el")))
+  :recipe (:host github :repo "copilot-emacs/copilot.el"))
 #+end_src
 ** Org
 *** Roam

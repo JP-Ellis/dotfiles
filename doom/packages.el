@@ -1,7 +1,5 @@
 ;; -*- no-byte-compile: t; -*-
 
-(unpin! t)
-
 (package! code-review
     :recipe (:host github
              :repo "phelrine/code-review"
@@ -9,15 +7,13 @@
              :files ("graphql" "code-review*.el")))
 (package! sqlite3)
 
-(package! pkgbuild-mode)
-
-(package! bicep-mode
-  :recipe (:host github :repo "christiaan-janssen/bicep-mode"))
+(package! pkgbuild-mode
+  :recipe (:host github :repo "juergenhoetzel/pkgbuild-mode"))
 
 (unpin! doom-themes)
 
 (package! copilot
-  :recipe (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el")))
+  :recipe (:host github :repo "copilot-emacs/copilot.el"))
 
 (unpin! org-roam)
 (package! org-roam-ui)
