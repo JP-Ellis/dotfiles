@@ -51,8 +51,9 @@ available. You can either set ~doom-theme~ or manually load a theme with the
 #+end_src
 Tweak the theme slightly
 #+begin_src emacs-lisp
-(setq doom-ayu-dark-brighter-modeline t)
-(setq doom-ayu-dark-brighter-comments t)
+(setq doom-ayu-dark-brighter-comments 't)
+(setq doom-ayu-dark-brighter-modeline nil)
+(setq doom-ayu-dark-comment-bg nil)
 #+end_src
 ** Miscellaneous
 This determines the style of line numbers in effect. If set to ~nil~, line
