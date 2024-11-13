@@ -23,7 +23,13 @@
 (package! org-padding
   :recipe (:host github :repo "TonCherAmi/org-padding"))
 
-(package! xah-wolfram-mode
-  :recipe (:host github :repo "xahlee/xah-wolfram-mode"))
+(add-hook 'python-mode-hook 'eglot-ensure)
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '(python-mode . ("ruff" "server")))
+  (add-hook 'after-save-hook 'eglot-format))
 
 (unpin! spell-fu)
+
+(package! xah-wolfram-mode
+  :recipe (:host github :repo "xahlee/xah-wolfram-mode"))

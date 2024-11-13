@@ -111,15 +111,26 @@ The ~org-roam-ui~ packages tries to keep up with the latest changes from
 (package! org-padding
   :recipe (:host github :repo "TonCherAmi/org-padding"))
 #+end_src
-** Xah Wolfram Mode
+** Python
+*** Ruff LSP
 #+begin_src emacs-lisp
-(package! xah-wolfram-mode
-  :recipe (:host github :repo "xahlee/xah-wolfram-mode"))
+(add-hook 'python-mode-hook 'eglot-ensure)
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '(python-mode . ("ruff" "server")))
+  (add-hook 'after-save-hook 'eglot-format))
+
 #+end_src
 ** Spell-Fu
 #+begin_src emacs-lisp
 (unpin! spell-fu)
 #+end_src
+** Xah Wolfram Mode
+#+begin_src emacs-lisp
+(package! xah-wolfram-mode
+  :recipe (:host github :repo "xahlee/xah-wolfram-mode"))
+#+end_src
+
 ;; Local Variables:
 ;; eval: (add-hook 'after-save-hook #'org-babel-tangle 0 t)
 ;; End:
