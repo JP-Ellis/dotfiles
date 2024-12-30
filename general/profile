@@ -1,4 +1,3 @@
-#!/bin/sh
 # shellcheck shell=sh
 
 # While most shells support `local`, it technically isn't POSIX. This will check
