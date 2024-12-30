@@ -48,7 +48,7 @@ Options
                         the --output and --replace options.  Note that this
                         option is incompatible with --force as the check
                         will always return 1 in that case.
-  -r, --replace         Replace the input file.  This option overrides any 
+  -r, --replace         Replace the input file.  This option overrides any
                         output file specified.  If the input file is already
                         has a '.mkv' extension, the file will be replaced.
                         Otherwise, the replacement file will have the '.mkv'
@@ -330,7 +330,7 @@ done
 
 # Look for subtitles in the directory
 typeset -a SUBTITLE_FILES_ARGS
-if [[ ${#INPUT_SUBTITLES} -ne 0 ]]; then 
+if [[ ${#INPUT_SUBTITLES} -ne 0 ]]; then
     typeset -aU SUBTITLE_FILES
     for i in $(seq  2 2 ${#INPUT_SUBTITLES}) ; do
         if [[ "$INPUT_SUBTITLES[$i]" = "." ]] ; then
@@ -438,7 +438,7 @@ if $NEEDS_TRANSCODING ; then
             msg "Moving $OUTPUT_FILE to ${INPUT_FILE:r}.mkv failed."
             exit -1
         fi
-        
+
         if [[ "${INPUT_FILE:e}" != "mkv" ]]; then
             msg "Deleting $INPUT_FILE"
             rm "$INPUT_FILE"
