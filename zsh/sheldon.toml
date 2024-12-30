@@ -42,17 +42,6 @@ inline = "autoload -Uz colors && zsh-defer colors"
 github = "zsh-users/zsh-completions"
 apply  = ["defer"]
 
-[plugins.enhancd]
-github = "babarot/enhancd"
-apply  = ["defer"]
-[plugins.enhancd.hooks]
-pre = """
-export ENHANCD_DIR="$HOME/.config/enhancd"
-export ENHANCD_FILTER=fzf:fzy
-export ENHANCED_HOOK_AFTER_CD=ls
-export ENHANCD_USE_ABBREV=true
-"""
-
 ## The following plugins need to be loaded last as they wrap other widgets
 
 [plugins.zsh-syntax-highlighting]
