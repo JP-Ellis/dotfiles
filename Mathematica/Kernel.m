@@ -93,7 +93,7 @@ GetPlotRange[gr : (_Graphics | _Graphics3D), pad_: False] :=
         ImageResolution -> 1]]];
 
 
-(* Joins and filters options, keeping the righmost if there are \
+(* Joins and filters options, keeping the rightmost if there are \
 multiple instances of the same option. *)
 filter[opts_List, head_] :=
   Reverse@DeleteDuplicatesBy[
@@ -124,7 +124,7 @@ If[$SEToolsExist,
     Check[url = stackImage@img, Return[]];
     copyToClipboard@(wrapStart <> url <> wrapEnd);
     ];
-  stackImage::httperr = "Server returned respose code: `1`";
+  stackImage::httperr = "Server returned response code: `1`";
   stackImage::err = "Server returner error: `1`";
   stackImage::parseErr = "Could not parse the answer of the server.";
   stackImage[g_] :=
@@ -277,7 +277,7 @@ PlotExplorer[expr_, rangeArg_: Automatic, sizeArg_: Automatic,
      epilog = Epilog /. Quiet@AbsoluteOptions@plot;
      gr = plot;
      (*When r1 or r2 is e.g.{1,1} (scale region has zero width),
-     EuclideanDistance by defult returns Infinity which is fine.*)
+     EuclideanDistance by default returns Infinity which is fine.*)
      d[p1_, p2_, {r1_, r2_}] :=
       Quiet@N@EuclideanDistance[Rescale[p1, r1], Rescale[p2, r2]];
      set[r_] := (range = new = r; mid = Mean /@ range;
@@ -394,6 +394,8 @@ updating `range`,`size` and `ratio`.*)
 
 
 (* Add Magma, Plasma, Inferno and Viridis colormaps *)
+(* ; codespell:ignore:start
+*)
 Magma=Blend[Uncompress["1:eJx92nc8lf/7B3ArlAZKCilZRWUlUdwoM0mkocyUkcitEEl2ZggpuyiyyyiVWbJH\
 9sgqooTIDP2uo+/nv+vx+6fHefR4Ho/7vM/7vt7X67oPj4mN9mUqaioqOzoqKioNC7v\
 rl2nhhR0j/KOtonjExsqGJFMKp/xZf58hyCtC/qX7/OQI8um4JN3HSwEEgneHT3gauJ\
@@ -488,8 +490,8 @@ WjyOGAIfKexyPUUGx76eePqb7gD9dq+q+xQtpfZo5cGyHPYpD64orqh8B5nqosmxkRJ\
 kDDK5qV3mGYn1f+ekNjwEf7KAfk48B7Kzp1DvXieItPzgju5MBz6uqO23pBNyaMinLy\
 4KeKRNdzF8kMwEbDbM8+bZ54L+HXCheV2K7VSoXcBxluq8z8F9SQDFbVWlbWwFglgr+\
 oMPBgFXsTAcflKC4hMOsiaWY8qXk+C031ADOvXbOq5YK7Qo2vTRYO/ge8PmR3I6zqyF\
-Te+WUx29URDEv5UorAR87532wVQnwymMHLxQf+fp7+lYt4EFn5Z373QHbBwjvC6pC8Y\
-2qJ5zGjYAVlFoyrxcCXpq50RfNgrZqIc2KlV+bAa/ElAXAzPx6k456KE6fyWJf007ZS\
+Te+WUx29URDEv5UorAR87532wVQnwymMHLxQf+fp7+lYt4EFn5Z373QHbBwjvC6pC8Y"(* codespell:ignore *)
+<>"2qJ5zGjYAVlFoyrxcCXpq50RfNgrZqIc2KlV+bAa/ElAXAzPx6k456KE6fyWJf007ZS\
 GS8T+cByNR8BrF1bEko/rcTAK/VUy0eJgGf2xp4y+AXiqun+sbSPo//b9aUAXgmd5+k\
 IoH2zxJJ0/l0fYBbAx1Uyr8DXpKgzEVQPCun60U/AFjCpuVGsgDE5K+dWmJ1vSgW3+H\
 87s8XwJ4mlCEj4MHIPWOEOBpqPNedyAwbBJx8tWwXYyzlL89UCwp7o7iNdVKhfoiykY\
@@ -832,8 +834,8 @@ bI+5Bc1j4D7b/TNJo/8tK3TrXqRWiOWYAHTHa3emmirVAtYIi/H1TUYx66u2yXPDgBk\
 fl/EqQw2vjOgqZUSx12nOOVriJIE0fOMddOQw4aDA6KLYLPXwRb7aDvgZwsIrqNJMm4\
 Lmc3+Xar1Ccoe1W/ampmSB/rMmWDbAEvPKAMvAoVoqsiGuJaYHY4mfaM+MF+ILLGao/\
 Aij2NztVLeXSCnPjz9OnvLGAr9ud2Lw4jR5yMck8UXIRpewS37Q/LV4O+JtT59X0DBQ\
-fLeM/6RIF+EnZNMPmD4DrKTuUJIpbvI7l+LG1QxbeKZNQtQB4kSGSQw8/xbvZoAoxH3\
-Do/as8SixjBHk6YZuG/Cx6Pqg1dB36iHdQFUxccIoQBDxpbff0WxqK+wU9XdPuAU6ws\
+fLeM/6RIF+EnZNMPmD4DrKTuUJIpbvI7l+LG1QxbeKZNQtQB4kSGSQw8/xbvZoAoxH3"(* codespell:ignore *)
+<>"Do/as8SixjBHk6YZuG/Cx6Pqg1dB36iHdQFUxccIoQBDxpbff0WxqK+wU9XdPuAU6ws\
 XJ+Kwd4yDBjWMsMxbG9Rze4U/Z7V9jD97+5ApjftRliEoohUu0XsO+APqVv5KGdA+CK\
 usYXukPoOWyPK2XTHLBg7XWb1QDAKUeSaRdDUPykb0Ww3L4Tpuj4iS7NZMDjXWaOamo\
 4Dv9nc9hPwOKyDjk2VYCV35yrNaRDccqwTxOPy3uCZBlT6dMaABw9HVIoVIQeYVOOol\
@@ -869,6 +871,7 @@ kNOY/3gCmXAKKPofPZ3uStgckQYP68aafOQcroiFIq6DIMm2je8jMXmSHIN2+vBh2cA\
 MxgQblGhy6rxWdkaY8T4H16j2KSvwPW6ViQ636Iru6D/C/WZdQBLtGk/nF0FbBz3cU0\
 Z/NK4v8Arrpjag=="],#]&;
 Protect[Magma, Inferno, Plasma, Viridis];
-
+(* ; codespell:ignore:end
+*)
 
 End[];

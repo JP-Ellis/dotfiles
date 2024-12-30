@@ -41,10 +41,10 @@ Options
                           new extension.
                         - Otherwise, the output file uses the same base name as
                           the input file, but with '.mkv' as the extension.
-                        This option can be overriden by the '--replace' option.
+                        This option can be overridden by the '--replace' option.
   -c, --check           Check whether the input file needs any transcoding.
                         Returns 0 if no transcoding is needed, and 1 otherwise.
-                        As this does no actualy transcoding, it will ignore
+                        As this does no actually transcoding, it will ignore
                         the --output and --replace options.  Note that this
                         option is incompatible with --force as the check
                         will always return 1 in that case.

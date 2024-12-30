@@ -102,7 +102,7 @@
 
  :checkers
  grammar                       ; tasing grammar mistake every you make
- (spell                        ; tasing you for misspelling mispelling
+ (spell                        ; tasing you for misspelling mispelling  ; codespell:ignore
   +aspell
   +everywhere)                 ; Spell check in comments of programming mode
  (syntax                       ; tasing you for every semicolon you forget
@@ -117,7 +117,7 @@
  (:if (not (featurep :system 'windows)) direnv)
  docker
  editorconfig                  ; let someone else argue about tabs vs spaces
- ;; ein                           ; tame Jupyter notebooks with emacs
+ ;; ein                           ; tame Jupyter notebooks with emacs ; codespell:ignore
  (eval                         ; run code, run (also, repls)
   +overlay)
  lookup                        ; navigate your code and its documentation
@@ -237,7 +237,7 @@
  ;;  +kawa
  ;;  +mit
  ;;  +racket)
- (sh +lsp +tree-sitter         ; she sells {ba,z,fi}sh shells on the C xor
+ (sh +lsp +tree-sitter         ; she sells {ba,z,fi}sh shells on the C xor  ; codespell:ignore
      +fish
      +powershell)
  ;; sml

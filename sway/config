@@ -119,7 +119,7 @@ bindsym $mod+Alt+Right move workspace to output right
 # Layout
 # ------
 
-# Split layout horizonally / vertically
+# Split layout horizontally / vertically
 bindsym $mod+Minus splitv
 bindsym $mod+Slash splith
 
