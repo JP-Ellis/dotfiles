@@ -78,15 +78,27 @@ repos:
         name: jsonlint
         entry: jsonlint
         language: node
-        files: |
-          (?x)^(
-            .*\.json
-          | .*\.jsonc
-          | .*\.cjson
-          | .*\.json5
-          )$
         additional_dependencies:
           - '@prantlf/jsonlint'
+        files: .*\.json$
+      - id: jsonlint-jsonc
+        name: jsonlint
+        entry: jsonlint
+        language: node
+        additional_dependencies:
+          - '@prantlf/jsonlint'
+        files: .*\.jsonc$
+        args:
+          - --mode=cjson
+      - id: jsonlint-json5
+        name: jsonlint
+        entry: jsonlint
+        language: node
+        additional_dependencies:
+          - '@prantlf/jsonlint'
+        files: .*\.json5$
+        args:
+          - --mode=json5
 
   - repo: https://github.com/crate-ci/committed
     rev: v1.1.5
