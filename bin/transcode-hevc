@@ -1,450 +1,553 @@
-#!/usr/bin/zsh
+#!/usr/bin/env bash
+# shellcheck shell=bash
 
-source ~/.local/share/zsh/print-fn
+# Prevent using unset variables.
+set -u
+# Exit on error
+set -e
+# Debug
+# set -x
 
-zparseopts -E -D -- \
-    h=HELP \
-    -help=HELP \
-    i:=INPUT_FILE \
-    -input:=INPUT_FILE \
-    o:=OUTPUT_FILE \
-    -output::=OUTPUT_FILE \
-    c=CHECK \
-    -check=CHECK \
-    r=REPLACE \
-    -replace=REPLACE \
-    f=FORCE \
-    -force=FORCE \
-    fv=FORCE_VIDEO \
-    -force-video=FORCE_VIDEO \
-    fa=FORCE_AUDIO \
-    -force-audio=FORCE_AUDIO \
-    s+:=INPUT_SUBTITLES \
-    -subtitle+:=INPUT_SUBTITLES \
-    hw=HW_ACCELERATION \
-    -hardware-acceleration=HW_ACCELERATION \
-    -rescale:=RESCALE
+################################################################################
+## Utility Functions
+################################################################################
+# Print a message to the output with word wrapping
+#
+# Usage: _print <prefix> <colour> <message>
+#
+# which will print '[<prefix>] <message>', with `<prefix>` in the
+# specified tput colour index.
+_print() {
+  (
+    set +x
+    local _cols
+    local _color
+    local _reset
+    if check_cmd tput; then
+      _cols=$(tput cols)
+      _color=$(tput setaf "$2")
+      _reset=$(tput sgr0)
+    else
+      _cols=${COLUMNS:-80}
+      _color=""
+      _reset=""
+    fi
 
+    _cols=$((_cols - 21))
+    local _prefix="$1"
+    local _message="$3"
 
-if [[ ! -z "$HELP" ]]; then
-    echo "${0:t} [options] INPUT [OUTPUT]"
-    cat <<EOF
+    printf '%s %s\n' "[${_color}${_prefix}${_reset}]" "$_message" >&2
+  )
+}
+
+# Debug message. Only prints if TRANSCODE_VERBOSE is set and can be silenced
+# with TRANSCODE_QUIET.
+debug() {
+  if [ -n "${TRANSCODE_VERBOSE-}" ] && [ -z "${TRANSCODE_QUIET-}" ]; then
+    _print Debug 4 "$1"
+  fi
+}
+
+# Info message. Can be silenced with TRANSCODE_QUIET.
+info() {
+  if [ -z "${TRANSCODE_QUIET-}" ]; then
+    _print Info 2 "$1"
+  fi
+}
+
+# Warning message. Cannot be silenced.
+warn() {
+  _print Warning 3 "$1"
+}
+
+# Error message and exit. Cannot be silenced.
+err() {
+  _print Error 1 "$1"
+  exit 255
+}
+
+# Check if a command exists
+check_cmd() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+# Assert that a command exists
+need_cmd() {
+  if ! check_cmd "$1"; then
+    err "need '$1' (command not found)"
+  fi
+}
+
+# Assert that a variable is not empty
+assert_nz() {
+  if [ -z "$1" ]; then err "assert_nz $2"; fi
+}
+
+# Run a command that should never fail. If the command fails execution will
+# immediately terminate with an error showing the failing command.
+ensure() {
+  if ! "$@"; then err "command failed: $*"; fi
+}
+
+################################################################################
+## Functionality
+################################################################################
+## Code specific to this script
+
+## List the video codecs and widths in a colon-separated list
+##
+## Assigns the codecs and widths to the arrays passed by reference.
+read_video_codecs() {
+  local -n _codecs=$2
+  local -n _widths=$3
+  local codec width
+  for stream in $(ffprobe "$1" -v error -select_streams v -show_entries stream=codec_name,width -of csv=p=0); do
+    IFS=, read -r codec width <<<"$stream"
+    _codecs+=("$codec")
+    _widths+=("$width")
+  done
+}
+
+## Convert a standard resolution (e.g., 720, 1080, 2160 as well as hd, fhd, uhd, 4k, etc.)
+## to a width in pixels.
+resolution_to_width() {
+  case "$1" in
+  720 | hd)
+    echo "1280"
+    ;;
+  1080 | fhd)
+    echo "1920"
+    ;;
+  2160 | uhd | 4k)
+    echo "3840"
+    ;;
+  *)
+    err "Unknown resolution '$1'"
+    ;;
+  esac
+}
+
+## Add filter for rescaling video to a specific resolution
+##
+## This function uses a nameref to modify the video_opts array in place. To
+## use this function, you must pass the video_opts array by reference:
+##
+##   local -a video_opts
+##   append_rescale_filter video_opts hd
+append_rescale_filter() {
+  local -n opts=$1
+  local resolution="$2"
+  local width
+
+  if [ -n "$resolution" ]; then
+    width=$(resolution_to_width "$resolution")
+    opts+=("-filter:v" "scale=w='min($width,iw)':h=-1:flags=spline+accurate_rnd")
+  fi
+}
+
+## Generate the arguments for transcoding the video streams
+##
+## This function uses a nameref to modify the ffmpeg_opts array in place. To
+## use this function, you must pass the ffmpeg_opts array by reference:
+##
+##   local -a ffmpeg_opts
+##   generate_video_args ffmpeg_opts file [resolution]
+generate_video_opts() {
+  # shellcheck disable=SC2178
+  local -n opts=$1
+  local file="$2"
+  local resolution="$3"
+
+  local -a codecs=()
+  local -a widths=()
+  read_video_codecs "$file" codecs widths
+
+  local stream_idx=0
+  while [ $stream_idx -lt ${#codecs[@]} ]; do
+    local codec=${codecs[$stream_idx]}
+    local width=${widths[$stream_idx]}
+
+    if
+      [ -n "${FORCE_VIDEO-}" ] ||
+        [ "$codec" != "hevc" ] ||
+        { [ -n "$resolution" ] && [ "$width" -gt "$(resolution_to_width "$resolution")" ]; }
+    then
+      case $codec in
+      mjpeg | dvbsub | pgsub)
+        # Some video streams are actually images, and therefore should not be
+        # transcoded
+        debug "Video stream $stream_idx is an image, copying"
+        opts+=(-map "0:v:$stream_idx" "-codec:v:$stream_idx" copy)
+        ;;
+      *)
+        NEEDS_TRANSCODING=true
+
+        # -a53cc 0 is required due to an upstream bug: https://trac.ffmpeg.org/ticket/10411
+        debug "Transcoding video stream $stream_idx to HEVC"
+        opts+=(-map "0:v:$stream_idx" "-codec:v:$stream_idx" libx265 -preset slow -x265-params aq-mode=3 -a53cc 0)
+
+        if [ -n "$resolution" ]; then
+          debug "Rescaling video stream $stream_idx to $resolution"
+          append_rescale_filter ffmpeg_opts "$resolution"
+        fi
+        ;;
+      esac
+    else
+      debug "Copying video stream $stream_idx"
+      opts+=(-map "0:v:$stream_idx" "-codec:v:$stream_idx" copy)
+    fi
+
+    stream_idx=$((stream_idx + 1))
+  done
+}
+
+## Output the list of audio codecs and channels in a colon-separated list
+##
+## Example output:
+##   aac:2:opus:6
+read_audio_codecs() {
+  # shellcheck disable=SC2178
+  local -n _codecs=$2
+  local -n _channels=$3
+  local codec channel
+  for stream in $(ffprobe "$1" -v error -select_streams a -show_entries stream=codec_name,channels -of csv=p=0); do
+    IFS=, read -r codec channel <<<"$stream"
+    _codecs+=("$codec")
+    _channels+=("$channel")
+  done
+}
+
+generate_audio_opts() {
+  # shellcheck disable=SC2178
+  local -n opts=$1
+  local file="$2"
+
+  local -a codecs=()
+  local -a channels=()
+  read_audio_codecs "$file" codecs channels
+
+  local stream_idx=0
+  while [ $stream_idx -lt ${#codecs[@]} ]; do
+    local codec=${codecs[$stream_idx]}
+    local channel=${channels[$stream_idx]}
+
+    if
+      [ -n "${FORCE_AUDIO-}" ] ||
+        [ "$codec" != "opus" ]
+    then
+      NEEDS_TRANSCODING=true
+      opts+=(-map "0:a:$stream_idx" "-codec:a:$stream_idx" libopus)
+
+      case $channel in
+      1)
+        debug "Transcoding audio stream $stream_idx to Opus (mono)"
+        opts+=("-filter:a:$stream_idx" aformat=channel_layouts="mono" "-b:a:$stream_idx" 64k)
+        ;;
+      2)
+        debug "Transcoding audio stream $stream_idx to Opus (stereo)"
+        opts+=("-filter:a:$stream_idx" aformat=channel_layouts="stereo" "-b:a:$stream_idx" 96k)
+        ;;
+      6)
+        debug "Transcoding audio stream $stream_idx to Opus (5.1)"
+        opts+=("-filter:a:$stream_idx" aformat=channel_layouts="5.1" "-b:a:$stream_idx" 128k)
+        ;;
+      8)
+        debug "Transcoding audio stream $stream_idx to Opus (7.1)"
+        opts+=("-filter:a:$stream_idx" aformat=channel_layouts="7.1" "-b:a:$stream_idx" 256k)
+        ;;
+      *)
+        err "Unknown channel layout with $channel channels"
+        ;;
+      esac
+    else
+      debug "Copying audio stream $stream_idx"
+      opts+=(-map "0:a:$stream_idx" "-codec:a:$stream_idx" copy)
+    fi
+
+    stream_idx=$((stream_idx + 1))
+  done
+}
+
+## Output the list of subtitle codecs in a colon-separated list
+##
+## Example output:
+##   webvtt:webvtt:webvtt
+read_subtitle_codecs() {
+  # shellcheck disable=SC2178
+  local -n _codecs=$2
+  local codec
+  for stream in $(ffprobe "$1" -v error -select_streams s -show_entries stream=codec_name -of csv=p=0); do
+    IFX=, read -r codec <<<"$stream"
+    _codecs+=("$stream")
+  done
+}
+
+generate_subtitle_opts() {
+  # shellcheck disable=SC2178
+  local -n opts=$1
+  local file="$2"
+
+  local -a codecs=()
+  read_subtitle_codecs "$file" codecs
+
+  local stream_idx=0
+  local codec
+  while [ $stream_idx -lt ${#codecs[@]} ]; do
+    codec=${codecs[$stream_idx]}
+
+    case $codec in
+    webvtt)
+      debug "Copying subtitle stream $stream_idx"
+      opts+=(-map "0:s:$stream_idx" "-codec:s:$stream_idx" copy)
+      ;;
+    hdmv_pgs_subtitle)
+      debug "Copying picture subtitle stream $stream_idx"
+      opts+=(-map "0:s:$stream_idx" "-codec:s:$stream_idx" copy)
+      ;;
+    dvd_subtitle)
+      debug "Copying picture subtitle stream $stream_idx"
+      opts+=(-map "0:s:$stream_idx" "-codec:s:$stream_idx" copy)
+      ;;
+    unknown)
+      debug "Unknown subtitle stream $stream_idx codec '$codec', ignoring"
+      # Ignore
+      ;;
+    *)
+      NEEDS_TRANSCODING=true
+      debug "Transcoding subtitle stream $stream_idx to WebVTT"
+      opts+=(-map "0:s:$stream_idx" "-codec:s:$stream_idx" webvtt)
+      ;;
+    esac
+
+    stream_idx=$((stream_idx + 1))
+  done
+}
+
+lockfile() {
+  local _lockfile="$1.lock"
+  echo "$_lockfile"
+}
+
+lock() {
+  local _lockfile
+  _lockfile="$(lockfile "$1")"
+  if [ -e "$_lockfile" ]; then
+    warn "Loc file $_lockfile exists"
+    exit 1
+  fi
+  ensure touch "$_lockfile"
+}
+
+unlock() {
+  local _lockfile
+  _lockfile="$(lockfile "$1")"
+  if [ ! -e "$_lockfile" ]; then
+    err "Lock file $_lockfile does not exist"
+  fi
+  ensure rm "$_lockfile"
+}
+
+################################################################################
+## Main
+################################################################################
+
+usage() {
+  echo "Usage: ${0##*/} [options] INPUT [OUTPUT]"
+  cat <<EOF
 Options
 
   -h, --help            Print this help message
-  -i, --input FILE      Set the input file
-  -o, --output FILE     Set the output file
-                        If this is not specified, it is determined from the
-                        input file based on the following rules:
-                        - If the input file's extension is '.mkv', the output
-                          file uses the same base name with '.x265.mkv' as the
-                          new extension.
-                        - Otherwise, the output file uses the same base name as
-                          the input file, but with '.mkv' as the extension.
-                        This option can be overridden by the '--replace' option.
-  -c, --check           Check whether the input file needs any transcoding.
-                        Returns 0 if no transcoding is needed, and 1 otherwise.
-                        As this does no actually transcoding, it will ignore
-                        the --output and --replace options.  Note that this
-                        option is incompatible with --force as the check
-                        will always return 1 in that case.
-  -r, --replace         Replace the input file.  This option overrides any
-                        output file specified.  If the input file is already
-                        has a '.mkv' extension, the file will be replaced.
-                        Otherwise, the replacement file will have the '.mkv'
-                        extension and the original file will be deleted.
-  -f, --force           Force transcoding even if it already in the desired
-                        codec, for both video and audio.
-  -fv, --force-video    Force transcoding the video streams even if they are in
-                        the desired codec.
-  -fa, --force-audio    Force transcoding the audio streams even if they are in
-                        the desired codec.
-  -s, --subtitle FILE   Add a subtitle file to the input file.
-                        This option can be specified multiple times.
-                        If '.' is given, then this will find all subtitle files
-                        within the input file's directory.
-  -hw, --hardware-acceleration
-                        Use hardware acceleration for transcoding.
-  --rescale RES         Downscale the output to the specified resolution.
+  -v, --verbose         Print debug messages
+  -q, --quiet           Suppress info messages
 
+  -c, --check           Check whether the file needs transcoding, returning:
+                        0    Transcoding needed
+                        1    No transcoding needed
+                        255  Error
+  -r, --recheck         Before transcoding, perform a check and only proceed
+                        if transcoding is needed, otherwise exits with status 2
+
+  -i, --force-video     Force transcoding the video streams
+  -a, --force-audio     Force transcoding the audio streams
+
+  --rescale RES         If a video stream is larger than the specified
+                        resolution, rescale it to that resolution.  RES can
+                        be one of: 720, 1080, 2160, hd, fhd, uhd, 4k
 EOF
-    exit -1
-fi
+  exit 0
+}
 
-# Get the input file
-if [[ -z "$INPUT_FILE[2]" ]]; then
-    if [[ -z "$1" ]]; then
-        echo "Input file must be provided." >&2
-        exit -1
-    else
-        INPUT_FILE="$1"
-        shift
-    fi
-else
-    INPUT_FILE="$INPUT_FILE[2]"
-fi
+parse_args() {
+  local args
+  args=$(getopt \
+    --name "${0##*/}" \
+    --options "hvqcria" \
+    --longoptions "help,verbose,quiet,check,recheck,force-video,force-audio,rescale:" \
+    -- "$@")
+  # shellcheck disable=SC2181
+  if [ $? -ne 0 ]; then
+    err "Failed to parse arguments"
+  fi
 
-# Get the output file.  If we are using a replacement, we ignore what's
-# specified in the arguments.  We also ignore the output file if we're just
-# doing a check.
-if [[ -n "$REPLACE[1]" ]]; then
-    # If we are replacing the input file, providing an output file is an error
-    # as it is unclear what the user wants.
-    if [[ -n "$OUTPUT_FILE[2]" || -n "$1" ]]; then
-        echo "--replace ignores the output file." >&2
-        exit -1
-    fi
-
-    # Set the output file to be a random file
-    OUTPUT_FILE="$(mktemp -t "${INPUT_FILE:t:r}-XXX.mkv")"
-    rm "$OUTPUT_FILE"
-elif [[ -n "$CHECK[1]" ]]; then
-    # If we are only doing a check, providing an output file is an error as it
-    # is unclear what the user wants.
-    if [[ -n "$OUTPUT_FILE[2]" || -n "$1" ]]; then
-        echo "--check ignores the output file." >&2
-        exit -1
-    fi
-    OUTPUT_FILE="/dev/null"
-else
-    # Get the output file from either --output or the 2nd position argument.
-    if [[ -z "$OUTPUT_FILE[2]" ]]; then
-        if [[ -z "$1" ]]; then
-            echo "Output file must be provided." >&2
-            exit -1
-        fi
-        OUTPUT_FILE="$1"
-        shift
-    else
-        OUTPUT_FILE="$OUTPUT_FILE[2]"
-    fi
-fi
-
-# If there are more arguments, give a warning
-if [[ $# -ge 1 ]]; then
-    echo "Unknown arguments: $@" >&2
-    exit -1
-fi
-
-# Generate the output file name if it isn't given
-if [[ -z "$OUTPUT_FILE" ]]; then
-    if [[ "${INPUT_FILE:e}" = "mkv" ]]; then
-        OUTPUT_FILE="${INPUT_FILE:r}.x265.mkv"
-    else
-        OUTPUT_FILE="${INPUT_FILE:r}.mkv"
-    fi
-fi
-
-# If --force is given, force-audio and force-video are both enabled.
-if [[ -n "$FORCE[1]" ]]; then
-    FORCE_AUDIO="$FORCE[1]"
-    FORCE_VIDEO="$FORCE[1]"
-else
-    FORCE_AUDIO="$FORCE_AUDIO[1]"
-    FORCE_VIDEO="$FORCE_VIDEO[1]"
-fi
-
-HW_ACCELERATION="$HW_ACCELERATION[1]"
-
-HW_ACCELERATION_OPTS=()
-if [[ -n "$HW_ACCELERATION" ]]; then
-    HW_ACCELERATION_OPTS=(
-        -hwaccel_output_format vaapi
-    )
-fi
-
-NEEDS_TRANSCODING=false
-
-# Check whether we are rescaling
-if [[ -n "$RESCALE[1]" ]]; then
-    case "$RESCALE[2]" in
-        (720)
-            # RESCALE_FILTER="-filter:v scale=min(iw,1280):-1 -sws_flags spline+accurate_rnd"
-            RESCALE_WIDTH=1280
-            RESCALE_FILTER="scale=w='min($RESCALE_WIDTH,iw)':h=-1:flags=spline+accurate_rnd"
-            ;;
-        (1080)
-            RESCALE_WIDTH=1920
-            RESCALE_FILTER="scale=w='min($RESCALE_WIDTH,iw)':h=-1:flags=spline+accurate_rnd"
-            ;;
-        (2160)
-            RESCALE_WIDTH=3840
-            RESCALE_FILTER="scale=w='min($RESCALE_WIDTH,iw)':h=-1:flags=spline+accurate_rnd"
-            ;;
-        (*)
-            echo "Unsupported scaling '$RESCALE[1]'." >&2
-            exit -1
-            ;;
+  eval set -- "$args"
+  while :; do
+    case "$1" in
+    -h | --help)
+      usage
+      ;;
+    -v | --verbose)
+      TRANSCODE_VERBOSE=${TRANSCODE_VERBOSE:-1}
+      shift
+      ;;
+    -q | --quiet)
+      TRANSCODE_QUIET=${TRANSCODE_QUIET:-1}
+      shift
+      ;;
+    -c | --check)
+      CHECK=1
+      shift
+      ;;
+    -r | --recheck)
+      RECHECK=1
+      shift
+      ;;
+    -i | --force-video)
+      FORCE_VIDEO=1
+      shift
+      ;;
+    -a | --force-audio)
+      FORCE_AUDIO=1
+      shift
+      ;;
+    --rescale)
+      RESCALE="$2"
+      shift 2
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      err "Unknown option: $1"
+      ;;
     esac
-else
-    # If we are not rescaling, just set the threshold width to be really large
-    RESCALE_WIDTH=999999999
-fi
+  done
 
-## Create the video options
-typeset -a VIDEO_OPTS
-codecs=(
-    $(
-    ffprobe "$INPUT_FILE" \
-            -v error \
-            -select_streams v \
-            -show_entries stream=codec_name \
-            -print_format default=nk=1:nw=1
-    )
-)
-stream_idx=0
-for codec in $codecs ; do
-    stream_width=$(
-        ffprobe "$INPUT_FILE" \
-            -v error \
-            -select_streams v:$stream_idx \
-            -show_entries stream=width \
-            -print_format default=nk=1:nw=1
-                )
-    if [[ -n "$FORCE_VIDEO" || $codec != "hevc" || $stream_width -gt $RESCALE_WIDTH ]]; then
-        case $codec in
-            # Don't transcode image
-            (mjpeg)
-                VIDEO_OPTS+=(-map 0:v:$stream_idx -codec:v:$stream_idx copy)
-                ;;
-            (*)
-                NEEDS_TRANSCODING=true
-                # If we are rescaling, we have additional flags
-                if [[ $stream_width -gt $RESCALE_WIDTH ]]; then
-                    if [[ -n "$HW_ACCELERATION" ]]; then
-                        VIDEO_OPTS+=(-map 0:v:$stream_idx -filter:v:$stream_idx "$RESCALE_FILTER,format=nv12|vaapi,hwupload" -codec:v:$stream_idx hevc_vaapi -rc_mode CQP)
-                    else
-                        VIDEO_OPTS+=(-map 0:v:$stream_idx -filter:v:$stream_idx "$RESCALE_FILTER" -codec:v:$stream_idx libx265 -preset slow -x265-params aq-mode=3)
-                    fi
-                else
-                    if [[ -n "$HW_ACCELERATION" ]]; then
-                        VIDEO_OPTS+=(-map 0:v:$stream_idx -filter:v:$stream_idx 'format=nv12|vaapi,hwupload' -codec:v:$stream_idx hevc_vaapi -rc_mode CQP)
-                    else
-                        VIDEO_OPTS+=(-map 0:v:$stream_idx -codec:v:$stream_idx libx265 -preset slow -x265-params aq-mode=3)
-                    fi
-                fi
-                ;;
-        esac
-    else
-        VIDEO_OPTS+=(-map 0:v:$stream_idx -codec:v:$stream_idx copy)
-    fi
-    ((stream_idx++))
-done
+  INPUT_FILE="$1"
+  shift
 
+  if [ -n "${1-}" ]; then
+    OUTPUT_FILE="$1"
+    shift
+  else
+    OUTPUT_FILE="${INPUT_FILE%.*}.mkv"
+  fi
 
-# Create the audio options
-typeset -a AUDIO_OPTS
-codecs=(
-    $(
-    ffprobe "$INPUT_FILE" \
-            -v error \
-            -select_streams a \
-            -show_entries stream=codec_name \
-            -print_format default=nk=1:nw=1
-    )
-)
-stream_idx=0
-for codec in $codecs ; do
-    if [[ -n "$FORCE_AUDIO" || $codec != "opus" ]]; then
-        NEEDS_TRANSCODING=true
-        AUDIO_OPTS+=(-map 0:a:$stream_idx -codec:a:$stream_idx libopus -b:a:$stream_idx 128k)
+  if [ $# -ge 1 ]; then
+    err "Unknown arguments: $*"
+  fi
+}
 
-        # Libopus doesn't understand `5.1(side)` channels, but does understand
-        # `5.1`; so we adjust this if need be.
-        # https://trac.ffmpeg.org/ticket/5718
-        channels=$(
-            ffprobe "$INPUT_FILE" \
-                    -v error \
-                    -select_streams a:$stream_idx \
-                    -show_entries stream=channel_layout \
-                    -print_format default=nk=1:nw=1
-                )
-        if [[ "$channels" =~ "^.*\(side\)$" ]]; then
-            AUDIO_OPTS+=(-filter:a:$stream_idx aformat=channel_layouts="${channels%%\(side\)}")
-        elif [[ "$channels" = "unknown" ]]; then
-            # If the layout is unknown, use the number of channels to infer the layout
-            channels=$(
-                ffprobe "$INPUT_FILE" \
-                    -v error \
-                    -select_streams a:$stream_idx \
-                    -show_entries stream=channels \
-                    -print_format default=nk=1:nw=1
-                    )
-            case $channels in
-                (1)
-                    AUDIO_OPTS+=(-filter:a:$stream_idx aformat=channel_layouts="mono")
-                    ;;
-                (2)
-                    AUDIO_OPTS+=(-filter:a:$stream_idx aformat=channel_layouts="stereo")
-                    ;;
-                (6)
-                    AUDIO_OPTS+=(-filter:a:$stream_idx aformat=channel_layouts="5.1")
-                    ;;
-                (8)
-                    AUDIO_OPTS+=(-filter:a:$stream_idx aformat=channel_layouts="7.1")
-                    ;;
-                (*)
-                    printf "Unknown channel layout with %d channels.\n" $channels >&2
-                    exit -1
-            esac
-        fi
-    else
-        AUDIO_OPTS+=(-map 0:a:$stream_idx -codec:a:$stream_idx copy)
-    fi
-    ((stream_idx++))
-done
+main() {
+  parse_args "$@"
 
+  # Check for required commands
+  need_cmd ffprobe
+  need_cmd ffmpeg
 
-## Create the subtitle options
-typeset -a SUBTITLE_OPTS
-codecs=(
-    $(
-    ffprobe "$INPUT_FILE" \
-            -v error \
-            -select_streams s \
-            -show_entries stream=codec_name \
-            -print_format default=nk=1:nw=1
-    )
-)
-stream_idx=0
-for codec in $codecs ; do
-    case $codec in
-        ("webvtt")
-            SUBTITLE_OPTS+=(-map 0:s:$stream_idx -codec:s:$stream_idx copy)
-            ;;
-        ("hdmv_pgs_subtitle")
-            # Picture based subtitle
-            SUBTITLE_OPTS+=(-map 0:s:$stream_idx -codec:s:$stream_idx copy)
-            ;;
-        ("dvd_subtitle")
-            # Picture based subtitle
-            SUBTITLE_OPTS+=(-map 0:s:$stream_idx -codec:s:$stream_idx copy)
-            ;;
-        (*)
-            NEEDS_TRANSCODING=true
-            SUBTITLE_OPTS+=(-map 0:s:$stream_idx -codec:s:$stream_idx webvtt)
-            ;;
+  if [ -n "${RECHECK-}" ]; then
+    local -a check_opts=()
+    [ -n "${TRANSCODE_VERBOSE-}" ] && check_opts+=(-v)
+    [ -n "${TRANSCODE_QUIET-}" ] && check_opts+=(-q)
+    [ -n "${RESCALE-}" ] && check_opts+=(--rescale "$RESCALE")
+
+    info "Rechecking $INPUT_FILE"
+    "$0" --check "${check_opts[@]}" "$INPUT_FILE"
+    local retval=$?
+    case $retval in
+    0)
+      info "Transcoding needed, proceeding"
+      ;;
+    1)
+      info "No transcoding needed, skipping"
+      return 2
+      ;;
+    *)
+      err "Failed recheck: $retval"
+      ;;
     esac
-    ((stream_idx++))
-done
+  fi
 
-# Look for subtitles in the directory
-typeset -a SUBTITLE_FILES_ARGS
-if [[ ${#INPUT_SUBTITLES} -ne 0 ]]; then
-    typeset -aU SUBTITLE_FILES
-    for i in $(seq  2 2 ${#INPUT_SUBTITLES}) ; do
-        if [[ "$INPUT_SUBTITLES[$i]" = "." ]] ; then
-            SUBTITLE_FILES+=($(
-                find "${INPUT_FILE:h}" \
-                    -type f \
-                    -name "*.srt" \
-                    -o -name "*.sub" \
-                    -o -name "*.ttml" \
-                    -o -name "*.sbv" \
-                    -o -name "*.dfxp" \
-                    -o -name "*.vtt"
-            ))
-        else
-            SUBTITLE_FILES+=("$INPUT_SUBTITLES[$i]")
-        fi
-    done
+  tmpfile="${INPUT_FILE%.*}"
+  tmpfile="${TMPDIR:-/tmp}/${tmpfile##*/}-$RANDOM.mkv"
+  rm -f "$tmpfile"
+  local -a ffmpeg_opts=()
 
-    file_idx=1
-    for file in $SUBTITLE_FILES ; do
-        codecs=(
-            $(
-            ffprobe "$file" \
-                    -v error \
-                    -select_streams s \
-                    -show_entries stream=codec_name \
-                    -print_format default=nk=1:nw=1
-            )
-        )
-        SUBTITLE_FILES_ARGS+=(-i "$file")
-        in_stream_idx=0
-        for codec in $codecs ; do
-            case $codec in
-                ("webvtt")
-                    NEEDS_TRANSCODING=true
-                    SUBTITLE_OPTS+=(-map ${file_idx}:s:$in_stream_idx -codec:s:$stream_idx copy -metadata:s:s:$stream_idx title="${${file:r:t}//_/ }")
-                    ;;
-                ("hdmv_pgs_subtitle")
-                    # Cannot be converted to VTT
-                    NEEDS_TRANSCODING=true
-                    SUBTITLE_OPTS+=(-map ${file_idx}:s:$in_stream_idx -codec:s:$stream_idx copy -metadata:s:s:$stream_idx title="${${file:r:t}//_/ }")
-                    ;;
-                (*)
-                    NEEDS_TRANSCODING=true
-                    SUBTITLE_OPTS+=(-map ${file_idx}:s:$in_stream_idx -codec:s:$stream_idx webvtt -metadata:s:s:$stream_idx title="${${file:r:t}//_/ }")
-                    ;;
-            esac
-            ((in_stream_idx++))
-            ((stream_idx++))
-        done
-    done
-fi
+  # Don't override a file if it already exists
+  ffmpeg_opts+=(-n)
+  # Hide FFmpeg banner
+  ffmpeg_opts+=(-hide_banner)
 
-# If we were just performing a check, we just need to check the transcoding
-# status.
-if [[ -n "$CHECK[1]" ]]; then
+  # Add the input file
+  ffmpeg_opts+=(-i "$INPUT_FILE")
+
+  local NEEDS_TRANSCODING=false
+
+  # Generate the video options
+  generate_video_opts ffmpeg_opts "$INPUT_FILE" "${RESCALE-}"
+
+  # Generate the audio options
+  generate_audio_opts ffmpeg_opts "$INPUT_FILE"
+
+  # Generate the subtitle options
+  generate_subtitle_opts ffmpeg_opts "$INPUT_FILE"
+
+  # Map metadata and chapters
+  ffmpeg_opts+=(-map_metadata 0 -map_chapters 0)
+
+  # If we were just performing a check, we just need to check the transcoding
+  # status.
+  if [ -n "${CHECK-}" ]; then
     if $NEEDS_TRANSCODING; then
-        return 1
-    else;
-        return 0
+      return 0
+    else
+      return 1
     fi
-fi
+  fi
 
+  if ! $NEEDS_TRANSCODING; then
+    info "No transcoding needed."
+    return 0
+  fi
 
-## Run FFmpeg
-if $NEEDS_TRANSCODING ; then
-    msg "Transcoding $INPUT_FILE to $OUTPUT_FILE"
-    echo ffmpeg -n \
-        -hide_banner \
-        -hwaccel vaapi \
-        -vaapi_device /dev/dri/renderD128 \
-        "${(@)HW_ACCELERATION_OPTS}" \
-        -i "$INPUT_FILE" \
-        "${(@)SUBTITLE_FILES_ARGS}" \
-        "${(@)VIDEO_OPTS}" \
-        "${(@)AUDIO_OPTS}" \
-        "${(@)SUBTITLE_OPTS}" \
-        -map_metadata 0 \
-        -map_chapters 0 \
-        "$OUTPUT_FILE"
-    nice ffmpeg -n \
-        -hide_banner \
-        -hwaccel vaapi \
-        -vaapi_device /dev/dri/renderD128 \
-        "${(@)HW_ACCELERATION_OPTS}" \
-        -i "$INPUT_FILE" \
-        "${(@)SUBTITLE_FILES_ARGS}" \
-        "${(@)VIDEO_OPTS}" \
-        "${(@)AUDIO_OPTS}" \
-        "${(@)SUBTITLE_OPTS}" \
-        -map_metadata 0 \
-        -map_chapters 0 \
-        "$OUTPUT_FILE"
+  lock "$INPUT_FILE"
 
-    if [[ $? -ne 0 ]]; then
-        msg "Transcoding $INPUT_FILE to $OUTPUT_FILE failed."
-        exit -1
+  cleanup() {
+    rm "$(lockfile "$INPUT_FILE")" || warn "Failed to remove lock file"
+    if [ -e "$tmpfile" ]; then
+      rm "$tmpfile" || warn "Failed to remove temporary file"
     fi
+  }
 
-    if [[ -n "$REPLACE[1]" ]]; then
-        msg "Moving $OUTPUT_FILE to ${INPUT_FILE:r}.mkv"
-        mv "$OUTPUT_FILE" "${INPUT_FILE:r}.mkv"
+  trap cleanup EXIT
 
-        if [[ $? -ne 0 ]]; then
-            msg "Moving $OUTPUT_FILE to ${INPUT_FILE:r}.mkv failed."
-            exit -1
-        fi
+  # Run FFmpeg
+  info "Transcoding $INPUT_FILE to $tmpfile"
+  ensure ffmpeg \
+    "${ffmpeg_opts[@]}" \
+    "$tmpfile"
 
-        if [[ "${INPUT_FILE:e}" != "mkv" ]]; then
-            msg "Deleting $INPUT_FILE"
-            rm "$INPUT_FILE"
-        fi
-    fi
-else
-    msg "No transcoding needed."
-    exit 0
-fi
+  info "Moving $tmpfile to $OUTPUT_FILE"
+  ensure mv "$tmpfile" "$OUTPUT_FILE"
+
+  # If the input and output files are different, remove the input file
+  if [ "$INPUT_FILE" != "$OUTPUT_FILE" ]; then
+    info "Removing $INPUT_FILE"
+    ensure rm "$INPUT_FILE"
+  fi
+
+  unlock "$INPUT_FILE"
+}
+
+main "$@"
