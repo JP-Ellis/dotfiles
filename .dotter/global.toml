@@ -5,7 +5,6 @@
 
 [bin]
 [bin.files]
-"bin/screen-share"   = "~/.local/bin/screen-share"
 "bin/transcode-hevc" = "~/.local/bin/transcode-hevc"
 
 [borgmatic]

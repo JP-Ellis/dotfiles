@@ -1,3 +1,7 @@
+#shellcheck shell=sh
+
+# shellcheck disable=SC3043
+
 ################################################################################
 ## Layouts
 ################################################################################
@@ -6,26 +10,30 @@
 
 # Find and load a Poetry virtual environment.
 layout_poetry() {
-  if [[ ! -f pyproject.toml ]]; then
-    log_error 'No pyproject.toml found.  Use `poetry new` or `poetry init` to create one first.'
+  if ! test -f pyproject.toml; then
+    log_error "No pyproject.toml found.  Use 'poetry new' or 'poetry init' to create one first."
     exit 2
   fi
 
-  local VENV=$(dirname $(poetry run which python))
-  export VIRTUAL_ENV=$(echo "$VENV" | rev | cut -d'/' -f2- | rev)
+  local VENV
+  VENV=$(dirname "$(poetry run which python)")
+  VIRTUAL_ENV=$(echo "$VENV" | rev | cut -d'/' -f2- | rev)
+  export VIRTUAL_ENV
   export POETRY_ACTIVE=1
   PATH_add "$VENV"
 }
 
 # Find and load a Hatch virtual environment.
 layout_hatch() {
-  if [[ ! -f pyproject.toml ]]; then
-    log_error 'No pyproject.toml found.  Use `hatch init` to create one first.'
+  if ! test -f pyproject.toml; then
+    log_error "No pyproject.toml found.  Use 'hatch init' to create one first."
     exit 2
   fi
 
-  export VIRTUAL_ENV=$(hatch env find)
-  export VIRTUAL_ENV_PROMPT=$(hatch project metadata | jq '.name' -r)
+  VIRTUAL_ENV=$(hatch env find)
+  export VIRTUAL_ENV
+  VIRTUAL_ENV_PROMPT=$(hatch project metadata | jq '.name' -r)
+  export VIRTUAL_ENV_PROMPT
   export HATCH_ENV_ACTIVE=default
   PATH_add "$VIRTUAL_ENV/bin"
 }
