@@ -1,6 +1,7 @@
+---
 program_options:
   tray: true
   appindicator: true
   automount: true
   notify: true
-  terminal: 'kitty -d'
+  terminal: kitty -d
