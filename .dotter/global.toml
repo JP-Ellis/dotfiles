@@ -128,7 +128,7 @@ usernameGitlab = "JP-Ellis"
 "sway/udiskie.service"                           = "~/.config/systemd/user/udiskie.service"
 "sway/udiskie.yml"                               = "~/.config/udiskie/config.yml"
 "sway/waybar.css"                                = "~/.config/waybar/style.css"
-"sway/waybar.json"                               = "~/.config/waybar/config"
+"sway/waybar.jsonc"                              = "~/.config/waybar/config"
 "sway/waybar.service"                            = "~/.config/systemd/user/waybar.service"
 
 [sway.variables]

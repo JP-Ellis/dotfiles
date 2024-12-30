@@ -62,24 +62,18 @@ window#waybar {
   }
 }
 
-#cpu {
-}
+/* #cpu { } */
 
-#memory {
-}
+/* #memory { } */
 
-#network {
-}
+/* #network { } */
 
 #network.disconnected {
   background: #f53c3c;
 }
 
-#pulseaudio {
-}
+/* #pulseaudio { } */
 
-#pulseaudio.muted {
-}
+/* #pulseaudio.muted { } */
 
-#tray {
-}
+/* #tray { } */
