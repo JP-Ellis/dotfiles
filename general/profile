@@ -158,18 +158,6 @@ Linux)
   ;;
 esac
 
-## Node Version Manager
-################################################################################
-if [ -s "/opt/homebrew/opt/nvm/nvm.sh" ]; then
-  . "/opt/homebrew/opt/nvm/nvm.sh"
-fi
-
-## Java Version Manager
-################################################################################
-if check_cmd jenv; then
-  eval "$(jenv init -)"
-fi
-
 ## Podman and Docker
 ################################################################################
 ## If podman is installed and docker is not, alias docker to podman
