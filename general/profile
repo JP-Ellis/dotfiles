@@ -137,6 +137,12 @@ for dir in "$HOME/.local" "/scratch/$USER/local" "/scratch/$SUSER/local" "$CARGO
   fi
 done
 
+for bindir in "$PNPM_HOME" ; do
+  if [ -d "$bindir" ]; then
+    add_path PATH "$bindir"
+  fi
+done
+
 ## Load environment variables into DBus and systemd
 ################################################################################
 case "$(uname -s)" in
