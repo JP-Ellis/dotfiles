@@ -7,6 +7,11 @@
 ## Use Emacs key bindings
 bindkey -v
 
+# Load profile
+if [[ -e "$HOME/.profile" ]]; then
+  source "$HOME/.profile"
+fi
+
 # Load Sheldon
 if (($+commands[sheldon])); then
   eval "$(sheldon source)"
@@ -25,11 +30,6 @@ fi
 
 if (($+commands[aws_completer])); then
   zsh-defer complete -C "$(which aws_completer)" aws
-fi
-
-# Load profile
-if [[ -e "$HOME/.profile" ]]; then
-  source "$HOME/.profile"
 fi
 
 # Load zoxide
