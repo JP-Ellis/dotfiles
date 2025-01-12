@@ -114,6 +114,12 @@ Enable the use of Gravatars
 #+begin_src emacs-lisp
 (setq magit-revision-show-gravatars t)
 #+end_src
+** Projectile
+Define where to search for projects.
+
+#+begin_src emacs-lisp
+(setq projectile-project-search-path '("~/src" "~/.dotfiles"))
+#+end_src
 ** Org
 If you use ~org~ and don't want your org files in the default location below,
 change ~org-directory~. It must be set before org loads!
