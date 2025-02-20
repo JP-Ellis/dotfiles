@@ -101,7 +101,7 @@ repos:
           - --mode=json5
 
   - repo: https://github.com/crate-ci/committed
-    rev: v1.1.5
+    rev: v1.1.7
     hooks:
       - id: committed
 
