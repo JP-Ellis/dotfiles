@@ -1,0 +1,116 @@
+#!/bin/bash
+
+################################################################################
+## Utilities
+################################################################################
+
+check_command() {
+  command -v "$1" &>/dev/null
+  return $?
+}
+
+################################################################################
+## System
+################################################################################
+
+########################################
+# Brew
+########################################
+
+if check_command "brew"; then
+  brew update
+  brew upgrade
+  brew upgrade --cask
+fi
+
+########################################
+# Arch Linux
+########################################
+
+if check_command "paru"; then
+  paru
+elif check_command "pacman"; then
+  sudo pacman -Syu
+fi
+
+# If we have `visual-studio-code-insiders-bin`, then we have to manually update
+# it. I'm going to assume it is installed from paru, and it is in paru's
+# standard cache location
+if [ -d ~/.cache/paru/clones/visual-studio-code-insiders-bin ]; then
+  makepkg --dir ~/.cache/paru/clones/visual-studio-code-insiders-bin --install
+fi
+
+########################################
+# Debian / Ubuntu
+########################################
+
+if check_command "apt"; then
+  sudo apt update
+  sudo apt upgrade
+  sudo apt autoremove
+fi
+
+################################################################################
+## Languages and Ecosystems
+################################################################################
+
+########################################
+# Terminals
+########################################
+
+# Sheldon
+if check_command "sheldon"; then
+  sheldon lock --update
+fi
+
+########################################
+# Rust and Cargo
+########################################
+
+if check_command "rustup"; then
+  rustup update
+
+  if check_command "cargo-install-update"; then
+    cargo install-update --all
+  else
+    echo "Rust is installed, but 'cargo install-update' option was not found."
+  fi
+fi
+
+########################################
+# Python
+########################################
+
+# UV
+if check_command "uv"; then
+  uv tool update --all
+fi
+
+########################################
+# Node
+########################################
+
+# NPM
+if check_command "npm"; then
+  npm update --global
+fi
+
+# Yarn
+if check_command "yarn"; then
+  yarn global upgrade
+fi
+
+# pnpm
+if check_command "pnpm"; then
+  pnpm update --global
+fi
+
+########################################
+# Emacs
+########################################
+
+# Doom Emacs
+if [ -x "${XDG_CONFIG_HOME:-$HOME/.config}/emacs/bin/doom" ]; then
+  git -C "${XDG_CONFIG_HOME:-$HOME/.config}/emacs" pull --rebase
+  "${XDG_CONFIG_HOME:-$HOME/.config}/emacs/bin/doom" sync -u --gc --aot
+fi

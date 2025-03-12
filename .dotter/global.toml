@@ -6,6 +6,7 @@
 [bin]
   [bin.files]
   "bin/transcode-hevc" = "~/.local/bin/transcode-hevc"
+  "bin/update"         = "~/.local/bin/update"
 
 [borgmatic]
   [borgmatic.files]
