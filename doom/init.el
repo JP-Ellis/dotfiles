@@ -208,7 +208,8 @@
  ;; (php +lsp +tree-sitter)    ; perl's insecure younger brother
  ;; plantuml                   ; diagrams for confusing people more
  ;; purescript                 ; javascript, but functional
- (python +lsp +tree-sitter     ; beautiful is better than ugly
+ (python +lsp                  ; beautiful is better than ugly
+         +tree-sitter
          ;; +conda
          ;; +cython
          +poetry
