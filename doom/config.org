@@ -62,7 +62,7 @@ numbers, set this to ~relative~.
 #+begin_src emacs-lisp
 (setq display-line-numbers-type 'relative)
 #+end_src
-* Package Configurations
+* Package / Language Configurations
 ** Github Copilot
 #+begin_src emacs-lisp
 (use-package! copilot
@@ -92,6 +92,14 @@ Define where to search for projects.
 
 #+begin_src emacs-lisp
 (setq projectile-project-search-path '("~/src" "~/.dotfiles"))
+#+end_src
+** Python
+Add Ruff's LSP to eglot's configuration:
+#+begin_src emacs-lisp
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '(python-mode . ("ruff" "server")))
+  (add-hook 'after-save-hook 'eglot-format))
 #+end_src
 ** Org
 If you use ~org~ and don't want your org files in the default location below,
