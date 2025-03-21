@@ -82,33 +82,6 @@ Only provide completion in insert-mode.
 #+begin_src emacs-lisp
 (setq copilot-enable-predicates '(evil-insert-state-p))
 #+end_src
-** Language Server
-The language server has issues when a project might have a larger number of
-files to track. The following code originates from [[https://github.com/emacs-lsp/lsp-mode/issues/713#issuecomment-985653873][emacs-lsp/lsp-mode#713]] and
-configures LSP to ignore tracking files specified from the ~.gitignore~. This is
-particularly useful for project which use ~npm~.
-#+begin_src emacs-lisp :tangle no
-(use-package! lsp-mode
-  :config
-  ;; Ignore setting up watches on gitignored paths
-  ;; https://github.com/emacs-lsp/lsp-mode/issues/713#issuecomment-985653873
-  (defun ++git-ignore-p (path)
-    (let* (; trailing / breaks git check-ignore if path is a symlink:
-           (path (directory-file-name path))
-           (default-directory (file-name-directory path))
-           (relpath (file-name-nondirectory path))
-           (cmd (format "git check-ignore '%s'" relpath))
-           (status (call-process-shell-command cmd)))
-      (eq status 0)))
-
-  (defun ++lsp--path-is-watchable-directory-a
-      (fn path dir ignored-directories)
-    (and (not (++git-ignore-p (f-join dir path)))
-         (funcall fn path dir ignored-directories)))
-
-  (advice-add 'lsp--path-is-watchable-directory
-              :around #'++lsp--path-is-watchable-directory-a))
-#+end_src
 ** Magit
 Enable the use of Gravatars
 #+begin_src emacs-lisp
