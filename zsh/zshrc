@@ -47,6 +47,11 @@ if (($+commands[github-copilot-cli])); then
   eval "$(github-copilot-cli alias -- "$0")"
 fi
 
+# Load rbenv
+if (($+commands[rbenv])); then
+  eval "$(rbenv init - --no-rehash zsh)"
+fi
+
 # Load Sheldon
 ## ZSH Preferences
 ################################################################################
