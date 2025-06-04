@@ -34,25 +34,36 @@ fi
 
 # Load zoxide
 if (($+commands[zoxide])); then
-  eval "$(zoxide init zsh)"
+  zsh-defer eval "$(zoxide init zsh)"
 fi
 
 # Load direnv
 if (($+commands[direnv])); then
-  eval "$(direnv hook zsh)"
+  zsh-defer eval "$(direnv hook zsh)"
 fi
 
 # Load github-copilot-cli
 if (($+commands[github-copilot-cli])); then
-  eval "$(github-copilot-cli alias -- "$0")"
+  zsh-defer eval "$(github-copilot-cli alias -- "$0")"
 fi
 
 # Load rbenv
 if (($+commands[rbenv])); then
-  eval "$(rbenv init - --no-rehash zsh)"
+  zsh-defer eval "$(rbenv init - --no-rehash zsh)"
 fi
 
-# Load Sheldon
+## Brew Google Cloud
+if (($+commands[brew])); then
+  if [[ -e "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc" ]]; then
+    zsh-defer source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
+  fi
+fi
+
+# Load starship
+if (($+commands[starship])); then
+  eval "$(starship init zsh)"
+fi
+
 ## ZSH Preferences
 ################################################################################
 ## The options below are documented in https://zsh.sourceforge.io/Doc/Release/Options.html
@@ -106,7 +117,7 @@ zstyle ':completion:*' substitute 1
 zstyle ':completion:*' use-compctl true
 zstyle ':completion:*' verbose true
 
-## Commands
+## Commands and Aliases
 ################################################################################
 
 ## Shorten `xdg-open` to just `open`, and if given multiple arguments open each
@@ -197,16 +208,4 @@ if (($+commands[gh])); then
   alias \?\?='gh copilot suggest -t shell'
   alias gh\?='gh copilot suggest -t gh'
   alias git\?='gh copilot suggest -t git'
-fi
-
-## Brew Google Cloud
-if (($+commands[brew])); then
-  if [[ -e "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc" ]]; then
-    zsh-defer source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
-  fi
-fi
-
-# Load starship
-if (($+commands[starship])); then
-  eval "$(starship init zsh)"
 fi
