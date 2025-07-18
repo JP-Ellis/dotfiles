@@ -52,6 +52,12 @@ if (($+commands[rbenv])); then
   zsh-defer eval "$(rbenv init - --no-rehash zsh)"
 fi
 
+# Load NVM
+if [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ]; then
+  zsh-defer source "$(brew --prefix)/opt/nvm/nvm.sh"
+  [ -s "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" ] && zsh-defer source "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm"
+fi
+
 ## Brew Google Cloud
 if (($+commands[brew])); then
   if [[ -e "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc" ]]; then
