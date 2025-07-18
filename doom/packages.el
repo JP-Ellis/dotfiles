@@ -1,11 +1,6 @@
 ;; -*- no-byte-compile: t; -*-
 
-(package! code-review
-    :recipe (:host github
-             :repo "phelrine/code-review"
-             :branch "fix/closql-update"
-             :files ("graphql" "code-review*.el")))
-(package! sqlite3)
+(unpin! forge)
 
 (package! pkgbuild-mode
   :recipe (:host github :repo "juergenhoetzel/pkgbuild-mode"))
@@ -23,11 +18,9 @@
 (package! org-padding
   :recipe (:host github :repo "TonCherAmi/org-padding"))
 
-(add-hook 'python-mode-hook 'eglot-ensure)
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
-               '(python-mode . ("ruff" "server")))
-  (add-hook 'after-save-hook 'eglot-format))
+               '(python-mode . ("ruff" "server"))))
 
 (unpin! spell-fu)
 

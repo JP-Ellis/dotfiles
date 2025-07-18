@@ -64,19 +64,12 @@ release. The `unpin!' macro allows you to unpin single packages...
 #+begin_src emacs-lisp :tangle no
 (unpin! t)
 #+end_src
-* Unpin Fixes
-Fixes for issues related to the unpinning of all packages.
-** Code Review
-The code-review package is incompatible with the latest version of closql, and
-appears to be unmaintained. We pull the package from a PR instead and include a
-new library to interact with the system SQLite library
+* Temporary Fixes
+** Missing glab
+It seems like forge has dropped some dependencies, but I'm getting errors about
+'no such file or directory "glab"'. Checking whether unpinning forge fixes the issue.
 #+begin_src emacs-lisp
-(package! code-review
-    :recipe (:host github
-             :repo "phelrine/code-review"
-             :branch "fix/closql-update"
-             :files ("graphql" "code-review*.el")))
-(package! sqlite3)
+(unpin! forge)
 #+end_src
 * Packages
 ** Arch Linux PKGBUILD
@@ -114,11 +107,9 @@ The ~org-roam-ui~ packages tries to keep up with the latest changes from
 ** Python
 *** Ruff LSP
 #+begin_src emacs-lisp
-(add-hook 'python-mode-hook 'eglot-ensure)
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
-               '(python-mode . ("ruff" "server")))
-  (add-hook 'after-save-hook 'eglot-format))
+               '(python-mode . ("ruff" "server"))))
 
 #+end_src
 ** Spell-Fu
