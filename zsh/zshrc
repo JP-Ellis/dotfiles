@@ -37,11 +37,6 @@ if (($+commands[zoxide])); then
   zsh-defer eval "$(zoxide init zsh)"
 fi
 
-# Load direnv
-if (($+commands[direnv])); then
-  zsh-defer eval "$(direnv hook zsh)"
-fi
-
 # Load github-copilot-cli
 if (($+commands[github-copilot-cli])); then
   zsh-defer eval "$(github-copilot-cli alias -- "$0")"
@@ -63,6 +58,14 @@ if (($+commands[brew])); then
   if [[ -e "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc" ]]; then
     zsh-defer source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
   fi
+fi
+
+# Load direnv
+#
+# This should be last to ensure that direnv can override any other
+# completions or aliases.
+if (($+commands[direnv])); then
+  zsh-defer eval "$(direnv hook zsh)"
 fi
 
 # Load starship
