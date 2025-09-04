@@ -39,6 +39,10 @@
 	pull-all = "!f() { git pull && git submodule update --init --recursive \"$@\"; }; f"
     ignore = "!gi() { curl -sL https://www.toptal.com/developers/gitignore/api/$@ ;}; gi"
 
+[branch]
+  autoSetupMerge = always
+  autoSetupRebase = always
+
 [init]
     defaultBranch = main
 
