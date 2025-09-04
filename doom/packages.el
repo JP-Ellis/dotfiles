@@ -1,7 +1,5 @@
 ;; -*- no-byte-compile: t; -*-
 
-(unpin! forge)
-
 (package! pkgbuild-mode
   :recipe (:host github :repo "juergenhoetzel/pkgbuild-mode"))
 

@@ -65,12 +65,6 @@ release. The `unpin!' macro allows you to unpin single packages...
 (unpin! t)
 #+end_src
 * Temporary Fixes
-** Missing glab
-It seems like forge has dropped some dependencies, but I'm getting errors about
-'no such file or directory "glab"'. Checking whether unpinning forge fixes the issue.
-#+begin_src emacs-lisp
-(unpin! forge)
-#+end_src
 * Packages
 ** Arch Linux PKGBUILD
 #+begin_src emacs-lisp
