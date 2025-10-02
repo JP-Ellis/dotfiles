@@ -1,5 +1,7 @@
 ;; -*- no-byte-compile: t; -*-
 
+(package! envrc :pin "107dae065df857271cd3371d9f520ff13df695cf")
+
 (package! pkgbuild-mode
   :recipe (:host github :repo "juergenhoetzel/pkgbuild-mode"))
 

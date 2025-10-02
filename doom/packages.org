@@ -65,6 +65,11 @@ release. The `unpin!' macro allows you to unpin single packages...
 (unpin! t)
 #+end_src
 * Temporary Fixes
+** envrc missing ~Info-directory-list~
+See the details from [[https://github.com/purcell/envrc/issues/117][purcell/envrc#117]], pinning to an older version for now.
+#+begin_src emacs-lisp
+(package! envrc :pin "107dae065df857271cd3371d9f520ff13df695cf")
+#+end_src
 * Packages
 ** Arch Linux PKGBUILD
 #+begin_src emacs-lisp
