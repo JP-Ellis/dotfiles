@@ -31,10 +31,6 @@
   "doom/packages.el"  = "~/.config/doom/packages.el"
   "doom/packages.org" = "~/.config/doom/packages.org"
 
-  [doom.variables]
-  "email" = "josh@jpellis.me"
-  "name"  = "JP-Ellis"
-
 [fonts]
   [fonts.files]
   "fontconfig/conf.d/40-monospace.conf"  = "~/.config/fontconfig/conf.d/40-monospace.conf"

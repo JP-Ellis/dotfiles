@@ -1,7 +1,7 @@
 [user]
-	email = {{email}}
-	name = {{name}}
-	signingkey = {{signingKey}}
+	email = {{ email }}
+	name = {{ username }}
+	signingkey = {{ signingKey }}
 
 [commit]
 	gpgsign = {{#if signingKey}}true{{else}}false{{/if}}

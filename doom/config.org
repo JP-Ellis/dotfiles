@@ -22,7 +22,7 @@ they are implemented.
 Some variables to identify the user, such as with GPG configuration, email, and
 various templates or snippets.
 #+begin_src emacs-lisp
-(setq user-full-name "{{ name }}"
+(setq user-full-name "{{ username }}"
       user-mail-address "{{ email }}")
 #+end_src
 * Display
