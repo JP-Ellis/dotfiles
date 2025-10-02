@@ -1,0 +1,30 @@
+mode = "local"
+project = ""
+shell = ""
+
+[dirs]
+project = []
+python = "isolated"
+data = "~/.local/share/hatch"
+cache = "~/.cache/hatch"
+
+[dirs.env]
+virtual = ".hatch"
+
+[projects]
+
+[publish.index]
+repo = "main"
+
+[template]
+name = "{{ username }}"
+email = "{{ email }}"
+
+[terminal.styles]
+info = "bold"
+success = "bold cyan"
+error = "bold red"
+warning = "bold yellow"
+waiting = "bold magenta"
+debug = "bold"
+spinner = "simpleDotsScrolling"

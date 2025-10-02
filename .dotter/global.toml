@@ -1,3 +1,8 @@
+[default]
+  [default.variables]
+  email = "josh@jpellis.me"
+  username = "JP-Ellis"
+
 [bash]
   [bash.files]
   "bash/bash_profile" = "~/.bash_profile"
@@ -88,6 +93,10 @@
   [gpg.files]
   "gpg/gpg-agent.conf" = "~/.local/share/gnupg/gpg-agent.conf"
   "gpg/sshcontrol"     = "~/.local/share/gnupg/sshcontrol"
+
+[hatch]
+  [hatch.files]
+  "hatch/config.toml" = "~/.config/hatch/config.toml"
 
 [kitty]
   [kitty.files]
