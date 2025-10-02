@@ -110,13 +110,6 @@
   [mathematica.files]
   "Mathematica/Kernel.m" = { target = "~/.config/mathematica/Kernel/init.m", type = "symbolic" }
 
-[nushell]
-  [nushell.files]
-  "nushell/config.nu" = "~/.config/nushell/config.nu"
-  "nushell/env.nu"    = "~/.config/nushell/env.nu"
-  "nushell/login.nu"  = "~/.config/nushell/login.nu"
-  "nushell/plugin.nu" = "~/.config/nushell/plugin.nu"
-
 [sheldon]
   [sheldon.files]
 

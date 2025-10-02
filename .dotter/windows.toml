@@ -1,6 +1,0 @@
-[nushell]
-[nushell.files]
-"nushell/config.nu" = "~/AppData/Roaming/nushell/config.nu"
-"nushell/env.nu"    = "~/AppData/Roaming/nushell/env.nu"
-"nushell/login.nu"  = "~/AppData/Roaming/nushell/login.nu"
-"nushell/plugin.nu" = "~/AppData/Roaming/nushell/plugin.nu"
