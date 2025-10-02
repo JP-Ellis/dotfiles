@@ -1,6 +1,0 @@
-[Unit]
-Description=Update Rustup
-
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/rustup update

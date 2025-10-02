@@ -61,11 +61,6 @@
   "general/environment.d/90-sqlite.conf"       = "~/.config/environment.d/90-sqlite.conf"
   "general/environment.d/90-texlive.conf"      = "~/.config/environment.d/90-texlive.conf"
 
-  "general/rustup-update.service"          = "~/.config/systemd/user/rustup-update.service"
-  "general/rustup-update.timer"            = "~/.config/systemd/user/rustup-update.timer"
-  "general/standing-desk-reminder.service" = "~/.config/systemd/user/standing-desk-reminder.service"
-  "general/standing-desk-reminder.timer"   = "~/.config/systemd/user/standing-desk-reminder.timer"
-
   [general.variables]
   app-browser = "brave"
   app-editor  = "vim"
