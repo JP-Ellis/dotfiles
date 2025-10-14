@@ -60,7 +60,6 @@
   "general/environment.d/90-make.conf"         = "~/.config/environment.d/90-make.conf"
   "general/environment.d/90-mathematica.conf"  = "~/.config/environment.d/90-mathematica.conf"
   "general/environment.d/90-minikube.conf"     = "~/.config/environment.d/90-minikube.conf"
-  "general/environment.d/90-nodejs.conf"       = "~/.config/environment.d/90-nodejs.conf"
   "general/environment.d/90-parallel.conf"     = "~/.config/environment.d/90-parallel.conf"
   "general/environment.d/90-rust.conf"         = "~/.config/environment.d/90-rust.conf"
   "general/environment.d/90-sqlite.conf"       = "~/.config/environment.d/90-sqlite.conf"
@@ -97,6 +96,10 @@
 [mathematica]
   [mathematica.files]
   "Mathematica/Kernel.m" = { target = "~/.config/mathematica/Kernel/init.m", type = "symbolic" }
+
+[nodejs]
+  [nodejs.files]
+  "nodejs/environment.d/90-nodejs.conf" = "~/.config/environment.d/90-nodejs.conf"
 
 [python]
   [python.files]
