@@ -1,4 +1,4 @@
-#shellcheck shell=sh
+#shellcheck shell=bash
 
 # shellcheck disable=SC3043
 
@@ -36,4 +36,50 @@ layout_hatch() {
   export VIRTUAL_ENV_PROMPT
   export HATCH_ENV_ACTIVE=default
   PATH_add "$VIRTUAL_ENV/bin"
+}
+
+layout_dotvenv() {
+  if ! test -f .venv/bin/activate; then
+    log_error "No .venv found.  Use 'python -m venv .venv' to create one first."
+    exit 2
+  fi
+
+  VIRTUAL_ENV=$(pwd)/.venv
+  export VIRTUAL_ENV
+  PATH_add "$VIRTUAL_ENV/bin"
+
+  # Extract the block that sets VIRTUAL_ENV_PROMPT from the activate script
+  read -r -d '' awk_script <<'EOF'
+{
+  # Store each line in an array indexed by line number
+  lines[NR] = $0
+}
+END {
+  # After reading all lines, search through them and find the line
+  # containing VIRTUAL_ENV_PROMPT assignment
+  for(i=1; i<=NR; i++) {
+    if(lines[i] ~ /VIRTUAL_ENV_PROMPT=/) {
+      # Found the target line, now search backwards to find the opening if statement
+      for(j=i-1; j>=1; j--) {
+        if(lines[j] ~ /^[[:space:]]*if /) {
+          start = j  # Remember where the if block starts
+          break
+        }
+      }
+
+      # Now print all lines from the if statement to its corresponding fi
+      for(k=start; k<=NR; k++) {
+        print lines[k]
+        # Stop when we reach the closing fi statement
+        if(lines[k] ~ /^[[:space:]]*fi[[:space:]]*$/) {
+          break
+        }
+      }
+      break  # Exit once we found and processed the block
+    }
+  }
+}
+EOF
+  eval "$(awk "$awk_script" "$VIRTUAL_ENV/bin/activate")"
+  export VIRTUAL_ENV_PROMPT
 }
