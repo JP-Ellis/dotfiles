@@ -1,4 +1,4 @@
-#:schema https://json.schemastore.org/any.json
+#:schema https://www.schemastore.org/any.json
 line_length        = 100
 whitelines         = 1
 section_whitelines = 1
