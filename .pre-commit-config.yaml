@@ -99,7 +99,7 @@ repos:
           - --mode=json5
 
   - repo: https://github.com/crate-ci/committed
-    rev: v1.1.8
+    rev: v1.1.9
     hooks:
       - id: committed
 
