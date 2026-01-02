@@ -7,6 +7,7 @@
   min-height: 0;
 }
 
+/* biome-ignore lint/correctness/noUnknownTypeSelector: waybar special */
 window#waybar {
   background: transparent;
   color: white;
