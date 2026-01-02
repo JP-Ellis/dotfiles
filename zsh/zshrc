@@ -179,10 +179,10 @@ mkcd() {
 
 if (($+commands[bat])); then
   ## Use bat to format man page
-  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+  export MANPAGER='bat -pl man'
 
   ## Shortcut to display help for a command in bat
-  alias bat-help='bat --plain --language=help'
+  alias bat-help='bat -pl help'
   help() {
     if [[ -z "$1" ]]; then
       echo "Usage: help <command>" >&2
