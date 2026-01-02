@@ -1,4 +1,3 @@
-*.ipynb    filter=dropoutput_ipynb
 *.nb       filter=dropoutput_nb
 
 # Compressed files
