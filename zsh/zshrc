@@ -17,6 +17,11 @@ if (($+commands[sheldon])); then
   eval "$(sheldon source)"
 fi
 
+# Load zsh-patina
+if (($+commands[zsh-patina])); then
+  eval "$(zsh-patina activate)"
+fi
+
 # Load completions
 if (($+commands[brew])) && [[ -d "$(brew --prefix)/share/zsh/site-functions" ]]; then
   zsh-defer chmod go-w "$(brew --prefix)/share" "$(brew --prefix)/share/zsh"

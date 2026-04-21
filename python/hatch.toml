@@ -1,30 +1,35 @@
-mode = "local"
+#:schema https://json.schemastore.org/any.json
+#:tombi schema.strict = false
+
+mode    = "local"
 project = ""
-shell = ""
+shell   = ""
 
 [dirs]
 project = []
-python = "isolated"
-data = "~/.local/share/hatch"
-cache = "~/.cache/hatch"
+python  = "isolated"
+data    = "~/.local/share/hatch"
+cache   = "~/.cache/hatch"
 
-[dirs.env]
-virtual = ".hatch"
+  [dirs.env]
+  virtual = ".hatch"
 
 [projects]
 
-[publish.index]
-repo = "main"
+[publish]
+  [publish.index]
+  repo = "main"
 
 [template]
-name = "{{ username }}"
+name  = "{{ username }}"
 email = "{{ email }}"
 
-[terminal.styles]
-info = "bold"
-success = "bold cyan"
-error = "bold red"
-warning = "bold yellow"
-waiting = "bold magenta"
-debug = "bold"
-spinner = "simpleDotsScrolling"
+[terminal]
+  [terminal.styles]
+  info    = "bold"
+  success = "bold cyan"
+  error   = "bold red"
+  warning = "bold yellow"
+  waiting = "bold magenta"
+  debug   = "bold"
+  spinner = "simpleDotsScrolling"
