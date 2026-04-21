@@ -1,0 +1,6 @@
+# shellcheck shell=zsh
+
+## XDG Base Directory default and ZDOTDIR.
+## Sourced for ALL zsh invocations — keep minimal and fast (no subprocesses).
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export ZDOTDIR="${XDG_CONFIG_HOME}/zsh"

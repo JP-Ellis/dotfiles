@@ -141,10 +141,13 @@
 
 [zsh]
   [zsh.files]
+  "zsh/zshenv"                 = "~/.zshenv"
+  "zsh/zshrc"                  = "~/.config/zsh/.zshrc"
+  "zsh/zstyles"                = "~/.config/zsh/zstyles"
+  "zsh/conf.d"                 = "~/.config/zsh/conf.d"
   "zsh/sheldon.toml"           = {
     target = "~/.config/sheldon/plugins.toml",
     type   = "symbolic"
   }
   "zsh/sheldon-update.service" = "~/.config/systemd/user/sheldon-update.service"
   "zsh/sheldon-update.timer"   = "~/.config/systemd/user/sheldon-update.timer"
-  "zsh/zshrc"                  = "~/.zshrc"
