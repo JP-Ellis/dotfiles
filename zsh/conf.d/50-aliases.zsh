@@ -29,9 +29,9 @@ else
 fi
 
 ## Docker/Podman — interactive shells only (not in profile)
-if ((${+commands[podman]})) && ! ((${+commands[docker]})); then
+if (( $+commands[podman] )) && ! (( $+commands[docker] )); then
   alias docker=podman
 fi
-if ((${+commands[podman-compose]})) && ! (({$+commands[docker-compose]})); then
+if (( $+commands[podman-compose] )) && ! (( $+commands[docker-compose] )); then
   alias docker-compose=podman-compose
 fi
