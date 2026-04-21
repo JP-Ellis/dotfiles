@@ -1,224 +1,24 @@
 # shellcheck shell=zsh
 
 ################################################################################
-## Executes commands at the start of an interactive session.
+## Interactive shell initialisation
 ################################################################################
 
-## Use Emacs key bindings
-bindkey -v
+## Raise open-file limit early — prevents zsh-patina fd exhaustion on macOS
+## (macOS default soft limit is 256; zsh + plugins can easily exceed this)
+ulimit -n 4096
 
-# Load profile
-if [[ -e "$HOME/.profile" ]]; then
-  source "$HOME/.profile"
-fi
+## POSIX profile — shared with bash, sets PATH, XDG vars, brew env, etc.
+[[ -f "$HOME/.profile" ]] && source "$HOME/.profile"
 
-# Load Sheldon
-if (($+commands[sheldon])); then
-  eval "$(sheldon source)"
-fi
+## Per-machine feature configuration (zstyle-based)
+[[ -f "${ZDOTDIR}/zstyles" ]] && source "${ZDOTDIR}/zstyles"
 
-# Load zsh-patina
-if (($+commands[zsh-patina])); then
-  eval "$(zsh-patina activate)"
-fi
+## External plugins via sheldon
+(( $+commands[sheldon] )) && eval "$(sheldon source)"
 
-# Load completions
-if (($+commands[brew])) && [[ -d "$(brew --prefix)/share/zsh/site-functions" ]]; then
-  zsh-defer chmod go-w "$(brew --prefix)/share" "$(brew --prefix)/share/zsh"
-  zsh-defer chmod -R go-w "$(brew --prefix)/share/zsh/site-functions"
-  fpath+=("$(brew --prefix)/share/zsh-functions")
-fi
-
-if [[ -d "$HOME/.local/share/zsh/site-functions" ]]; then
-  fpath+=("$HOME/.local/share/zsh/site-functions")
-fi
-
-if (($+commands[aws_completer])); then
-  zsh-defer complete -C "$(which aws_completer)" aws
-fi
-
-# Load zoxide
-if (($+commands[zoxide])); then
-  zsh-defer eval "$(zoxide init zsh)"
-fi
-
-# Load github-copilot-cli
-if (($+commands[github-copilot-cli])); then
-  zsh-defer eval "$(github-copilot-cli alias -- "$0")"
-fi
-
-# Load rbenv
-if (($+commands[rbenv])); then
-  zsh-defer eval "$(rbenv init - --no-rehash zsh)"
-fi
-
-# Load fnm
-if (($+commands[fnm])); then
-  zsh-defer eval "$(fnm env --use-on-cd --shell zsh --version-file-strategy recursive --corepack-enabled --resolve-engines)"
-fi
-
-## Brew Google Cloud
-if (($+commands[brew])); then
-  if [[ -e "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc" ]]; then
-    zsh-defer source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
-  fi
-fi
-
-# Load direnv
-#
-# This should be last to ensure that direnv can override any other
-# completions or aliases.
-if (($+commands[direnv])); then
-  zsh-defer eval "$(direnv hook zsh)"
-fi
-
-# Load starship
-if (($+commands[starship])); then
-  eval "$(starship init zsh)"
-fi
-
-## ZSH Preferences
-################################################################################
-## The options below are documented in https://zsh.sourceforge.io/Doc/Release/Options.html
-
-## Enable history
-HISTFILE="$HOME/.cache/zsh_history"
-HISTSIZE=1000000
-SAVEHIST=1000000
-
-# Set shell options: http://zsh.sourceforge.net/Doc/Release/Options.html.
-setopt bang_hist
-setopt extended_history
-setopt hist_allow_clobber
-setopt hist_expire_dups_first
-setopt hist_fcntl_lock
-setopt hist_ignore_all_dups
-setopt hist_ignore_dups
-setopt hist_ignore_space
-setopt hist_lex_words
-setopt hist_save_by_copy
-setopt hist_save_no_dups
-setopt hist_verify
-setopt inc_append_history_time
-
-## Confirm before overwriting output files
-setopt no_clobber
-
-## Completion preferences
-setopt complete_in_word
-setopt glob_complete
-setopt menu_complete
-setopt glob_dots # no special treatment for file names with a leading dot
-setopt auto_menu
-# setopt auto_cd
-
-# zstyle ':completion:*' auto-description 'Specify %d'
-zstyle ':completion:*' completer _list _oldlist _expand _complete _ignored _match _correct _approximate _prefix
-# zstyle ':completion:*' completions 1
-# zstyle ':completion:*' expand prefix suffix
-# zstyle ':completion:*' format 'Completing %d'
-zstyle ':completion:*' glob 1
-# zstyle ':completion:*' group-name ''
-zstyle ':completion:*' ignore-parents parent pwd .. directory
-zstyle ':completion:*' list-suffixes true
-zstyle ':completion:*' match-original both
-# zstyle ':completion:*' max-errors 2
-# zstyle ':completion:*' preserve-prefix '//[^/]##/'
-# zstyle ':completion:*' prompt 'Corrections'
-zstyle ':completion:*' squeeze-slashes true
-zstyle ':completion:*' substitute 1
-zstyle ':completion:*' use-compctl true
-zstyle ':completion:*' verbose true
-
-## Commands and Aliases
-################################################################################
-
-## Shorten `xdg-open` to just `open`, and if given multiple arguments open each
-## of them individually
-if (($+commands[xdg-open] && !$+commands[open])); then
-  open() {
-    local arg
-    for arg in "$@"; do
-      xdg-open "$arg"
-    done
-  }
-fi
-
-## ls substitution
-if (($+commands[eza])); then
-  alias ls='eza --group-directories-first --git --binary' # default
-  alias li='ls --git-ignore'                              # use gitignore
-  alias l='ls --oneline --all'                            # list for parsing
-  alias ll='ls --long --header'                           # default with a bit more
-  alias lr='ll --tree'                                    # recurse
-  alias la='ll --all'                                     # show all
-  alias lx='ll --sort=extension'                          # sort by e_x_tension
-  alias lb='ll --sort=size'                               # sort by _b_ytes
-  alias lc='ll --sort=created --time=created'             # sort by _c_reation date
-  alias lm='ll --sort=modified --time=modified'           # sort by _m_odification date
-  alias lt='lm'                                           # sort by (modification) _t_ime
-  alias sl=ls                                             # typo fix
-else
-  alias ls='ls --group-directories-first --color=auto' # default
-  alias l='ls -1 --almost-all'                         # list for parsing
-  alias ll='ls -l --human-readable'                    # default with a bit more
-  alias lr='ll --recursive'                            # recurse
-  alias la='ll --almost-all'                           # show all
-  alias lx='ll --sort=extension'                       # sort by e_x_tension
-  alias lb='ll --sort=size'                            # sort by _b_ytes
-  alias lc='ll --sort=time --time=created'             # sort by _c_reation date
-  alias lm='ll --sort=time --time=modified'            # sort by _m_odification date
-  alias lt='lm'                                        # sort by (modification) _t_ime
-  alias sl=ls                                          # typo fix
-fi
-
-## Run ls after entering a directory
-# cd() {
-#   builtin cd "$1" && ls
-# }
-
-## Shortcut to make and cd into a new directory
-mkcd() {
-  mkdir "$1" && cd "$1"
-}
-
-if (($+commands[bat])); then
-  ## Use bat to format man page
-  export MANPAGER='bat -pl man'
-
-  ## Shortcut to display help for a command in bat
-  alias bat-help='bat -pl help'
-  help() {
-    if [[ -z "$1" ]]; then
-      echo "Usage: help <command>" >&2
-      return
-    fi
-    case "$1" in
-    --help)
-      echo "Usage: help <command>" >&2
-      return
-      ;;
-    esac
-
-    if "$@" --help >/dev/null 2>&1; then
-      "$@" --help | bat --plain --language=help
-      return
-    elif "$@" -h >/dev/null 2>&1; then
-      "$@" -h | bat --plain --language=help
-      return
-    elif man "$@" >/dev/null 2>&1; then
-      man "$@"
-      return
-    fi
-
-    echo "No help available for $@" >&2
-    return
-  }
-fi
-
-## Github Copilot alias
-if (($+commands[gh])); then
-  alias \?\?='gh copilot suggest -t shell'
-  alias gh\?='gh copilot suggest -t gh'
-  alias git\?='gh copilot suggest -t git'
-fi
+## Load conf.d modules in numeric order
+for _zsh_module in "${ZDOTDIR}/conf.d"/*.zsh; do
+  source "$_zsh_module"
+done
+unset _zsh_module

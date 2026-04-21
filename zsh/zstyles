@@ -1,0 +1,24 @@
+# shellcheck shell=zsh
+
+################################################################################
+## Per-machine feature configuration.
+## Source this file (or template it with dotter) to customise behaviour.
+## Modules read these zstyles to decide whether to load each tool.
+################################################################################
+
+## OS type — drives brew setup, xdg-open shim, launchctl vs dbus, etc.
+## Values: 'macos' or 'linux'
+zstyle ':config:os' type 'macos'
+
+## Runtime and tool manager
+zstyle ':config:tools:mise'     enabled 'yes'
+
+## Cloud tools
+zstyle ':config:tools:gcloud'   enabled 'yes'
+zstyle ':config:tools:aws'      enabled 'no'
+
+## Shell integrations
+zstyle ':config:tools:fzf-tab'  enabled 'yes'   # requires fzf in PATH
+zstyle ':config:tools:starship' enabled 'yes'
+zstyle ':config:tools:zoxide'   enabled 'yes'
+zstyle ':config:tools:direnv'   enabled 'yes'

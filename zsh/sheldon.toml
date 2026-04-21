@@ -28,13 +28,19 @@ defer = """
 
 [plugins]
   [plugins.zsh-defer]
-  # As this plugin is used to defer the loading of other plugins, it must
-  # be loaded first so as to be available.
+  # Must be first — provides zsh-defer for all subsequent plugins
   github = "romkatv/zsh-defer"
-
-  [plugins.colors]
-  inline = "autoload -Uz colors && zsh-defer colors"
 
   [plugins.zsh-completions]
   github = "zsh-users/zsh-completions"
+  apply  = ["defer"]
+
+  [plugins.zsh-autosuggestions]
+  github = "zsh-users/zsh-autosuggestions"
+  apply  = ["defer"]
+
+  [plugins.fzf-tab]
+  # Replaces the default zsh completion menu with fzf.
+  # Requires fzf in PATH (provided by mise).
+  github = "Aloxaf/fzf-tab"
   apply  = ["defer"]

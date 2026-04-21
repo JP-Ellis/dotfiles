@@ -76,11 +76,23 @@ hooks = [
 ]
 
 [[repos]]
-repo  = "https://github.com/koalaman/shellcheck-precommit"
-rev   = "v0.11.0"
+repo  = "https://github.com/shellcheck-py/shellcheck-py"
+rev   = "v0.11.0.1"
 hooks = [
-  { id = "shellcheck", args = ["--external-sources"] },
+  {
+    id      = "shellcheck",
+    args    = ["--external-sources"],
+    exclude = { glob = ["**/*.zsh", "zsh/**"] }
+  },
 ]
+
+# Waiting on:
+# - https://github.com/afadesigns/zshellcheck/pull/1046
+# - https://github.com/afadesigns/zshellcheck/issues/1047
+# [[repos]]
+# repo  = "https://github.com/afadesigns/zshellcheck"
+# rev   = "v1.0.12"
+# hooks = [{ id = "zshellcheck" }]
 
 [[repos]]
 repo  = "https://github.com/scop/pre-commit-shfmt"
