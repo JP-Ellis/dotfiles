@@ -64,17 +64,11 @@ if check_command "sheldon"; then
 fi
 
 ########################################
-# Rust and Cargo
+# mise — runtime and tool manager
 ########################################
 
-if check_command "rustup"; then
-  rustup update
-
-  if check_command "cargo-install-update"; then
-    cargo install-update --all
-  else
-    echo "Rust is installed, but 'cargo install-update' option was not found."
-  fi
+if check_command "mise"; then
+  mise upgrade
 fi
 
 ########################################
