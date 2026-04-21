@@ -95,7 +95,10 @@
 
 [mathematica]
   [mathematica.files]
-  "Mathematica/Kernel.m" = { target = "~/.config/mathematica/Kernel/init.m", type = "symbolic" }
+  "Mathematica/Kernel.m" = {
+    target = "~/.config/mathematica/Kernel/init.m",
+    type   = "symbolic"
+  }
 
 [nodejs]
   [nodejs.files]
@@ -134,7 +137,10 @@
 
 [zsh]
   [zsh.files]
-  "zsh/sheldon.toml"           = { target = "~/.config/sheldon/plugins.toml", type = "symbolic" }
+  "zsh/sheldon.toml"           = {
+    target = "~/.config/sheldon/plugins.toml",
+    type   = "symbolic"
+  }
   "zsh/sheldon-update.service" = "~/.config/systemd/user/sheldon-update.service"
   "zsh/sheldon-update.timer"   = "~/.config/systemd/user/sheldon-update.timer"
   "zsh/zshrc"                  = "~/.zshrc"

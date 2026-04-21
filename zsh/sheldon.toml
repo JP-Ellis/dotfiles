@@ -13,7 +13,6 @@
 
 shell = "zsh"
 
-################################################################################
 [templates]
 # Use `zsh-defer` to source files once the shell is ready.
 # See <https://github.com/romkatv/zsh-defer>
@@ -27,39 +26,15 @@ defer = """
 {{ hooks?.post | nl }}
 """
 
-################################################################################
 [plugins]
+  [plugins.zsh-defer]
+  # As this plugin is used to defer the loading of other plugins, it must
+  # be loaded first so as to be available.
+  github = "romkatv/zsh-defer"
 
-[plugins.zsh-defer]
-# As this plugin is used to defer the loading of other plugins, it must
-# be loaded first so as to be available.
-github = "romkatv/zsh-defer"
+  [plugins.colors]
+  inline = "autoload -Uz colors && zsh-defer colors"
 
-[plugins.colors]
-inline = "autoload -Uz colors && zsh-defer colors"
-
-[plugins.zsh-completions]
-github = "zsh-users/zsh-completions"
-apply  = ["defer"]
-
-## The following plugins need to be loaded last as they wrap other widgets
-
-[plugins.zsh-syntax-highlighting]
-github = "zsh-users/zsh-syntax-highlighting"
-apply  = ["defer"]
-
-[plugins.zsh-autocomplete]
-# This will execute `compinit` and `autoload -Uz compinit` for you.
-github = "marlonrichert/zsh-autocomplete"
-apply  = ["defer"]
-[plugins.zsh-autocomplete.hooks]
-pre = """
-# Always search history in default context
-
-# Insert prefixes shared by all completions on tab complete
-zstyle ':autocomplete:*complete*:*' insert-unambiguous yes
-"""
-post = """
-# Tab accepts the completion, Enter executes the completion
-zsh-defer bindkey -M menuselect '\\r' .accept-line
-"""
+  [plugins.zsh-completions]
+  github = "zsh-users/zsh-completions"
+  apply  = ["defer"]
