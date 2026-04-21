@@ -25,13 +25,6 @@ check_cmd() {
 ## before the '@' (or leave it unchanged if there is no '@').
 export SUSER="${USER%@*}"
 
-## Load Brew
-################################################################################
-if [ -x /opt/homebrew/bin/brew ]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-  export DYLD_FALLBACK_LIBRARY_PATH="$HOMEBREW_PREFIX/lib"
-fi
-
 ## Temporary directory
 ################################################################################
 ## Remove trailing slash from $TMPDIR if present
@@ -56,38 +49,33 @@ if [ "${TMPDIR%"$SUSER"}" = "$TMPDIR" ]; then
 fi
 
 ## Ensure $TMPDIR is only readable to the current user
-# shellcheck disable=SC2174
-mkdir -p -m 700 "$TMPDIR"
-# Only set the group if the current user has a group
-case "$(groups)" in
-*$USER*)
-  chown "$USER:$USER" "$TMPDIR"
-  ;;
-*)
-  chown "$USER:$(id -gn)" "$TMPDIR"
-  ;;
-esac
-chmod 700 "$TMPDIR"
-
-if check_cmd setfacl; then
-  setfacl -m "user:${USER}:rwx,group::---,mask::---,other::---" "$TMPDIR"
-fi
-
-## SSH Socket from GPG Agent
-################################################################################
-
-if [ -z "$SSH_AUTH_SOCK" ] && check_cmd gpgconf; then
-  SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
-  export SSH_AUTH_SOCK
+## Only run on first creation to avoid unnecessary filesystem ops each session
+if [ ! -d "$TMPDIR" ]; then
+  # shellcheck disable=SC2174
+  mkdir -p -m 700 "$TMPDIR"
+  case "$(groups)" in
+  *$USER*)
+    chown "$USER:$USER" "$TMPDIR"
+    ;;
+  *)
+    chown "$USER:$(id -gn)" "$TMPDIR"
+    ;;
+  esac
+  chmod 700 "$TMPDIR"
+  if check_cmd setfacl; then
+    setfacl -m "user:${USER}:rwx,group::---,mask::---,other::---" "$TMPDIR"
+  fi
 fi
 
 ## Load environment variables from .config/environment.d
 ################################################################################
+## Loaded early so $XDG_* vars are available for subsequent sections (e.g. brew cache).
+## Note: uses hardcoded path because $XDG_CONFIG_HOME is not yet set.
 # Pending on the outcome of https://github.com/systemd/systemd/issues/7641
 if [ -d "$HOME/.config/environment.d" ]; then
   set -o allexport
   if [ -x /usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator ]; then
-    eval "$(systemctl --user show-environment | rg -v '^PATH=')"
+    eval "$(systemctl --user show-environment | grep -v '^PATH=')"
   else
     for conf in "$HOME/.config/environment.d"/*.conf; do
       # shellcheck disable=SC1090
@@ -107,14 +95,14 @@ add_path() {
   fi
 
   p="${2%/}"
-  expanded=$(eval echo "\$$1")
+  expanded=$(eval "printf '%s' \"\$$1\"")
 
   case "$expanded" in
   *"$p"*)
     # Path already present, do nothing
     ;;
   "")
-    # Empty path var, initialize it
+    # Empty path var, initialise it
     eval export "$1"="$p"
     ;;
   *)
@@ -128,7 +116,47 @@ add_path() {
   esac
 }
 
-for dir in "$HOME/.local" "/scratch/$USER/local" "/scratch/$SUSER/local" "$CARGO_HOME" "$HOME/.jenv/bin"; do
+## mise shims — add before brew so mise-managed tools (including sheldon) are in PATH
+add_path PATH "${XDG_DATA_HOME:-$HOME/.local/share}/mise/shims"
+
+## Load Brew
+################################################################################
+## Detect brew binary (Apple Silicon first, then Intel)
+_brew_bin=""
+if [ -x /opt/homebrew/bin/brew ]; then
+  _brew_bin=/opt/homebrew/bin/brew
+elif [ -x /usr/local/bin/brew ]; then
+  _brew_bin=/usr/local/bin/brew
+fi
+
+if [ -n "$_brew_bin" ]; then
+  ## Cache brew shellenv — output is static; only regenerate when cache is absent.
+  ## Uses $XDG_CACHE_HOME (set above via environment.d). Cache persists across reboots.
+  ## Manual invalidation: rm "${XDG_CACHE_HOME:-$HOME/.cache}/brew_shellenv"
+  _brew_env_cache="${XDG_CACHE_HOME:-$HOME/.cache}/brew_shellenv"
+  if [ ! -f "$_brew_env_cache" ]; then
+    "$_brew_bin" shellenv >| "$_brew_env_cache"
+    printf 'export DYLD_FALLBACK_LIBRARY_PATH="%s/lib"\n' "$HOMEBREW_PREFIX" >> "$_brew_env_cache"
+  fi
+  # shellcheck disable=SC1090
+  . "$_brew_env_cache"
+  unset _brew_env_cache
+fi
+unset _brew_bin
+
+## SSH Socket from GPG Agent
+################################################################################
+
+if [ -z "$SSH_AUTH_SOCK" ] && check_cmd gpgconf; then
+  SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+  export SSH_AUTH_SOCK
+fi
+
+## User paths
+################################################################################
+
+## Standard locations
+for dir in "$HOME/.local" "/scratch/$USER/local" "/scratch/$SUSER/local"; do
   if [ -d "$dir/bin" ]; then
     add_path PATH "$dir/bin"
   fi
@@ -137,38 +165,49 @@ for dir in "$HOME/.local" "/scratch/$USER/local" "/scratch/$SUSER/local" "$CARGO
   fi
 done
 
-for bindir in "$PNPM_HOME" ; do
-  if [ -d "$bindir" ]; then
-    add_path PATH "$bindir"
+## Optional vars — skipped when variable is unset or directory absent
+## Note: jenv is superseded by mise; kept for compatibility during transition
+for dir in "${CARGO_HOME:+$CARGO_HOME}" "${PNPM_HOME:+$PNPM_HOME}" "$HOME/.jenv"; do
+  [ -n "$dir" ] || continue
+  if [ -d "$dir/bin" ]; then
+    add_path PATH "$dir/bin"
   fi
 done
 
 ## Load environment variables into DBus and systemd
 ################################################################################
-case "$(uname -s)" in
-Darwin)
-  if check_cmd launchctl; then
-    launchctl setenv SSH_AUTH_SOCK "$SSH_AUTH_SOCK"
-  fi
-  ;;
-Linux)
-  if check_cmd dbus-update-activation-environment; then
-    dbus-update-activation-environment --systemd SSH_AUTH_SOCK
-  fi
-  ;;
-esac
+if [ -n "$SSH_AUTH_SOCK" ]; then
+  case "$(uname -s)" in
+  Darwin)
+    check_cmd launchctl && launchctl setenv SSH_AUTH_SOCK "$SSH_AUTH_SOCK"
+    ;;
+  Linux)
+    check_cmd dbus-update-activation-environment && \
+      dbus-update-activation-environment --systemd SSH_AUTH_SOCK
+    ;;
+  esac
+fi
 
 ## Podman and Docker
 ################################################################################
-## If podman is installed and docker is not, alias docker to podman
+## Set DOCKER_HOST so docker-compatible tools find the podman socket.
+## Cache socket path in TMPDIR (cleared on reboot — appropriate since path can
+## change when the podman VM is recreated).
 if check_cmd podman && ! check_cmd docker; then
-  alias docker=podman
-  DOCKER_HOST="$(podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}')"
-  export DOCKER_HOST
+  if [ -z "$DOCKER_HOST" ]; then
+    _docker_cache="${TMPDIR}/docker_host"
+    if [ ! -f "$_docker_cache" ]; then
+      podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}' \
+        >| "$_docker_cache" 2>/dev/null
+    fi
+    if [ -f "$_docker_cache" ]; then
+      DOCKER_HOST="$(cat "$_docker_cache")"
+      export DOCKER_HOST
+    fi
+    unset _docker_cache
+  fi
 fi
-if check_cmd podman-compose && ! check_cmd docker-compose; then
-  alias docker-compose=podman-compose
-fi
+## Note: docker/podman aliases are in zsh/conf.d/50-aliases.zsh (interactive shells only)
 
 ## Customizations
 ################################################################################
