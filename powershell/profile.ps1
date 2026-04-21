@@ -22,5 +22,5 @@ Set-PSReadlineKeyHandler -Key Ctrl+D -Function ViExit
 
 if (Get-Command "starship" -ErrorAction SilentlyContinue) {
     $Env:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
-    Invoke-Expression (&starship init powershell)
+    . ([scriptblock]::Create((&starship init powershell)))
 }
