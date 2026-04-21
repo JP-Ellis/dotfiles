@@ -1,0 +1,36 @@
+# mise/config.toml
+# Global tool and runtime configuration.
+# Run `mise install` on a new machine to get a complete environment.
+# See: https://mise.jdx.dev
+
+[tools]
+# Language runtimes
+node   = "lts"
+python = "latest"
+ruby   = "latest"
+
+# Rust — mise uses rustup under the hood; toolchain concepts apply directly.
+# stable is the default; nightly enables `cargo +nightly fmt` etc.
+rust           = { version = "stable", components = "rustfmt,clippy,rust-src" }
+"rust@nightly" = { version = "nightly", components = "rustfmt" }
+
+# Shell/env tools (downloaded as pre-built binaries via mise registry)
+direnv   = "latest"
+fzf      = "latest"
+starship = "latest"
+zoxide   = "latest"
+
+# Rust CLI tools — cargo backend.
+# cargo-binstall is used if already on PATH (mise.cargo.binstall defaults to true);
+# it is listed first so it is available for subsequent tools on a fresh install.
+"cargo:cargo-binstall" = "latest"
+"cargo:bat"            = "latest"
+"cargo:eza"            = "latest"
+"cargo:fd-find"        = "latest"
+"cargo:ripgrep"        = "latest"
+"cargo:sheldon"        = "latest"
+"cargo:zsh-patina"     = "latest"
+
+[settings]
+# Respect .node-version, .ruby-version, .python-version etc. in project directories
+legacy_version_file = true

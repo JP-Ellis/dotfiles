@@ -100,6 +100,10 @@
     type   = "symbolic"
   }
 
+[mise]
+  [mise.files]
+  "mise/config.toml" = "~/.config/mise/config.toml"
+
 [nodejs]
   [nodejs.files]
   "nodejs/environment.d/90-nodejs.conf" = "~/.config/environment.d/90-nodejs.conf"
