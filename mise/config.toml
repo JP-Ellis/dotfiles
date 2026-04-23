@@ -5,32 +5,68 @@
 
 [tools]
 # Language runtimes
-node   = "lts"
-python = "latest"
-ruby   = "latest"
+"core:nodejs" = "24"
+"core:python" = "3.14"
+"core:ruby"   = "4.0"
+"core:rust"   = { version = "stable", components = "rustfmt,clippy,rust-src" }
+"core:golang" = "1"
 
-# Rust — mise uses rustup under the hood; toolchain concepts apply directly.
-# stable is the default; nightly enables `cargo +nightly fmt` etc.
-rust           = { version = "stable", components = "rustfmt,clippy,rust-src" }
-"rust@nightly" = { version = "nightly", components = "rustfmt" }
+# Core package/runtime tools
+"cargo:mise"           = "2026"
+"cargo:cargo-binstall" = "1"
+"cargo:uv"             = "0.11"
+"github:endevco/aube"  = "1"
 
-# Shell/env tools (downloaded as pre-built binaries via mise registry)
-direnv   = "latest"
-fzf      = "latest"
-starship = "latest"
-zoxide   = "latest"
+# Shell and navigation
+"aqua:direnv/direnv"     = "2"
+"aqua:junegunn/fzf"      = "0.71"
+"aqua:starship/starship" = "1"
+"cargo:zoxide"           = "0.9"
+"cargo:sheldon"          = "0.8"
+"cargo:zsh-patina"       = "1"
 
-# Rust CLI tools — cargo backend.
-# cargo-binstall is used if already on PATH (mise.cargo.binstall defaults to true);
-# it is listed first so it is available for subsequent tools on a fresh install.
-"cargo:cargo-binstall" = "latest"
-"cargo:bat"            = "latest"
-"cargo:eza"            = "latest"
-"cargo:fd-find"        = "latest"
-"cargo:ripgrep"        = "latest"
-"cargo:sheldon"        = "latest"
-"cargo:zsh-patina"     = "latest"
+# Git and repo workflows
+"aqua:cli/cli"                    = "2"
+"aqua:git-lfs/git-lfs"            = "3"
+"aqua:orhun/git-cliff"            = "2"
+"cargo:committed"                 = "1"
+"cargo:git-absorb"                = "0.9"
+"cargo:prek"                      = "0.3"
+"pipx:git-delete-merged-branches" = "7"
+
+# Everyday text, search, and data tools
+"aqua:biomejs/biome" = "2"
+"aqua:jqlang/jq"     = "1"
+"cargo:bat"          = "0.26"
+"cargo:eza"          = "0.23"
+"cargo:fd-find"      = "10"
+"cargo:hexyl"        = "0.17"
+"cargo:jaq"          = "3"
+"cargo:ripgrep"      = "15"
+
+# Task runners and quality checks
+"aqua:koalaman/shellcheck" = "0.11"
+"aqua:mvdan/sh"            = "3"
+"aqua:tombi-toml/tombi"    = "0.9"
+"cargo:just"               = "1"
+"cargo:tokei"              = "12"
+"cargo:typos-cli"          = "1"
+"github:rvben/rumdl"       = "0.1"
+"npm:eslint"               = "10"
+"npm:prettier"             = "3"
+
+# Cloud and platform CLIs
+"aqua:aws/aws-cli"              = "2"
+"vfox:mise-plugins/vfox-gcloud" = "565"
+
+# Editor CLI for quick edits across repos
+"aqua:neovim/neovim" = "0.11"
+
+# Backups and storage
+"cargo:rustic-rs" = "0.11"
 
 [settings]
-# Respect .node-version, .ruby-version, .python-version etc. in project directories
-legacy_version_file = true
+experimental = true
+
+  [settings.python]
+  uv_venv_auto = "create|source"
