@@ -15,10 +15,10 @@ zstyle ':config:tools:mise'     enabled 'yes'
 
 ## Cloud tools
 zstyle ':config:tools:gcloud'   enabled 'yes'
-zstyle ':config:tools:aws'      enabled 'no'
+zstyle ':config:tools:aws'      enabled 'yes'
 
 ## Shell integrations
-zstyle ':config:tools:fzf-tab'  enabled 'yes'   # requires fzf in PATH
+zstyle ':config:tools:fzf-tab'  enabled 'yes'
 zstyle ':config:tools:starship' enabled 'yes'
 zstyle ':config:tools:zoxide'   enabled 'yes'
 zstyle ':config:tools:direnv'   enabled 'yes'
