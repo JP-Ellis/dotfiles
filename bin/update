@@ -72,34 +72,6 @@ if check_command "mise"; then
 fi
 
 ########################################
-# Python
-########################################
-
-# UV
-if check_command "uv"; then
-  uv tool update --all
-fi
-
-########################################
-# Node
-########################################
-
-# NPM
-if check_command "npm"; then
-  npm update --global
-fi
-
-# Yarn
-if check_command "yarn"; then
-  yarn global upgrade
-fi
-
-# pnpm
-if check_command "pnpm"; then
-  pnpm update --global
-fi
-
-########################################
 # Emacs
 ########################################
 
