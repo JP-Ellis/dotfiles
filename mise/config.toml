@@ -32,7 +32,7 @@
 "cargo:committed"                 = "1"
 "cargo:git-absorb"                = "0.9"
 "cargo:prek"                      = "0.3"
-"pipx:git-delete-merged-branches" = "7"
+"pipx:git-delete-merged-branches" = "7.5.1"
 
 # Everyday text, search, and data tools
 "aqua:biomejs/biome" = "2"
