@@ -49,7 +49,7 @@
 "aqua:mvdan/sh"            = "3"
 "aqua:tombi-toml/tombi"    = "0.9"
 "cargo:just"               = "1"
-"cargo:tokei"              = "12"
+"cargo:tokei"              = "14"
 "cargo:typos-cli"          = "1"
 "github:rvben/rumdl"       = "0.1"
 "npm:eslint"               = "10"
