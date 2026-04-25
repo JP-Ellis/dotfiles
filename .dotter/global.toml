@@ -14,6 +14,13 @@
   "bash/bash_profile" = "~/.bash_profile"
   "bash/bashrc"       = "~/.bashrc"
 
+[claude]
+  [claude.files]
+  "claude/CLAUDE.md"        = "~/.claude/CLAUDE.md"
+  "claude/settings.json"    = "~/.claude/settings.json"
+  "claude/rules"            = "~/.claude/rules"
+  "claude/.claude/commands" = "~/.claude/.claude/commands"
+
 [bin]
   [bin.files]
   "bin/transcode-hevc" = "~/.local/bin/transcode-hevc"
@@ -67,9 +74,8 @@
 
 [git]
   [git.files]
-  "git/attributes"             = "~/.config/git/attributes"
-  "git/config"                 = "~/.config/git/config"
-  "git/ipynb_output_filter.py" = "~/.config/git/ipynb_output_filter.py"
+  "git/attributes" = "~/.config/git/attributes"
+  "git/config"     = "~/.config/git/config"
 
   [git.variables]
   signingKey     = "josh@jpellis.me"
