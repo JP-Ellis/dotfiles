@@ -12,10 +12,10 @@
 "core:golang" = "1"
 
 # Core package/runtime tools
-"cargo:mise"           = "2026"
-"cargo:cargo-binstall" = "1"
-"cargo:uv"             = "0.11"
-"github:endevco/aube"  = "1"
+"aqua:cargo-bins/cargo-binstall" = "1"
+"cargo:mise"                     = "2026"
+"cargo:uv"                       = "0.11"
+"github:endevco/aube"            = "1"
 
 # Shell and navigation
 "aqua:direnv/direnv"     = "2"
@@ -60,7 +60,8 @@
 "vfox:mise-plugins/vfox-gcloud" = "565"
 
 # Editor CLI for quick edits across repos
-"aqua:neovim/neovim" = "0.12"
+"aqua:neovim/neovim"          = "0.12"
+"aqua:anthropics/claude-code" = "2"
 
 # Backups and storage
 "cargo:rustic-rs" = "0.11"
