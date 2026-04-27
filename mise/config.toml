@@ -19,7 +19,7 @@
 
 # Shell and navigation
 "aqua:direnv/direnv"     = "2"
-"aqua:junegunn/fzf"      = "0.71"
+"aqua:junegunn/fzf"      = "0.72.0"
 "aqua:starship/starship" = "1"
 "cargo:zoxide"           = "0.9"
 "cargo:sheldon"          = "0.8"
