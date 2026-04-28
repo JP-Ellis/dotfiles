@@ -17,7 +17,7 @@
 [claude]
   [claude.files]
   "claude/CLAUDE.md"        = "~/.claude/CLAUDE.md"
-  "claude/settings.json"    = "~/.claude/settings.json"
+  "claude/settings.json"    = { target = "~/.claude/settings.json", type = "symbolic" }
   "claude/rules"            = "~/.claude/rules"
   "claude/.claude/commands" = "~/.claude/.claude/commands"
 
