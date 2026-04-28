@@ -1,3 +1,5 @@
+#:tombi toml-version = "v1.0.0"
+
 [default]
   [default.variables]
   app-browser = "brave"
@@ -101,10 +103,7 @@
 
 [mathematica]
   [mathematica.files]
-  "Mathematica/Kernel.m" = {
-    target = "~/.config/mathematica/Kernel/init.m",
-    type   = "symbolic"
-  }
+  "Mathematica/Kernel.m" = { target = "~/.config/mathematica/Kernel/init.m", type = "symbolic" }
 
 [mise]
   [mise.files]
@@ -151,9 +150,6 @@
   "zsh/zshrc"                  = "~/.config/zsh/.zshrc"
   "zsh/zstyles"                = "~/.config/zsh/zstyles"
   "zsh/conf.d"                 = "~/.config/zsh/conf.d"
-  "zsh/sheldon.toml"           = {
-    target = "~/.config/sheldon/plugins.toml",
-    type   = "symbolic"
-  }
+  "zsh/sheldon.toml"           = { target = "~/.config/sheldon/plugins.toml", type = "symbolic" }
   "zsh/sheldon-update.service" = "~/.config/systemd/user/sheldon-update.service"
   "zsh/sheldon-update.timer"   = "~/.config/systemd/user/sheldon-update.timer"
