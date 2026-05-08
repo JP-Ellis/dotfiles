@@ -64,7 +64,7 @@
       "Bash(uv remove:*)",
       "Bash(uv run:*)",
       "Bash(uv sync:*)",
-      "Read(~/.claude/plugins/cache/claude-plugins-official/superpowers/)"
+      "Read(~/.claude/plugins/cache/claude-plugins-official/)"
     ],
     "defaultMode": "auto"
   },
