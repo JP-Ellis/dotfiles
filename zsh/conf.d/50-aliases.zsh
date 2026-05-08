@@ -28,6 +28,9 @@ else
   alias sl=ls
 fi
 
+## Claude Code — work account uses isolated config dir
+alias wclaude='CLAUDE_CONFIG_DIR="${HOME}/.claude-work" claude'
+
 ## Docker/Podman — interactive shells only (not in profile)
 if (( $+commands[podman] )) && ! (( $+commands[docker] )); then
   alias docker=podman
