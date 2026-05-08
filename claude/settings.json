@@ -68,6 +68,7 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "sonnet",
   "allowManagedMcpServersOnly": false,
   "enabledPlugins": {
     "feature-dev@claude-plugins-official": true,
@@ -75,10 +76,13 @@
     "pyright-lsp@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true
+    "superpowers@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true
   },
-  "effortLevel": "high",
+  "effortLevel": "medium",
   "theme": "auto",
   "skipAutoPermissionPrompt": true,
-  "model": "sonnet"
+  "agentPushNotifEnabled": true
 }
