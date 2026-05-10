@@ -9,4 +9,4 @@
 ##
 ## Using zsh-defer here ensures FIFO ordering: all sheldon-deferred items are
 ## already queued before this file sources, so this runs after them.
-(( $+commands[zsh-patina] )) && zsh-defer eval "$(zsh-patina activate)"
+(( $+commands[zsh-patina] )) && eval "$(zsh-patina activate)"

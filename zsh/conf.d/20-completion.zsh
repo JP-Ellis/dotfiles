@@ -1,9 +1,21 @@
 # shellcheck shell=zsh
 
-## Completion system — deferred to avoid blocking startup.
-## compinit must run after fpath is fully populated (done in 00-core.zsh).
-autoload -Uz compinit
-zsh-defer compinit
+## Completion initialisation — called deferred by sheldon (after zsh-completions
+## populates fpath, before fzf-tab wraps widgets).
+_compinit_load() {
+  local dump="${XDG_CACHE_HOME}/zsh/zcompdump"
+  mkdir -p "${dump:h}"
+  # Skip the slow per-directory security check when the dump is < 24 h old.
+  # Use full compinit (with security checks) to rebuild when stale or missing.
+  if [[ -f $dump && -n ${dump}(#qNmh-24) ]]; then
+    compinit -C -d "$dump"
+  else
+    compinit -d "$dump"
+    touch "$dump"  # ensure mtime is refreshed even if nothing changed
+  fi
+  # Byte-compile the dump for faster sourcing on the next rebuild
+  [[ ! -f "${dump}.zwc" || $dump -nt "${dump}.zwc" ]] && zcompile "$dump"
+}
 
 ## Completion styles
 zstyle ':completion:*' completer _list _oldlist _expand _complete _ignored _match _correct _approximate _prefix

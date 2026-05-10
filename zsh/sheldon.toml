@@ -33,14 +33,19 @@ defer = """
 
   [plugins.zsh-completions]
   github = "zsh-users/zsh-completions"
-  apply  = ["defer"]
-
-  [plugins.zsh-autosuggestions]
-  github = "zsh-users/zsh-autosuggestions"
-  apply  = ["defer"]
 
   [plugins.fzf-tab]
   # Replaces the default zsh completion menu with fzf.
   # Requires fzf in PATH (provided by mise).
+  # Must load after compinit and before zsh-autosuggestions.
+  # hooks.pre queues compinit via zsh-defer immediately before fzf-tab in the
+  # defer queue, ensuring the correct order: compinit → fzf-tab → autosuggestions.
   github = "Aloxaf/fzf-tab"
+  apply  = ["defer"]
+
+    [plugins.fzf-tab.hooks]
+    pre = "zsh-defer -c '_compinit_load'"
+
+  [plugins.zsh-autosuggestions]
+  github = "zsh-users/zsh-autosuggestions"
   apply  = ["defer"]
