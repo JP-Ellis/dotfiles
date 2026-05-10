@@ -1,26 +1,45 @@
 # shellcheck shell=zsh
 
-## All tool integrations are deferred via zsh-defer so they don't block startup.
-## direnv is last — it may override completions/aliases set by other tools.
+## All tool integrations deferred via zsh-defer so they don't block startup.
+##
+## Critically, ALL tools are batched into a SINGLE zsh-defer call.  Each
+## separate zsh-defer call triggers a precmd cycle; VSCode shell integration
+## walks the full environment on every precmd (~800 ms per cycle), so every
+## extra batch costs ~1 s in a VSCode terminal.  Capturing the activation
+## scripts synchronously is cheap (<250 ms total); the expensive eval is what
+## we defer — and we do it once.
+##
+## direnv is evaluated last — it may override completions/aliases set by other tools.
 
-## mise — runtime and tool manager
-## Activating mise sets up PATH hooks for per-directory tool switching.
-## (mise shims are already in PATH from the profile; this adds dynamic behaviour.)
-_tool_enabled 'mise' 'mise' && zsh-defer eval "$(mise activate zsh)"
+() {
+  local _deferred=''
 
-## zoxide — smarter cd with frecency-based directory tracking
-_tool_enabled 'zoxide' 'zoxide' && zsh-defer eval "$(zoxide init zsh)"
+  ## mise — runtime and tool manager
+  if _tool_enabled 'mise' 'mise'; then
+    _deferred+="$(mise activate zsh 2>/dev/null)"$'\n'
+  fi
 
-## AWS completions
-_tool_enabled 'aws' 'aws_completer' && \
-  zsh-defer complete -C "$(which aws_completer)" aws
+  ## zoxide — smarter cd with frecency-based directory tracking
+  if _tool_enabled 'zoxide' 'zoxide'; then
+    _deferred+="$(zoxide init zsh 2>/dev/null)"$'\n'
+  fi
 
-## gcloud completions (macOS Homebrew path; no-op if BREW_PREFIX unset or file absent)
-if _tool_enabled 'gcloud' 'gcloud' && [[ -n "$BREW_PREFIX" ]]; then
-  _tools_gcloud_comp="$BREW_PREFIX/share/google-cloud-sdk/completion.zsh.inc"
-  [[ -f "$_tools_gcloud_comp" ]] && zsh-defer source "$_tools_gcloud_comp"
-  unset _tools_gcloud_comp
-fi
+  ## AWS completions — complete -C is bash syntax; bashcompinit provides the shim.
+  if _tool_enabled 'aws' 'aws_completer'; then
+    _deferred+="autoload -Uz bashcompinit && bashcompinit"$'\n'
+    _deferred+="complete -C ${(q)$(whence -p aws_completer)} aws"$'\n'
+  fi
 
-## direnv — must be last (overrides other completions/aliases)
-_tool_enabled 'direnv' 'direnv' && zsh-defer eval "$(direnv hook zsh)"
+  ## gcloud completions (macOS Homebrew path; no-op if BREW_PREFIX unset or file absent)
+  if _tool_enabled 'gcloud' 'gcloud' && [[ -n $BREW_PREFIX ]]; then
+    local _gcloud_comp="$BREW_PREFIX/share/google-cloud-sdk/completion.zsh.inc"
+    [[ -f $_gcloud_comp ]] && _deferred+="source ${(q)_gcloud_comp}"$'\n'
+  fi
+
+  ## direnv — must be last (overrides other completions/aliases)
+  if _tool_enabled 'direnv' 'direnv'; then
+    _deferred+="$(direnv hook zsh 2>/dev/null)"$'\n'
+  fi
+
+  [[ -n $_deferred ]] && eval "$_deferred"
+}

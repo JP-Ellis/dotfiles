@@ -40,9 +40,9 @@ unset _core_os
 ## fpath — completion function paths
 if [[ -n "$BREW_PREFIX" ]]; then
   fpath+=("$BREW_PREFIX/share/zsh/site-functions")
-  # Fix world-writable Homebrew dirs that cause compinit warnings (deferred: non-urgent)
-  zsh-defer chmod go-w "$BREW_PREFIX/share" "$BREW_PREFIX/share/zsh"
-  zsh-defer chmod -R go-w "$BREW_PREFIX/share/zsh/site-functions"
+  # Fix world-writable Homebrew dirs that cause compinit security warnings.
+  chmod go-w "$BREW_PREFIX/share" "$BREW_PREFIX/share/zsh"
+  chmod -R go-w "$BREW_PREFIX/share/zsh/site-functions"
 fi
 [[ -d "${XDG_DATA_HOME}/zsh/site-functions" ]] && \
   fpath+=("${XDG_DATA_HOME}/zsh/site-functions")
