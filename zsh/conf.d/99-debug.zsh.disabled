@@ -1,0 +1,13 @@
+# shellcheck shell=zsh
+#
+# Startup timing diagnostic — rename to 99-debug.zsh to enable.
+# After opening a new shell, wait until responsive, then run: zprof | head -40
+#
+# To use:
+#   mv conf.d/99-debug.zsh.disabled conf.d/99-debug.zsh
+#   # open a new terminal, wait until you can type, then:
+#   zprof | head -40
+#   # restore when done:
+#   mv conf.d/99-debug.zsh conf.d/99-debug.zsh.disabled
+
+zmodload zsh/zprof
