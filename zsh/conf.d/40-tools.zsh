@@ -41,5 +41,10 @@
     _deferred+="$(direnv hook zsh 2>/dev/null)"$'\n'
   fi
 
-  [[ -n $_deferred ]] && eval "$_deferred"
+  # Promote to global so zsh-defer can access it outside this anonymous scope,
+  # then eval in a single deferred batch (compdef requires compinit to have run).
+  if [[ -n $_deferred ]]; then
+    typeset -g _tools_deferred_script="$_deferred"
+    zsh-defer -c 'eval "$_tools_deferred_script"; unset _tools_deferred_script'
+  fi
 }
