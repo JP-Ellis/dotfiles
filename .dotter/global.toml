@@ -279,7 +279,7 @@
   "zsh/zshenv" = "~/.zshenv"
   "zsh/zshrc" = "~/.config/zsh/.zshrc"
   "zsh/zstyles" = "~/.config/zsh/zstyles"
-  "zsh/conf.d" = "~/.config/zsh/conf.d"
+  "zsh/conf.d" = { target = "~/.config/zsh/conf.d", type = "symbolic", recurse = false }
   "zsh/site-functions" = "~/.local/share/zsh/site-functions"
   "zsh/sheldon.toml" = { target = "~/.config/sheldon/plugins.toml", type = "symbolic" }
   "zsh/sheldon-update.service" = "~/.config/systemd/user/sheldon-update.service"
