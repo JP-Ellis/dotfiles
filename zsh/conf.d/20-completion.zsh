@@ -2,12 +2,14 @@
 
 ## Completion initialisation — called deferred by sheldon (after zsh-completions
 ## populates fpath, before fzf-tab wraps widgets).
+autoload -Uz compinit
 _compinit_load() {
   local dump="${XDG_CACHE_HOME}/zsh/zcompdump"
   mkdir -p "${dump:h}"
-  # Skip the slow per-directory security check when the dump is < 24 h old.
-  # Use full compinit (with security checks) to rebuild when stale or missing.
-  if [[ -f $dump && -n ${dump}(#qNmh-24) ]]; then
+  # Skip the slow per-directory security check when the dump is fresh (< 24 h)
+  # and non-empty. Rebuild otherwise — an empty dump (e.g. from a previously
+  # failed compinit run) silently loads nothing and breaks every completer.
+  if [[ -s $dump && -n ${dump}(#qNmh-24) ]]; then
     compinit -C -d "$dump"
   else
     compinit -d "$dump"
