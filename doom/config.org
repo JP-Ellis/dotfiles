@@ -2,6 +2,16 @@
 #+begin_src emacs-lisp
 ;;; -*- lexical-binding: t; -*-
 #+end_src
+* Compatibility
+=set-local= was added in Emacs 31, but some dev builds predate the commit.
+The =compat= package skips defining it when =emacs-version >= 31=, leaving a
+gap on those builds.
+#+begin_src emacs-lisp
+(unless (fboundp 'set-local)
+  (defun set-local (variable value)
+    "Make VARIABLE buffer-local and set it to VALUE."
+    (set (make-local-variable variable) value)))
+#+end_src
 Here are some additional functions/macros that could help you configure Doom:
 
 - ~load!~ for loading external ~*.el~ files relative to this one
