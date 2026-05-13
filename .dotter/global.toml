@@ -19,8 +19,9 @@
 [claude]
   [claude.files]
   "claude/CLAUDE.md"     = "~/.claude/CLAUDE.md"
-  "claude/settings.json" = { target = "~/.claude/settings.json", type = "symbolic" }
+  "claude/RTK.md"        = "~/.claude/RTK.md"
   "claude/rules"         = "~/.claude/rules"
+  "claude/settings.json" = { target = "~/.claude/settings.json", type = "symbolic" }
 
 [bin]
   [bin.files]
