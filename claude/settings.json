@@ -1,40 +1,11 @@
 {
-  "agentPushNotifEnabled": true,
-  "allowManagedMcpServersOnly": false,
+  "env": {
+    "CLAUDE_MODEL": "claude-sonnet-4-6"
+  },
   "attribution": {
     "commit": "Assisted-by: Claude Code:{{claude:model}}",
     "pr": ""
   },
-  "effortLevel": "medium",
-  "enabledPlugins": {
-    "code-review@claude-plugins-official": true,
-    "code-simplifier@claude-plugins-official": true,
-    "feature-dev@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true,
-    "playwright@claude-plugins-official": true,
-    "pr-review-toolkit@claude-plugins-official": true,
-    "pyright-lsp@claude-plugins-official": true,
-    "rust-analyzer-lsp@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true
-  },
-  "env": {
-    "CLAUDE_MODEL": "claude-sonnet-4-6"
-  },
-  "hooks": {
-    "PreToolUse": [
-      {
-        "hooks": [
-          {
-            "command": "rtk hook claude",
-            "type": "command"
-          }
-        ],
-        "matcher": "Bash"
-      }
-    ]
-  },
-  "model": "sonnet",
   "permissions": {
     "allow": [
       "Bash(aube audit:*)",
@@ -97,6 +68,35 @@
     ],
     "defaultMode": "auto"
   },
-  "skipAutoPermissionPrompt": true,
-  "theme": "auto"
+  "model": "sonnet",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "rtk hook claude"
+          }
+        ]
+      }
+    ]
+  },
+  "allowManagedMcpServersOnly": false,
+  "enabledPlugins": {
+    "code-review@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true
+  },
+  "effortLevel": "medium",
+  "theme": "auto",
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true
 }
