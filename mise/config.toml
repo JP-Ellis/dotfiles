@@ -31,7 +31,7 @@
 "aqua:orhun/git-cliff"            = "2"
 "cargo:committed"                 = "1"
 "cargo:git-absorb"                = "0.9"
-"cargo:prek"                      = "0.3"
+"cargo:prek"                      = "0.4"
 "pipx:git-delete-merged-branches" = "7"
 
 # Everyday text, search, and data tools
