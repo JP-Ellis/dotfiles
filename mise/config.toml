@@ -64,7 +64,7 @@
 
 # LLM and AI tools
 "aqua:anthropics/claude-code" = "2"
-"github:rtk-ai/rtk"           = "0.39"
+"github:rtk-ai/rtk"           = "v0.40.0"
 
 # Backups and storage
 "cargo:rustic-rs" = "0.11"
