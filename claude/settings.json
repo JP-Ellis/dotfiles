@@ -74,6 +74,11 @@
       "Bash(rtk wc *)",
       "Read(~/.claude/plugins/cache/claude-plugins-official/)"
     ],
+    "deny": [
+      "Bash(rtk cargo * --message-format=*)",
+      "Bash(git add -A)",
+      "Bash(rtk git add -A)"
+    ],
     "defaultMode": "auto"
   },
   "model": "sonnet",
