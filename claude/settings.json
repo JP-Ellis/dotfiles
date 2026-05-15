@@ -64,6 +64,14 @@
       "Bash(uv remove *)",
       "Bash(uv run *)",
       "Bash(uv sync *)",
+      "Bash(rtk cargo build *)",
+      "Bash(rtk cargo clippy *)",
+      "Bash(rtk find *)",
+      "Bash(rtk grep *)",
+      "Bash(rtk ls *)",
+      "Bash(rtk read *)",
+      "Bash(rtk tree *)",
+      "Bash(rtk wc *)",
       "Read(~/.claude/plugins/cache/claude-plugins-official/)"
     ],
     "defaultMode": "auto"
