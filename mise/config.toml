@@ -47,7 +47,7 @@
 # Task runners and quality checks
 "aqua:koalaman/shellcheck" = "0.11"
 "aqua:mvdan/sh"            = "3"
-"aqua:tombi-toml/tombi"    = "0.11.4"
+"aqua:tombi-toml/tombi"    = "0.11.5"
 "cargo:just"               = "1"
 "cargo:tokei"              = "14"
 "cargo:typos-cli"          = "1"
