@@ -16,7 +16,13 @@
 
   ## mise — runtime and tool manager
   if _tool_enabled 'mise' 'mise'; then
-    _deferred+="$(mise activate zsh 2>/dev/null)"$'\n'
+    if [[ -n $VSCODE_INJECTION ]]; then
+      # Strip inherited mise state before capturing the activation script so
+      # mise generates a fresh diff rather than embedding the stale one.
+      _deferred+="$(env -u __MISE_DIFF -u __MISE_SESSION -u __MISE_ORIG_PATH mise activate zsh 2>/dev/null)"$'\n'
+    else
+      _deferred+="$(mise activate zsh 2>/dev/null)"$'\n'
+    fi
   fi
 
   ## zoxide — smarter cd with frecency-based directory tracking
@@ -41,10 +47,30 @@
     _deferred+="$(direnv hook zsh 2>/dev/null)"$'\n'
   fi
 
-  # Promote to global so zsh-defer can access it outside this anonymous scope,
-  # then eval in a single deferred batch (compdef requires compinit to have run).
   if [[ -n $_deferred ]]; then
-    typeset -g _tools_deferred_script="$_deferred"
-    zsh-defer -c 'eval "$_tools_deferred_script"; unset _tools_deferred_script'
+    if [[ -n $VSCODE_INJECTION ]]; then
+      # VSCode inherits PATH from resolveShellEnv (which fully activated mise)
+      # but strips __MISE_DIFF/__MISE_ORIG_PATH from the environment. This means
+      # mise tool paths are already embedded in the inherited PATH at the wrong
+      # position (after homebrew). When mise activate runs and sets
+      # __MISE_ORIG_PATH=$PATH, it captures this polluted PATH and hook-env
+      # considers tools "already active", producing no reordering. Strip mise
+      # paths first so ORIG_PATH is clean and hook-env correctly prepends tool
+      # paths before homebrew.
+      local _mise_data="${XDG_DATA_HOME:-$HOME/.local/share}/mise"
+      path=("${(@)path:#${_mise_data}/installs/*}")
+      path=("${(@)path:#${_mise_data}/shims}")
+      unset __MISE_DIFF __MISE_SESSION __MISE_ORIG_PATH
+
+      (($+functions[_compinit_load])) && _compinit_load
+      eval "$_deferred"
+      (($+functions[_mise_hook_precmd])) && _mise_hook_precmd
+    else
+      # Promote to global so zsh-defer can access it outside this anonymous
+      # scope, then eval in a single deferred batch (compdef requires compinit
+      # to have run).
+      typeset -g _tools_deferred_script="$_deferred"
+      zsh-defer -c 'eval "$_tools_deferred_script"; unset _tools_deferred_script'
+    fi
   fi
 }
