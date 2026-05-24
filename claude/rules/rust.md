@@ -53,6 +53,10 @@ These instructions are based on [The Rust Book](https://doc.rust-lang.org/book/)
 -   When referencing modules within the same crate, prefer `crate::module::function` over `super::module::function`
 -   Use `cargo +nightly fmt` to format your code if using nightly features
 
+## Environment
+
+-   The local cargo registry is at `~/.local/share/cargo/registry` (not the default `~/.cargo/registry`).
+
 ## Error Handling
 
 -   Use `Result<T, E>` for errors and only `panic!` when absolutely necessary (e.g., unrecoverable errors) or in situations where safety is guaranteed (internal/static code)
