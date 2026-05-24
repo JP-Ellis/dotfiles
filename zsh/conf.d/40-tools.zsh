@@ -9,6 +9,15 @@
 ## scripts synchronously is cheap (<250 ms total); the expensive eval is what
 ## we defer — and we do it once.
 ##
+## Exception — VSCode terminals (VSCODE_INJECTION set): deferral is skipped
+## entirely and the batch is eval'd synchronously.  The problem there is PATH
+## *correctness*, not startup speed: VSCode's resolveShellEnv has already
+## activated mise in the wrong order before the interactive shell starts.  A
+## deferred eval would leave the wrong PATH active for every command run before
+## the first precmd fires.  Synchronous eval fixes the order immediately, and
+## the performance cost is acceptable because resolveShellEnv has already done
+## the expensive work.  See the VSCODE_INJECTION block below for details.
+##
 ## direnv is evaluated last — it may override completions/aliases set by other tools.
 
 () {
@@ -49,14 +58,20 @@
 
   if [[ -n $_deferred ]]; then
     if [[ -n $VSCODE_INJECTION ]]; then
-      # VSCode inherits PATH from resolveShellEnv (which fully activated mise)
-      # but strips __MISE_DIFF/__MISE_ORIG_PATH from the environment. This means
-      # mise tool paths are already embedded in the inherited PATH at the wrong
-      # position (after homebrew). When mise activate runs and sets
-      # __MISE_ORIG_PATH=$PATH, it captures this polluted PATH and hook-env
-      # considers tools "already active", producing no reordering. Strip mise
-      # paths first so ORIG_PATH is clean and hook-env correctly prepends tool
-      # paths before homebrew.
+      # VSCode's resolveShellEnv fully activates mise before the interactive
+      # shell starts, but strips __MISE_DIFF/__MISE_ORIG_PATH from the
+      # environment. This leaves mise tool paths embedded in PATH at the wrong
+      # position (after Homebrew). When mise activate later runs and records
+      # __MISE_ORIG_PATH=$PATH, it captures this polluted baseline; hook-env
+      # then considers tools "already active" and produces no reordering.
+      #
+      # Fix: strip mise paths and unset tracking vars so ORIG_PATH is clean
+      # when activation runs, letting hook-env correctly prepend tool paths
+      # before Homebrew.
+      #
+      # Why synchronous (not zsh-defer): this is a PATH *correctness* fix,
+      # not a startup-speed optimisation.  Deferring would leave the wrong
+      # PATH active for every command run before the first precmd fires.
       local _mise_data="${XDG_DATA_HOME:-$HOME/.local/share}/mise"
       path=("${(@)path:#${_mise_data}/installs/*}")
       path=("${(@)path:#${_mise_data}/shims}")
