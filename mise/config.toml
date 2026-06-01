@@ -65,7 +65,7 @@
 # LLM and AI tools
 "aqua:anthropics/claude-code" = "2"
 "github:rtk-ai/rtk"           = "v0.42.0"
-"github:ggml-org/llama.cpp"   = { version = "9351", version_prefix = "b" }
+"github:ggml-org/llama.cpp"   = { version = "9442", version_prefix = "b" }
 
 # Backups and storage
 "cargo:rustic-rs" = "0.11"
