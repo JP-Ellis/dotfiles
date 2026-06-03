@@ -51,7 +51,7 @@
 "cargo:just"               = "1"
 "cargo:tokei"              = "14"
 "cargo:typos-cli"          = "1"
-"github:rvben/rumdl"       = "v0.2.4"
+"github:rvben/rumdl"       = "v0.2.5"
 "npm:eslint"               = "10"
 "npm:prettier"             = "3"
 
