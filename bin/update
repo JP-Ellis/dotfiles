@@ -68,6 +68,7 @@ fi
 ########################################
 
 if check_command "mise"; then
+  mise self-update -y
   mise upgrade
 fi
 
