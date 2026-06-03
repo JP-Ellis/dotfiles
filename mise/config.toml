@@ -8,7 +8,7 @@
 "core:nodejs" = "24"
 "core:python" = "3.14"
 "core:ruby"   = "4.0"
-"core:rust"   = { version = "stable", components = "rustfmt,clippy,rust-src" }
+"core:rust"   = { version = "1.96", components = "rustfmt,clippy,rust-src" }
 "core:golang" = "1"
 
 # Core package/runtime tools
@@ -19,7 +19,7 @@
 
 # Shell and navigation
 "aqua:direnv/direnv"     = "2"
-"aqua:junegunn/fzf"      = "0.73.1"
+"aqua:junegunn/fzf"      = "0.73"
 "aqua:starship/starship" = "1"
 "cargo:zoxide"           = "0.9"
 "cargo:sheldon"          = "0.8"
@@ -29,10 +29,11 @@
 "aqua:cli/cli"                    = "2"
 "aqua:git-lfs/git-lfs"            = "3"
 "aqua:orhun/git-cliff"            = "2"
+"cargo:cargo-dist"                = "0.32"
 "cargo:committed"                 = "1"
 "cargo:git-absorb"                = "0.9"
 "cargo:prek"                      = "0.4"
-"pipx:git-delete-merged-branches" = "7.6.0"
+"pipx:git-delete-merged-branches" = "7"
 
 # Everyday text, search, and data tools
 "aqua:biomejs/biome" = "2"
@@ -47,11 +48,11 @@
 # Task runners and quality checks
 "aqua:koalaman/shellcheck" = "0.11"
 "aqua:mvdan/sh"            = "3"
-"aqua:tombi-toml/tombi"    = "1.1.1"
+"aqua:tombi-toml/tombi"    = "1"
 "cargo:just"               = "1"
 "cargo:tokei"              = "14"
 "cargo:typos-cli"          = "1"
-"github:rvben/rumdl"       = "v0.2.5"
+"github:rvben/rumdl"       = "v0.2"
 "npm:eslint"               = "10"
 "npm:prettier"             = "3"
 
@@ -65,7 +66,7 @@
 # LLM and AI tools
 "aqua:anthropics/claude-code" = "2"
 "github:rtk-ai/rtk"           = "v0.42.0"
-"github:ggml-org/llama.cpp"   = { version = "9484", version_prefix = "b" }
+"github:ggml-org/llama.cpp"   = { version = "latest", version_prefix = "b" }
 
 # Backups and storage
 "cargo:rustic-rs" = "0.11"
