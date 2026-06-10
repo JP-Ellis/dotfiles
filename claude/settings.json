@@ -44,6 +44,7 @@
     "ruby-lsp@claude-plugins-official": true
   },
   "effortLevel": "medium",
+  "skipWorkflowUsageWarning": true,
   "theme": "auto",
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
