@@ -32,6 +32,7 @@
 "cargo:cargo-dist"                = "0.32"
 "cargo:committed"                 = "1"
 "cargo:git-absorb"                = "0.9"
+"cargo:gitu"                      = "0.42"
 "cargo:prek"                      = "0.4"
 "pipx:git-delete-merged-branches" = "7.6.0"
 
@@ -42,6 +43,7 @@
 "cargo:eza"          = "0.23"
 "cargo:fd-find"      = "10"
 "cargo:hexyl"        = "0.17"
+"cargo:hwatch"       = "0.4"
 "cargo:jaq"          = "3"
 "cargo:ripgrep"      = "15"
 
@@ -49,6 +51,8 @@
 "aqua:koalaman/shellcheck" = "0.11"
 "aqua:mvdan/sh"            = "3"
 "aqua:tombi-toml/tombi"    = "1"
+"cargo:cargo-machete"      = "0.9"
+"cargo:cargo-nextest"      = "0.9"
 "cargo:just"               = "1"
 "cargo:tokei"              = "14"
 "cargo:typos-cli"          = "1"
