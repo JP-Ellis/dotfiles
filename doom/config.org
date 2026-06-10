@@ -3,15 +3,6 @@
 ;;; -*- lexical-binding: t; -*-
 #+end_src
 * Compatibility
-=set-local= was added in Emacs 31, but some dev builds predate the commit.
-The =compat= package skips defining it when =emacs-version >= 31=, leaving a
-gap on those builds.
-#+begin_src emacs-lisp
-(unless (fboundp 'set-local)
-  (defun set-local (variable value)
-    "Make VARIABLE buffer-local and set it to VALUE."
-    (set (make-local-variable variable) value)))
-#+end_src
 Here are some additional functions/macros that could help you configure Doom:
 
 - ~load!~ for loading external ~*.el~ files relative to this one
@@ -76,16 +67,17 @@ numbers, set this to ~relative~.
 ** Github Copilot
 #+begin_src emacs-lisp
 (use-package! copilot
-  :hook (prog-mode . copilot-mode)
-  :bind (:map copilot-completion-map
-              ("<tab>" . 'copilot-accept-completion)
-              ("TAB" . 'copilot-accept-completion)
-              ("C-TAB" . 'copilot-accept-completion-by-word)
-              ("C-<tab>" . 'copilot-accept-completion-by-word)))
+  :hook (prog-mode . copilot-mode))
+
+(map! :map copilot-completion-map
+      "<tab>"   #'copilot-accept-completion
+      "TAB"     #'copilot-accept-completion
+      "C-TAB"   #'copilot-accept-completion-by-word
+      "C-<tab>" #'copilot-accept-completion-by-word)
 #+end_src
 On Windows, point to the correct node version.
 #+begin_src emacs-lisp
-(when IS-WINDOWS
+(when (featurep :system 'windows)
   (setq copilot-node-executable "~/scoop/apps/nodejs-lts/current/node.exe"))
 #+end_src
 Only provide completion in insert-mode.
@@ -104,12 +96,10 @@ Define where to search for projects.
 (setq projectile-project-search-path '("~/src" "~/.dotfiles"))
 #+end_src
 ** Python
-Add Ruff's LSP to eglot's configuration:
+Add Ruff as the eglot LSP server for Python, covering both classic and tree-sitter modes:
 #+begin_src emacs-lisp
-(with-eval-after-load 'eglot
-  (add-to-list 'eglot-server-programs
-               '(python-mode . ("ruff" "server")))
-  (add-hook 'after-save-hook 'eglot-format))
+(after! python
+  (set-eglot-client! '(python-mode python-ts-mode) '("ruff" "server")))
 #+end_src
 ** Org
 If you use ~org~ and don't want your org files in the default location below,
@@ -160,9 +150,6 @@ Adjust the org buffer sections:
 #+end_src
 Configuration for org-roam-ui.
 #+begin_src emacs-lisp
-(use-package! websocket
-  :after org-roam)
-
 (use-package! org-roam-ui
   :after org-roam
   :config
@@ -191,10 +178,10 @@ Configuration for org-roam-ui.
   ;; This initialization bit puts the `orhc-bibtex-cache-file` into `~/.doom/.local/cache/orhc-bibtex-cache
   ;; Not strictly required, but Org-ref will pollute your home directory otherwise, creating the cache file in ~/.orhc-bibtex-cache
   :init
-  (let ((cache-dir (concat doom-cache-dir "org-ref")))
+  (let ((cache-dir (file-name-concat doom-profile-cache-dir "org-ref")))
     (unless (file-exists-p cache-dir)
       (make-directory cache-dir t))
-    (setq orhc-bibtex-cache-file (concat cache-dir "/orhc-bibtex-cache"))))
+    (setq orhc-bibtex-cache-file (file-name-concat cache-dir "orhc-bibtex-cache"))))
 #+end_src
 
 *** Padding
@@ -221,10 +208,10 @@ Enable git integration within Treemacs. The ~+treemacs-git-mode~ has the followi
 - ~extended~ Files and directories are highlighted (requires Python)
 - ~deferred~ Same as ~extended~, but asynchronous
 #+begin_src emacs-lisp
-(customize-set-variable '+treemacs-git-mode 'deferred)
+(setq +treemacs-git-mode 'deferred)
 #+end_src
 ** Rust
-Enable inlay hints within Rust.
+Enable inlay hints via eglot (Emacs 29+ native support):
 #+begin_src emacs-lisp
-(setq lsp-rust-analyzer-server-display-inlay-hints t)
+(add-hook 'rustic-mode-hook #'eglot-inlay-hints-mode)
 #+end_src
