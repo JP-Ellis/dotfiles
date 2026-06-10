@@ -103,14 +103,6 @@ The ~org-roam-ui~ packages tries to keep up with the latest changes from
 (package! org-padding
   :recipe (:host github :repo "TonCherAmi/org-padding"))
 #+end_src
-** Python
-*** Ruff LSP
-#+begin_src emacs-lisp
-(with-eval-after-load 'eglot
-  (add-to-list 'eglot-server-programs
-               '(python-mode . ("ruff" "server"))))
-
-#+end_src
 ** Spell-Fu
 #+begin_src emacs-lisp
 (unpin! spell-fu)
