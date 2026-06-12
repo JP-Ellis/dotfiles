@@ -1,0 +1,11 @@
+#!/bin/sh
+_ssh_dir="${XDG_RUNTIME_DIR:-$HOME/.cache}/pinentry-ssh"
+if [ -d "$_ssh_dir" ] && [ -n "$(ls -A "$_ssh_dir" 2>/dev/null)" ]; then
+    exec /usr/bin/pinentry-curses "$@"
+elif [ -n "$WAYLAND_DISPLAY" ]; then
+    exec /usr/bin/pinentry-gnome3 "$@"
+elif [ -n "$DISPLAY" ]; then
+    exec /usr/bin/pinentry-gtk "$@"
+else
+    exec /usr/bin/pinentry-curses "$@"
+fi
