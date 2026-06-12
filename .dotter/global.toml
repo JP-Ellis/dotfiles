@@ -29,6 +29,7 @@
 
 [bin]
   [bin.files]
+  "bin/pinentry-auto"  = "~/.local/bin/pinentry-auto"
   "bin/transcode-hevc" = "~/.local/bin/transcode-hevc"
   "bin/update"         = "~/.local/bin/update"
 
