@@ -21,7 +21,7 @@
 "aqua:direnv/direnv"     = "2"
 "aqua:junegunn/fzf"      = "0.74.0"
 "aqua:starship/starship" = "1"
-"cargo:zoxide"           = "0.9"
+"cargo:zoxide"           = "0.10"
 "cargo:sheldon"          = "0.8"
 "cargo:zsh-patina"       = "1"
 
