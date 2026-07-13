@@ -32,7 +32,7 @@
 "cargo:cargo-dist"                = "0.32"
 "cargo:committed"                 = "1"
 "cargo:git-absorb"                = "0.9"
-"cargo:gitu"                      = "0.42"
+"cargo:gitu"                      = "0.43"
 "cargo:prek"                      = "0.4"
 "pipx:git-delete-merged-branches" = "7.6.0"
 
