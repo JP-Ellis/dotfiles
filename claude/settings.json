@@ -15,7 +15,6 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "sonnet",
   "hooks": {
     "PreToolUse": [
       {
@@ -32,21 +31,33 @@
   "allowManagedMcpServersOnly": false,
   "enabledPlugins": {
     "code-review@claude-plugins-official": true,
-    "code-simplifier@claude-plugins-official": true,
-    "feature-dev@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true,
-    "playwright@claude-plugins-official": true,
-    "pr-review-toolkit@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": false,
+    "feature-dev@claude-plugins-official": false,
+    "playwright@claude-plugins-official": false,
     "pyright-lsp@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
-    "ruby-lsp@claude-plugins-official": true
+    "ruby-lsp@claude-plugins-official": true,
+    "datadog@claude-plugins-official": true,
+    "slack@claude-plugins-official": false,
+    "github@claude-plugins-official": true
   },
   "effortLevel": "medium",
+  "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
   "theme": "auto",
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "skillOverrides": {
+    "cloudflare": "user-invocable-only",
+    "cloudflare-email-service": "user-invocable-only",
+    "durable-objects": "user-invocable-only",
+    "web-perf": "user-invocable-only",
+    "workers-best-practices": "user-invocable-only",
+    "wrangler": "user-invocable-only",
+    "agents-sdk": "user-invocable-only",
+    "sandbox-sdk": "user-invocable-only"
+  }
 }
