@@ -83,5 +83,8 @@
 [settings]
 experimental = true
 
+  [settings.cargo]
+  binstall_quickinstall = true
+
   [settings.python]
   uv_venv_auto = "create|source"
