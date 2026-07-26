@@ -37,15 +37,17 @@
 "pipx:git-delete-merged-branches" = "7.6.0"
 
 # Everyday text, search, and data tools
-"aqua:biomejs/biome" = "2"
-"aqua:jqlang/jq"     = "1"
-"cargo:bat"          = "0.26"
-"cargo:eza"          = "0.23"
-"cargo:fd-find"      = "10"
-"cargo:hexyl"        = "0.17"
-"cargo:hwatch"       = "0.4"
-"cargo:jaq"          = "3"
-"cargo:ripgrep"      = "15"
+"aqua:biomejs/biome"  = "2"
+"aqua:jqlang/jq"      = "1"
+"cargo:bat"           = "0.26"
+"cargo:eza"           = "0.23"
+"cargo:fd-find"       = "10"
+"cargo:hexyl"         = "0.17"
+"cargo:hwatch"        = "0.4"
+"cargo:jaq"           = "3"
+"cargo:ripgrep"       = "15"
+"cargo:watchexec-cli" = "2.5.1"
+"cargo:yazi-fm"       = "26.5.6"
 
 # Task runners and quality checks
 "aqua:koalaman/shellcheck" = "0.11"
@@ -59,9 +61,11 @@
 "github:rvben/rumdl"       = "v0.2"
 "npm:eslint"               = "10"
 "npm:prettier"             = "3"
+"pipx:hatch"               = "1.17.0"
 
 # Cloud and platform CLIs
 "aqua:aws/aws-cli"              = "2"
+"github:DataDog/pup"            = "1"
 "vfox:mise-plugins/vfox-gcloud" = "565"
 
 # Editor CLI for quick edits across repos
@@ -73,6 +77,7 @@
 "github:ggml-org/llama.cpp"   = { version = "latest", version_prefix = "b" }
 
 # Backups and storage
+"cargo:dotter"    = "0.13.4"
 "cargo:rustic-rs" = "0.11"
 
 [settings]
