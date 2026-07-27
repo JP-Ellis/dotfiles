@@ -18,10 +18,11 @@
 
 [claude]
   [claude.files]
-  "claude/CLAUDE.md"     = "~/.claude/CLAUDE.md"
-  "claude/RTK.md"        = "~/.claude/RTK.md"
-  "claude/rules"         = "~/.claude/rules"
-  "claude/settings.json" = { target = "~/.claude/settings.json", type = "symbolic" }
+  "claude/CLAUDE.md"               = "~/.claude/CLAUDE.md"
+  "claude/RTK.md"                  = "~/.claude/RTK.md"
+  "claude/rules"                   = "~/.claude/rules"
+  "claude/settings.json"           = { target = "~/.claude/settings.json", type = "symbolic" }
+  "claude/skills/secondary-review" = "~/.claude/skills/secondary-review"
 
 [bin]
   [bin.files]
