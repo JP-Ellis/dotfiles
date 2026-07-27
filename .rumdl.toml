@@ -1,0 +1,13 @@
+#:schema https://rumdl.dev/schema.json
+
+[global]
+# Do not enforce line length
+# table-cell-alignment pads table pipes for visual alignment, which costs tokens
+# in files that get loaded into a model context
+# Disable checking for reference links, as MkDocs generates additional ones that
+# are not visible to the linter
+disable = ["line-length", "table-cell-alignment", "reference-links-images"]
+
+# MARK: Rules
+[code-block-style]
+style = "fenced"
