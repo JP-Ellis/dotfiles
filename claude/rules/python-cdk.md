@@ -14,144 +14,144 @@ These instructions are based on [AWS CDK Best Practices](https://docs.aws.amazon
 
 ## General Instructions
 
--   Prioritize readability, maintainability, and infrastructure reliability
--   Use strong typing with type hints for all function parameters and return values
--   Break down complex stacks into smaller, focused stacks with clear responsibilities
--   Keep infrastructure code deterministic and idempotent
--   All deployed resources must be tagged with deployment date, repository source, and git commit hash
--   Infrastructure should follow AWS Well-Architected Framework principles
+- Prioritize readability, maintainability, and infrastructure reliability
+- Use strong typing with type hints for all function parameters and return values
+- Break down complex stacks into smaller, focused stacks with clear responsibilities
+- Keep infrastructure code deterministic and idempotent
+- All deployed resources must be tagged with deployment date, repository source, and git commit hash
+- Infrastructure should follow AWS Well-Architected Framework principles
 
 ## Stack Organization
 
--   Create separate stacks for different lifecycle components (secrets, networking, application)
--   Use stack dependencies (`add_dependency()`) to establish clear deployment order
--   Pass resources between stacks using properties, not CloudFormation exports (when possible)
--   Keep stacks focused on a single logical unit or service
--   Name stacks descriptively using pattern: `<Service><Purpose>Stack`
--   Only create resources in stack classes, never in `app.py` entry points
--   Expose resources that other stacks need as public readonly properties
+- Create separate stacks for different lifecycle components (secrets, networking, application)
+- Use stack dependencies (`add_dependency()`) to establish clear deployment order
+- Pass resources between stacks using properties, not CloudFormation exports (when possible)
+- Keep stacks focused on a single logical unit or service
+- Name stacks descriptively using pattern: `<Service><Purpose>Stack`
+- Only create resources in stack classes, never in `app.py` entry points
+- Expose resources that other stacks need as public readonly properties
 
 ## Python Conventions
 
 ### Type Safety
 
--   Always use type hints for all functions, methods, and class properties
--   Define typed props dataclasses with `@dataclass` decorator
--   Use `from __future__ import annotations` for forward references
--   Import types: `from aws_cdk import Stack, aws_lambda as lambda_`
--   Never use `Any` type unless absolutely necessary
+- Always use type hints for all functions, methods, and class properties
+- Define typed props dataclasses with `@dataclass` decorator
+- Use `from __future__ import annotations` for forward references
+- Import types: `from aws_cdk import Stack, aws_lambda as lambda_`
+- Never use `Any` type unless absolutely necessary
 
 ### Code Organization
 
-1.  Imports (grouped: standard library, third-party, aws_cdk, local)
-2.  Constants and configuration
-3.  Dataclass definitions for props
-4.  Stack class definition:
-    -   `__init__` method
-    -   Private helper methods (prefixed with `_`):
-        -   `_tag_resources()`
-        -   `_load_config()`
-        -   `_create_resources()`
-        -   `_setup_integrations()`
-        -   `_create_outputs()`
+1. Imports (grouped: standard library, third-party, aws_cdk, local)
+2. Constants and configuration
+3. Dataclass definitions for props
+4. Stack class definition:
+    - `__init__` method
+    - Private helper methods (prefixed with `_`):
+        - `_tag_resources()`
+        - `_load_config()`
+        - `_create_resources()`
+        - `_setup_integrations()`
+        - `_create_outputs()`
 
 ### Naming Conventions
 
--   Use `snake_case` for variables, functions, and methods
--   Use `PascalCase` for class names and construct IDs
--   Use `UPPER_SNAKE_CASE` for constants
--   Private methods: prefix with single underscore `_`
--   Module-level "private" variables: prefix with single underscore `_`
+- Use `snake_case` for variables, functions, and methods
+- Use `PascalCase` for class names and construct IDs
+- Use `UPPER_SNAKE_CASE` for constants
+- Private methods: prefix with single underscore `_`
+- Module-level "private" variables: prefix with single underscore `_`
 
 ## Resource Naming
 
 ### Construct IDs (Logical IDs)
 
--   Use PascalCase for construct IDs
--   Be descriptive and specific
--   Include service name to avoid conflicts
--   Never change logical IDs of stateful resources (causes resource replacement)
+- Use PascalCase for construct IDs
+- Be descriptive and specific
+- Include service name to avoid conflicts
+- Never change logical IDs of stateful resources (causes resource replacement)
 
 ### Resource Names
 
--   Use lowercase with hyphens for actual resource names
--   Include environment/stage/location when managing multiple environments
--   Keep names consistent across related resources
+- Use lowercase with hyphens for actual resource names
+- Include environment/stage/location when managing multiple environments
+- Keep names consistent across related resources
 
 ### Constants
 
--   Define constants at module level in UPPER_SNAKE_CASE
--   Group related constants in dataclasses or enums when appropriate
--   Use `Final` type hint for constants: `from typing import Final`
+- Define constants at module level in UPPER_SNAKE_CASE
+- Group related constants in dataclasses or enums when appropriate
+- Use `Final` type hint for constants: `from typing import Final`
 
 ## Configuration Management
 
--   Use CDK context for environment-specific configuration
--   Access context with defaults: `self.node.try_get_context("key") or default_value`
--   Encapsulate configuration loading in private helper methods
--   Use CloudFormation parameters for deployment-time values
--   Type all configuration with dataclasses or TypedDict
+- Use CDK context for environment-specific configuration
+- Access context with defaults: `self.node.try_get_context("key") or default_value`
+- Encapsulate configuration loading in private helper methods
+- Use CloudFormation parameters for deployment-time values
+- Type all configuration with dataclasses or TypedDict
 
 ## Secrets and Parameters
 
 ### Secrets Manager
 
--   Store all sensitive data (API tokens, passwords, keys) in Secrets Manager
--   Always use `RemovalPolicy.RETAIN` for secrets
--   Grant runtime access using `.grant_read()` methods
--   Pass secret ARNs to Lambda as environment variables, not values
--   Use `no_echo=True` for sensitive CloudFormation parameters
+- Store all sensitive data (API tokens, passwords, keys) in Secrets Manager
+- Always use `RemovalPolicy.RETAIN` for secrets
+- Grant runtime access using `.grant_read()` methods
+- Pass secret ARNs to Lambda as environment variables, not values
+- Use `no_echo=True` for sensitive CloudFormation parameters
 
 ### SSM Parameter Store
 
--   Store non-sensitive configuration in SSM Parameter Store
--   Apply `RemovalPolicy.RETAIN` to preserve parameters
+- Store non-sensitive configuration in SSM Parameter Store
+- Apply `RemovalPolicy.RETAIN` to preserve parameters
 
 ### Never Store Secrets In
 
--   Source code
--   CloudFormation outputs
--   SSM StringParameter
--   Lambda environment variables directly
+- Source code
+- CloudFormation outputs
+- SSM StringParameter
+- Lambda environment variables directly
 
 ## IAM Permissions
 
--   Always use `.grant_*()` methods for least-privilege permissions
--   Avoid wildcard (`*`) permissions unless justified
--   Grant only the minimum required actions and resources
--   Prefer `.grant_read()`, `.grant_write()`, `.grant_read_write_data()` over manual policies
+- Always use `.grant_*()` methods for least-privilege permissions
+- Avoid wildcard (`*`) permissions unless justified
+- Grant only the minimum required actions and resources
+- Prefer `.grant_read()`, `.grant_write()`, `.grant_read_write_data()` over manual policies
 
 ## Cross-Stack References
 
--   Prefer passing resources via constructor props over CloudFormation exports
--   Use CloudFormation exports only for shared infrastructure
--   Import existing resources using `.from_*()` methods with explicit attributes
--   Always establish dependencies using `add_dependency()` when referencing other stacks
+- Prefer passing resources via constructor props over CloudFormation exports
+- Use CloudFormation exports only for shared infrastructure
+- Import existing resources using `.from_*()` methods with explicit attributes
+- Always establish dependencies using `add_dependency()` when referencing other stacks
 
 ## Removal Policies
 
--   Use `RemovalPolicy.RETAIN` for production data, secrets, and configuration
--   Use `RemovalPolicy.DESTROY` only for development/test resources
--   Stateless resources (Lambda, IAM roles) use default `DESTROY`
--   Always explicitly set removal policy for stateful resources
+- Use `RemovalPolicy.RETAIN` for production data, secrets, and configuration
+- Use `RemovalPolicy.DESTROY` only for development/test resources
+- Stateless resources (Lambda, IAM roles) use default `DESTROY`
+- Always explicitly set removal policy for stateful resources
 
 ## Tagging
 
--   Tag all stacks with:
-    -   `ManagedBy: "cdk"`
-    -   `Service: "<service-name>"`
-    -   `Repository: "<org>/<repo>"`
-    -   `GitSha: "<commit-hash>"`
-    -   `DeployedAt: "<ISO-timestamp>"`
--   Apply tags in constructor using `Tags.of(self).add()` before creating resources
+- Tag all stacks with:
+  - `ManagedBy: "cdk"`
+  - `Service: "<service-name>"`
+  - `Repository: "<org>/<repo>"`
+  - `GitSha: "<commit-hash>"`
+  - `DeployedAt: "<ISO-timestamp>"`
+- Apply tags in constructor using `Tags.of(self).add()` before creating resources
 
 ## CloudFormation Outputs
 
--   Output user-facing URLs and identifiers using `CfnOutput`
--   Include descriptive labels and descriptions
--   Only use `export_name` when value is needed by other stacks
--   Never change output names (breaks references)
--   Never output sensitive values
+- Output user-facing URLs and identifiers using `CfnOutput`
+- Include descriptive labels and descriptions
+- Only use `export_name` when value is needed by other stacks
+- Never change output names (breaks references)
+- Never output sensitive values
 
 ## Python-Specific Patterns
 
@@ -275,44 +275,44 @@ class MyStack(Stack):
 
 ### Context Managers
 
--   Use context managers for resources that need cleanup
--   Useful for custom constructs that manage lifecycle
+- Use context managers for resources that need cleanup
+- Useful for custom constructs that manage lifecycle
 
 ### Error Handling
 
--   Validate props in `__init__` before creating resources
--   Raise `ValueError` for invalid configuration
--   Use type hints to catch errors at development time
+- Validate props in `__init__` before creating resources
+- Raise `ValueError` for invalid configuration
+- Use type hints to catch errors at development time
 
 ## Patterns to Follow
 
--   Break down complex constructors using private helper methods
--   Use `pathlib.Path` for cross-platform path resolution
--   Handle git command failures gracefully (return None)
--   Use specific Lambda function constructs when available
--   Prefer typed CDK properties over `Fn.get_att()`
--   Write unit tests using CDK assertions library
--   Run `cdk synth` and `cdk diff` before every deployment
+- Break down complex constructors using private helper methods
+- Use `pathlib.Path` for cross-platform path resolution
+- Handle git command failures gracefully (return None)
+- Use specific Lambda function constructs when available
+- Prefer typed CDK properties over `Fn.get_att()`
+- Write unit tests using CDK assertions library
+- Run `cdk synth` and `cdk diff` before every deployment
 
 ## Patterns to Avoid
 
--   Don't hardcode account IDs or regions (use `self.account`, `self.region`)
--   Don't use escape hatches (`add_override`, `add_property_override`) unless absolutely necessary
--   Don't create circular dependencies between stacks
--   Don't use mutable state in constructs
--   Don't mix application code with infrastructure code
--   Don't change logical IDs of stateful resources
--   Don't use `Fn.get_att()` when typed properties exist
--   Don't use bare `except:` clauses
+- Don't hardcode account IDs or regions (use `self.account`, `self.region`)
+- Don't use escape hatches (`add_override`, `add_property_override`) unless absolutely necessary
+- Don't create circular dependencies between stacks
+- Don't use mutable state in constructs
+- Don't mix application code with infrastructure code
+- Don't change logical IDs of stateful resources
+- Don't use `Fn.get_att()` when typed properties exist
+- Don't use bare `except:` clauses
 
 ## Documentation
 
--   Document all classes, methods, and functions with docstrings
--   Use Google-style docstrings for consistency
--   Explain non-obvious configuration decisions
--   Document stack dependencies and why they exist
--   Include AWS documentation references for complex resources
--   Document why specific patterns are used (e.g., removal policies)
+- Document all classes, methods, and functions with docstrings
+- Use Google-style docstrings for consistency
+- Explain non-obvious configuration decisions
+- Document stack dependencies and why they exist
+- Include AWS documentation references for complex resources
+- Document why specific patterns are used (e.g., removal policies)
 
 ### Docstring Format
 
@@ -339,13 +339,13 @@ def create_bucket(
 
 ## Testing
 
--   Write snapshot tests for all stacks using `Template.from_stack()`
--   Use `Template.resource_count_is()` to verify resource counts
--   Use `Template.has_resource_properties()` with `Match` for fine-grained assertions
--   Test that sensitive parameters use `no_echo=True`
--   Verify IAM policies follow least privilege
--   Use `pytest` as the testing framework
--   Use fixtures for common test setup
+- Write snapshot tests for all stacks using `Template.from_stack()`
+- Use `Template.resource_count_is()` to verify resource counts
+- Use `Template.has_resource_properties()` with `Match` for fine-grained assertions
+- Test that sensitive parameters use `no_echo=True`
+- Verify IAM policies follow least privilege
+- Use `pytest` as the testing framework
+- Use fixtures for common test setup
 
 ### Test Example
 
@@ -382,13 +382,13 @@ def test_stack_creates_lambda():
 
 ### Python Lambda Best Practices
 
--   Use specific runtime versions: `lambda_.Runtime.PYTHON_3_12`
--   Set appropriate timeout (default is 3 seconds, often too short)
--   Set appropriate memory size (minimum 128 MB, consider performance needs)
--   Use `lambda_.Code.from_asset()` for local code
--   Use layers for shared dependencies
--   Use environment variables for configuration, not secrets
--   Grant permissions using `.grant_*()` methods
+- Use specific runtime versions: `lambda_.Runtime.PYTHON_3_12`
+- Set appropriate timeout (default is 3 seconds, often too short)
+- Set appropriate memory size (minimum 128 MB, consider performance needs)
+- Use `lambda_.Code.from_asset()` for local code
+- Use layers for shared dependencies
+- Use environment variables for configuration, not secrets
+- Grant permissions using `.grant_*()` methods
 
 ### Lambda Layers
 
@@ -469,21 +469,21 @@ def __init__(self, scope, id, api_url: str, **kwargs):
 
 ## Code Style
 
--   Use `ruff` for linting and formatting
--   Follow PEP 8 style guidelines
--   Maximum line length: 88 characters (Black default)
--   Use f-strings for string formatting
--   Use list/dict comprehensions when they improve readability
--   Use context managers (`with` statements) for resource management
+- Use `ruff` for linting and formatting
+- Follow PEP 8 style guidelines
+- Maximum line length: 88 characters (Black default)
+- Use f-strings for string formatting
+- Use list/dict comprehensions when they improve readability
+- Use context managers (`with` statements) for resource management
 
 ## Type Hints
 
--   Use `from __future__ import annotations` for forward references
--   Use `|` for union types (Python 3.10+): `str | None`
--   Use `list[str]` instead of `List[str]` (Python 3.9+)
--   Use `dict[str, int]` instead of `Dict[str, int]` (Python 3.9+)
--   Use `Final` for constants
--   Use `Protocol` for structural subtyping when needed
+- Use `from __future__ import annotations` for forward references
+- Use `|` for union types (Python 3.10+): `str | None`
+- Use `list[str]` instead of `List[str]` (Python 3.9+)
+- Use `dict[str, int]` instead of `Dict[str, int]` (Python 3.9+)
+- Use `Final` for constants
+- Use `Protocol` for structural subtyping when needed
 
 ## App Entry Point
 

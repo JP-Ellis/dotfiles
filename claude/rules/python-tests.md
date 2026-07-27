@@ -6,9 +6,9 @@ paths:
 
 # Python Testing Conventions
 
--   Use `pytest` as the testing framework, with all tests located in `tests/` directories and files prefixed with `test_`.
--   Prefer descriptive function names that clearly indicate the test's purpose. Include docstrings only when additional context is needed beyond the function name.
--   Use `@pytest.mark.parametrize` to cover multiple scenarios without code duplication:
+- Use `pytest` as the testing framework, with all tests located in `tests/` directories and files prefixed with `test_`.
+- Prefer descriptive function names that clearly indicate the test's purpose. Include docstrings only when additional context is needed beyond the function name.
+- Use `@pytest.mark.parametrize` to cover multiple scenarios without code duplication:
 
     ```python
     @pytest.mark.parametrize(
@@ -23,12 +23,12 @@ paths:
         ...
     ```
 
--   Ensure test coverage for:
-    -   Critical application paths and core functionality
-    -   Common edge cases (empty inputs, invalid data types, boundary conditions)
-    -   Error conditions and exception handling
--   Avoid testing implementation details; focus on testing the public API and expected behavior rather than internal workings.
--   Focus on testing the unique logic and functionality of your code, rather than simple getters/setters or trivial code.
--   Include comments explaining complex test logic or edge case rationale.
--   Minimize mocking and prefer testing with real data and dependencies when practical. Mock only external services or components that are unreliable or expensive to test against.
--   Use pytest fixtures for common test setup and shared data.
+- Ensure test coverage for:
+  - Critical application paths and core functionality
+  - Common edge cases (empty inputs, invalid data types, boundary conditions)
+  - Error conditions and exception handling
+- Avoid testing implementation details; focus on testing the public API and expected behavior rather than internal workings.
+- Focus on testing the unique logic and functionality of your code, rather than simple getters/setters or trivial code.
+- Include comments explaining complex test logic or edge case rationale.
+- Minimize mocking and prefer testing with real data and dependencies when practical. Mock only external services or components that are unreliable or expensive to test against.
+- Use pytest fixtures for common test setup and shared data.
