@@ -8,6 +8,9 @@
 # are not visible to the linter
 disable = ["line-length", "table-cell-alignment", "reference-links-images"]
 
+# Vendored upstream, tracked as a submodule
+exclude = ["claude/skills/diataxis/diataxis-documentation-framework"]
+
 # MARK: Rules
 [code-block-style]
 style = "fenced"
