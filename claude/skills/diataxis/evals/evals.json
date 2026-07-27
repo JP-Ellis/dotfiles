@@ -1,0 +1,153 @@
+{
+  "skill_name": "diataxis",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Can you review my project's documentation? The main docs are in the README.md. Here's what it contains:\n\n---\n# MyLib\n\nMyLib is a Python library for processing CSV files. It uses a streaming approach to handle files larger than memory.\n\n## Why streaming?\n\nTraditional CSV parsers load the entire file into memory. MyLib instead streams rows one at a time, which means you can process a 50GB file on a laptop with 8GB of RAM. This design was chosen because our users frequently work with data warehouse exports.\n\n## Installation\n\nRun `pip install mylib` to install. Python 3.9+ required.\n\n## Quick Start\n\nLet's build a simple pipeline together. First, install the library:\n\n```\npip install mylib\n```\n\nNow create a file called `pipeline.py`:\n\n```python\nimport mylib\nreader = mylib.Reader('data.csv')\nfor row in reader:\n    print(row)\n```\n\nRun it with `python pipeline.py`. You should see each row printed.\n\nNow let's filter rows. Add a filter function...\n\n## How to deduplicate rows\n\nTo remove duplicate rows from a CSV file:\n\n1. Use `mylib.dedup(path, key='id')` where `key` is the column to deduplicate on.\n2. The output is written to `path.deduped.csv` by default.\n3. If the file is large, add `streaming=True`.\n\n## API Reference\n\n`Reader(path, encoding='utf-8')` — Opens a CSV file for streaming. Returns an iterator of dicts.\n`Writer(path)` — Opens a CSV file for writing. Call `.write(row)` to append rows.\n`dedup(path, key, output=None, streaming=False)` — Deduplicates a CSV file by the given key column.\n---\n\nCan you tell me what's right and wrong with this documentation structure?",
+      "expected_output": "A Diátaxis analysis identifying: (1) The README mixes all four quadrant types — explanation (why streaming), tutorial (quick start with 'let's'), how-to (dedup instructions), and reference (API section). (2) What each section does well within its quadrant. (3) Recommendation to split into separate documents. The report should cite specific sections and use Diátaxis terminology.",
+      "files": [],
+      "assertions": [
+        {
+          "name": "identifies-explanation-section",
+          "description": "Identifies the 'Why streaming?' section as Explanation (understanding-oriented, design rationale)"
+        },
+        {
+          "name": "identifies-tutorial-section",
+          "description": "Identifies the 'Quick Start' section as Tutorial (learning-by-doing, 'Let's build' framing)"
+        },
+        {
+          "name": "identifies-howto-section",
+          "description": "Identifies the 'How to deduplicate rows' section as a How-to guide"
+        },
+        {
+          "name": "identifies-reference-section",
+          "description": "Identifies the 'API Reference' section as Reference material"
+        },
+        {
+          "name": "diagnoses-mixed-content",
+          "description": "Diagnoses the README as mixing multiple Diátaxis types"
+        },
+        {
+          "name": "uses-diataxis-terminology",
+          "description": "Uses specific Diátaxis terminology: Tutorial, How-to, Reference, Explanation"
+        },
+        {
+          "name": "recommends-splitting",
+          "description": "Recommends splitting the content into separate documents"
+        },
+        {
+          "name": "offers-next-steps",
+          "description": "Offers to help with next steps (rewriting, restructuring, drafting new docs)"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We're building an open-source CLI tool called `datapipe`. Our entire documentation is in the `docs/` folder. Here's what we have:\n\ndocs/\n  cli-reference.md   (documents every flag and subcommand)\n  config-reference.md  (documents all config file options)\n  api-reference.md   (documents the Python API)\n\nOur users keep complaining that they don't know how to get started, and experienced users say they can't figure out how to do common tasks like setting up a pipeline or migrating from v1 to v2. Can you review our documentation structure and tell us what's wrong?",
+      "expected_output": "A Diátaxis gap analysis identifying: (1) The docs are entirely Reference — well-structured but serving only users who already know what they want to look up. (2) No Tutorial means new users have no guided entry point, explaining the 'don't know how to get started' complaint. (3) No How-to guides means experienced users can't find task-specific guidance like migration or pipeline setup, explaining that complaint. (4) No Explanation means users can't build a mental model of how datapipe works. Concrete recommendations for what to create for each missing quadrant.",
+      "files": [],
+      "assertions": [
+        {
+          "name": "identifies-all-docs-as-reference",
+          "description": "Identifies all three existing docs as Reference type"
+        },
+        {
+          "name": "flags-missing-tutorial",
+          "description": "Flags the absence of a Tutorial as a structural gap"
+        },
+        {
+          "name": "flags-missing-howto",
+          "description": "Flags the absence of How-to guides as a structural gap"
+        },
+        {
+          "name": "connects-gaps-to-complaints",
+          "description": "Connects the missing doc types to the specific user complaints"
+        },
+        {
+          "name": "uses-diataxis-terminology",
+          "description": "Uses specific Diátaxis terminology in the gap analysis"
+        },
+        {
+          "name": "specific-gap-descriptions",
+          "description": "Describes each gap in terms of the user need it leaves unmet"
+        },
+        {
+          "name": "offers-next-steps",
+          "description": "Offers to help create missing documentation or suggests concrete next steps"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I wrote a tutorial for my library called 'Getting Started with Reaktor'. Can you review it against best practices?\n\n---\n# Getting Started with Reaktor\n\nThis tutorial shows you how to set up Reaktor for your project.\n\n## Prerequisites\n- Python 3.10+\n- A project that needs event handling\n\n## Steps\n\n1. Install Reaktor: `pip install reaktor`\n2. Import it in your code: `from reaktor import EventBus`\n3. Create an event bus: `bus = EventBus()`\n4. Register a handler: `bus.on('user.created', handle_user_created)`\n5. Emit an event: `bus.emit('user.created', {'id': 123})`\n\nYou may also want to use `bus.once()` if you only want the handler to fire once. Alternatively, you can use `bus.off()` to remove a handler when you're done.\n\n## What is an EventBus?\n\nAn EventBus is a publish-subscribe messaging pattern where publishers emit named events and subscribers listen for them. This decouples components because the emitter doesn't need to know who's listening. The pattern is common in UI frameworks and microservice architectures.\n\n## Common configurations\n\nDepending on your use case, you might want:\n- Synchronous mode: `EventBus(sync=True)` — handlers run in the same thread\n- Async mode: `EventBus(async_mode=True)` — handlers run as coroutines  \n- Priority handlers: `bus.on('event', handler, priority=10)` — higher priority runs first\n---",
+      "expected_output": "A review identifying this as a misclassified or mixed document that is partly tutorial and partly other things. Specific issues should include: (1) The 'you may also want to use bus.once()' and 'alternatively' language in step 5 — tutorials should have one path, not branches. (2) The 'What is an EventBus?' section is Explanation embedded in a Tutorial — it interrupts the learning journey and should be a separate concepts document. (3) 'Common configurations' section presents choices — this is a How-to guide or Reference embedded in a Tutorial. (4) What the tutorial does well: sequential steps, imperative style. Concrete suggestions for how to restructure.",
+      "files": [],
+      "assertions": [
+        {
+          "name": "flags-branching-antipattern",
+          "description": "Flags 'you may also want to use bus.once()' / 'Alternatively' branching as a tutorial anti-pattern"
+        },
+        {
+          "name": "identifies-embedded-explanation",
+          "description": "Identifies the 'What is an EventBus?' section as Explanation embedded in a Tutorial"
+        },
+        {
+          "name": "flags-configurations-section",
+          "description": "Flags the 'Common configurations' section as offering choices (anti-pattern for tutorials)"
+        },
+        {
+          "name": "acknowledges-what-works",
+          "description": "Acknowledges what the document does right as a tutorial (sequential steps, install-first structure)"
+        },
+        {
+          "name": "uses-diataxis-terminology",
+          "description": "Uses specific Diátaxis terminology in the critique"
+        },
+        {
+          "name": "gives-concrete-suggestions",
+          "description": "Gives concrete restructuring suggestions (e.g., move explanation to a Concepts page)"
+        },
+        {
+          "name": "offers-next-steps",
+          "description": "Offers to help rewrite or restructure the document"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Can you review the documentation in my project at docs/guides/ specifically? I want to know if the guides are well-structured according to diátaxis. Here's what's in there:\n\ndocs/guides/authentication.md:\n---\n# Authentication\n\nAuthentication in this API uses JWT tokens. JSON Web Tokens are an open standard (RFC 7519) that defines a compact way to securely transmit information as a JSON object. Tokens consist of three parts: header, payload, and signature.\n\nTo authenticate:\n1. POST to /auth/login with your credentials\n2. Receive a token in the response\n3. Include the token in subsequent requests as `Authorization: Bearer <token>`\n\nTokens expire after 24 hours. When a token expires, you'll receive a 401 response. You should then re-authenticate.\n---\n\ndocs/guides/deployment.md:\n---\n# Deployment Guide\n\nThis guide explains how to deploy the application to production.\n\n## Deploy to AWS ECS\n1. Build the Docker image: `docker build -t myapp .`\n2. Push to ECR: `aws ecr get-login-password | docker login ...`\n3. Update the ECS task definition\n4. Deploy: `aws ecs update-service --force-new-deployment`\n\n## Deploy to Heroku\n1. Install Heroku CLI\n2. `heroku login`\n3. `git push heroku main`\n\n## Deploy to a VPS\n1. SSH into your server\n2. Pull the latest code\n3. Run `docker-compose up -d`\n---",
+      "expected_output": "A scoped review of docs/guides/ only. For authentication.md: identifies mixing of Explanation (what JWTs are, RFC 7519, token structure) with How-to guide steps (the numbered authentication steps). The explanation paragraphs don't serve the user trying to authenticate — they should be moved to a concepts doc or trimmed. For deployment.md: this is actually a good How-to guide — it's goal-oriented (deploy to production), written from user perspective, allows for real-world variation (three deployment targets), and assumes competence. Minor note that 'guide' framing and the how-to structure are well-aligned. Overall: one file needs restructuring, one is solid.",
+      "files": [],
+      "assertions": [
+        {
+          "name": "stays-scoped-to-guides",
+          "description": "Stays scoped to docs/guides/ and does not drift to reviewing other hypothetical parts of the project"
+        },
+        {
+          "name": "flags-authentication-explanation-mixing",
+          "description": "Identifies authentication.md as mixing Explanation (JWT background) with How-to steps"
+        },
+        {
+          "name": "suggests-moving-explanation",
+          "description": "Suggests moving the JWT explanation to a separate concepts/background document"
+        },
+        {
+          "name": "recognizes-deployment-as-howto",
+          "description": "Recognizes deployment.md as a well-structured How-to guide"
+        },
+        {
+          "name": "uses-diataxis-terminology",
+          "description": "Uses specific Diátaxis terminology (How-to, Explanation, etc.)"
+        },
+        {
+          "name": "differentiates-between-files",
+          "description": "Gives different assessments to the two files (one has problems, one is good)"
+        },
+        {
+          "name": "offers-next-steps",
+          "description": "Offers to help fix authentication.md or suggests a concrete next action"
+        }
+      ]
+    }
+  ]
+}

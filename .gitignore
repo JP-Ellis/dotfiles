@@ -1,3 +1,4 @@
 /.dotter/*
 !/.dotter/global.toml
 !/.dotter/windows.toml
+!/.dotter/post_deploy.sh
