@@ -18,3 +18,7 @@ Host unifi.jpellis.me
 Host media.jpellis.me
     User josh
     RequestTTY yes
+
+Host jpellis-desktop.jpellis.me
+    User josh
+    RequestTTY yes
