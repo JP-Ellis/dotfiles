@@ -10,6 +10,59 @@ check_command() {
 }
 
 ################################################################################
+## Dotfiles
+################################################################################
+
+## Bash reads a script in chunks as it runs rather than loading it up front, so
+## rewriting this file mid-run leaves it resuming from a stale byte offset and
+## executing whatever now sits there. Refresh the checkout before anything else
+## and hand over to the new copy immediately; UPDATE_REEXEC keeps that handover
+## from looping.
+
+dotfiles="${DOTFILES_DIR:-$HOME/.dotfiles}"
+
+if [ -z "${UPDATE_REEXEC:-}" ]; then
+  if ! check_command "git"; then
+    echo "update: git is unavailable, cannot refresh $dotfiles" >&2
+    exit 1
+  fi
+
+  if ! git -C "$dotfiles" rev-parse --git-dir &>/dev/null; then
+    echo "update: $dotfiles is not a git checkout" >&2
+    exit 1
+  fi
+
+  if ! git -C "$dotfiles" pull --rebase --autostash; then
+    echo "update: could not refresh $dotfiles, resolve the checkout by hand" >&2
+    exit 1
+  fi
+
+  ## The pull reports success even when reapplying the autostash conflicts,
+  ## which leaves conflict markers sitting in the working tree. Deploying that
+  ## would scatter them across the live config, so stop while it is still one
+  ## checkout to repair rather than a machine to unpick.
+  if [ -n "$(git -C "$dotfiles" ls-files --unmerged)" ]; then
+    echo "update: $dotfiles has unresolved conflicts, resolve them by hand" >&2
+    exit 1
+  fi
+
+  UPDATE_REEXEC=1 exec "$dotfiles/bin/update" "$@"
+fi
+
+## Only reachable through the handover above, so the checkout is current and the
+## deployed copies can be brought into line with it. A missing dotter is left to
+## the mise run further down, which is what installs it in the first place.
+
+if check_command "dotter"; then
+  if ! (cd "$dotfiles" && dotter deploy); then
+    echo "update: dotter deploy failed" >&2
+    exit 1
+  fi
+else
+  echo "update: dotter is unavailable, skipping deploy" >&2
+fi
+
+################################################################################
 ## System
 ################################################################################
 
