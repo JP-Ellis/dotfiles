@@ -14,7 +14,7 @@
 # Core package/runtime tools
 "aqua:cargo-bins/cargo-binstall" = "1"
 "cargo:mise"                     = "2026"
-"cargo:uv"                       = "0.11"
+"cargo:uv"                       = "0.12"
 "github:endevco/aube"            = "1"
 
 # Shell and navigation
