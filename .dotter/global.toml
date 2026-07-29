@@ -94,6 +94,11 @@
   "gpg/gpg-agent.conf" = "~/.local/share/gnupg/gpg-agent.conf"
   "gpg/sshcontrol"     = "~/.local/share/gnupg/sshcontrol"
 
+  "gpg/systemd/gpg-agent-browser.socket.conf" = "~/.config/systemd/user/gpg-agent-browser.socket.d/gnupghome.conf"
+  "gpg/systemd/gpg-agent-extra.socket.conf"   = "~/.config/systemd/user/gpg-agent-extra.socket.d/gnupghome.conf"
+  "gpg/systemd/gpg-agent-ssh.socket.conf"     = "~/.config/systemd/user/gpg-agent-ssh.socket.d/gnupghome.conf"
+  "gpg/systemd/gpg-agent.socket.conf"         = "~/.config/systemd/user/gpg-agent.socket.d/gnupghome.conf"
+
 [kitty]
   [kitty.files]
   "kitty/dark.theme.conf"  = "~/.config/kitty/dark.theme.conf"
