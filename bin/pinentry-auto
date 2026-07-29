@@ -1,11 +1,30 @@
 #!/bin/sh
+## Each interactive SSH session drops a file named after its shell's PID into
+## this directory to request a terminal prompt instead of a dialog on the
+## desktop, which nobody is sitting in front of.  Sessions remove their own
+## file on exit, but a killed shell never runs its trap, so presence alone is
+## not evidence of a live session: an entry counts only while its process is
+## still alive, and dead ones are reaped here.
 _ssh_dir="${XDG_RUNTIME_DIR:-$HOME/.cache}/pinentry-ssh"
-if [ -d "$_ssh_dir" ] && [ -n "$(ls -A "$_ssh_dir" 2>/dev/null)" ]; then
-    exec /usr/bin/pinentry-curses "$@"
+_ssh_active=0
+
+if [ -d "$_ssh_dir" ]; then
+  for _flag in "$_ssh_dir"/*; do
+    [ -e "$_flag" ] || continue
+    if kill -0 "${_flag##*/}" 2>/dev/null; then
+      _ssh_active=1
+    else
+      rm -f "$_flag"
+    fi
+  done
+fi
+
+if [ "$_ssh_active" -eq 1 ]; then
+  exec /usr/bin/pinentry-curses "$@"
 elif [ -n "$WAYLAND_DISPLAY" ]; then
-    exec /usr/bin/pinentry-gnome3 "$@"
+  exec /usr/bin/pinentry-gnome3 "$@"
 elif [ -n "$DISPLAY" ]; then
-    exec /usr/bin/pinentry-gtk "$@"
+  exec /usr/bin/pinentry-gtk "$@"
 else
-    exec /usr/bin/pinentry-curses "$@"
+  exec /usr/bin/pinentry-curses "$@"
 fi
