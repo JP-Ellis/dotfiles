@@ -7,7 +7,7 @@ description: Use when implementation work is finished and needs an independent r
 
 ## Overview
 
-An independent review pass run by two populations of reviewers that differ in **what context they are given**, not just what they look for.
+An independent review pass run by two reviewers that differ in **what context they are given**, not just what they look for.
 
 **Core principle:** a reviewer who knows what the change was *supposed* to do grades it against that intent and stops looking. A reviewer who knows nothing judges the code on its own terms. Running both, and reconciling where they disagree, catches what either alone misses.
 
@@ -17,9 +17,9 @@ An independent review pass run by two populations of reviewers that differ in **
 - A PR is open and has forge review comments (Copilot, CodeRabbit, human) to reconcile
 - After a large refactor, when you want a second opinion you didn't author
 
-Prefer `superpowers:requesting-code-review` for a single task inside a plan. Use this when the whole change is done and a missed defect costs more than the fan-out.
+Prefer `superpowers:requesting-code-review` for a single task inside a plan. Use this when the whole change is done and a missed defect costs more than two reviewers.
 
-**Not for:** work in progress, or when you want code *changed* — use `/simplify`.
+**Not for:** work in progress, or when you want code *changed* — use `/simplify`. Also not for a branch that turned out to be several changes at once — see the cohesion gate.
 
 ## The Two Lenses
 
@@ -33,19 +33,27 @@ Prefer `superpowers:requesting-code-review` for a single task inside a plan. Use
 
 ## Roster
 
-| # | Agent | Lens | Aspect |
-|---|---|---|---|
-| B1 | correctness | Blind | Logic errors, edge cases, DRY, patterns |
-| B2 | failure-modes | Blind | Swallowed errors, silent failures |
-| B3 | test-quality | Blind | Real assertions vs mocks and tautologies |
-| B4 | type-design | Blind | Invariants, illegal states representable |
-| B5 | comment-drift | Blind | Comments that no longer match the code |
-| S1 | intent | Sighted | Solves the stated problem? Scope creep? |
-| S2 | coverage | Sighted | Acceptance criteria actually tested? |
-| S3 | doc-consistency | Sighted | Docs and specs this change just made wrong |
-| C | forge | — | Existing PR review comments |
+Two agents, both on Sonnet. One carries the whole blind lens, the other the whole sighted lens.
 
-B2–B5 deliberately do not reuse `pr-review-toolkit`'s equivalent agents: those fetch PR context by design, which defeats the blind lens.
+| Agent | Model | Covers |
+|---|---|---|
+| **Blind** | `sonnet` | correctness, failure-modes, test-quality, type-design, comment-drift |
+| **Sighted** | `sonnet` | intent, coverage, doc-consistency |
+
+Splitting these into one agent per aspect produced findings that mostly overlapped, at one full diff-and-codebase read each. The lens split is what changes findings; the aspect split only multiplied the bill. The aspects survive as checklists inside the two prompts.
+
+Neither reuses `pr-review-toolkit`'s equivalent agents: those fetch PR context by design, which defeats the blind lens.
+
+Forge comments are not an agent. Run `gh pr view --comments` (or the forge equivalent) yourself and reduce it to one line per comment as `file:line — claim`, with no judgement attached.
+
+**Escalation, at most one extra agent.** A deep dive is a second, dedicated pass on an aspect the blind reviewer already covers — depth, not coverage:
+
+- New or modified public types → **type-design**
+- Diff is substantially comments, docstrings, or markdown → **comment-drift**
+
+If both trigger, take the one the diff is more about. Never dispatch both.
+
+Reviewers run on Sonnet, so the confidence filter below is doing real work rather than rubber-stamping. Do not skip it.
 
 ## Scope and Sizing
 
@@ -57,28 +65,33 @@ git diff --stat $BASE..$HEAD | tail -1
 
 For **uncommitted** work, either commit first, or set `[HEAD_SHA]` to the literal string `(working tree)` in the templates — reviewers then use `git diff $BASE` with no second revision.
 
-| Tier | Threshold (both conditions) | Roster |
-|---|---|---|
-| Forge-only | Reconciling existing comments, no fresh review wanted | C, B1 |
-| Focused | ≤ 5 files **and** ≤ 200 changed lines | B1, S1 |
-| Standard | ≤ 20 files **and** ≤ 800 changed lines | B1, B2, B3, S1, S2 |
-| Broad | Anything larger | B1–B5, S1–S3 |
+| Changed lines | Action |
+|---|---|
+| ≤ 1000 | Dispatch. No assessment. |
+| > 1000 | Assess cohesion first — see below. |
 
-Take the first tier whose conditions both hold. Add regardless of tier:
+Reconciling existing forge comments with no fresh review wanted: collect the comments and dispatch the blind reviewer only.
 
-- New or modified public types → **B4**
-- Diff is substantially comments, docstrings, or markdown → **B5**
-- An open PR exists → **C**
+Dispatch selected agents in one message so they run concurrently.
 
-Dispatch every selected agent in one message so they run concurrently.
+## The Cohesion Gate
+
+Above 1000 changed lines, a diff is as likely to be several changes wearing one branch as it is to be a large single change. Reviewing the first kind well is not possible — findings scatter, and the sighted lens has no single intent to review against.
+
+Dispatch one `general-purpose` agent with `model: "haiku"`, giving it **only** `git diff --stat $BASE..$HEAD` and `git log --oneline $BASE..$HEAD`. Not the diff body — the gate must not cost what it is trying to save. Ask it to answer:
+
+- Does this diff do one thing, or several unrelated things?
+- If several: what are they, and which files belong to each?
+
+If it reports one thing, dispatch the normal roster. If it reports several, **stop and do not dispatch**. Report the size, list the split points it named, and ask whether to split the branch or review it anyway. Proceed only on an explicit instruction to review anyway.
+
+A large cohesive diff gets the same two reviewers as a small one. Size is a reason to question the change, not to buy more opinions about it.
 
 ## Dispatch
 
-Blind agents use [blind-reviewer.md](blind-reviewer.md); sighted agents use [sighted-reviewer.md](sighted-reviewer.md).
+The blind reviewer uses [blind-reviewer.md](blind-reviewer.md); the sighted reviewer uses [sighted-reviewer.md](sighted-reviewer.md). Both are dispatched as `general-purpose` with `model: "sonnet"`.
 
-**The blind prompt is the template verbatim with four substitutions: `[ASPECT_NAME]`, `[ASPECT_BRIEF]`, `[BASE_SHA]`, `[HEAD_SHA]`. Nothing is added, no section is inserted, no sentence is rewritten.** The sighted prompt is the template with its eight slots filled.
-
-Agent C needs no template. Run `gh pr view --comments` (or the forge equivalent) and return one line per comment as `file:line — claim`, with no judgement attached.
+**The blind prompt is the template verbatim with three substitutions: `[ASPECTS]`, `[BASE_SHA]`, `[HEAD_SHA]`. Nothing is added, no section is inserted, no sentence is rewritten.** `[ASPECTS]` gets every row of that file's aspect briefs table — all five — unless this is the deep-dive agent, which gets one. The sighted prompt is the template with its seven slots filled, `[ASPECTS]` likewise taking all three rows.
 
 ## Confidence Filter
 
@@ -92,7 +105,7 @@ Reviewers self-score, but **you re-score every finding** before it reaches the u
 | 75 | Verified, will be hit in practice, current approach insufficient |
 | 100 | Confirmed by direct evidence |
 
-Drop below 75. Reviewers are already told to skip compiler-caught, untouched-line, vague, and explicitly-silenced issues; drop any that slip through, plus behaviour changes that are plainly the point of the change.
+Drop below 75. Re-score against the code, not against the reviewer's reasoning — a Sonnet reviewer that argues its way to 75 has still only argued. A finding you cannot reproduce from the diff yourself is a 25. Reviewers are already told to skip compiler-caught, untouched-line, vague, and explicitly-silenced issues; drop any that slip through, plus behaviour changes that are plainly the point of the change.
 
 ## Synthesis
 
@@ -102,7 +115,7 @@ Disagreements do not fall out of the reports — you produce them. Before writin
 
 Group by agreement, not by agent.
 
-1. **Confirmed** — flagged by two or more agents, or scored 100. File:line, what's wrong, why it matters.
+1. **Confirmed** — corroborated by both lenses or by an existing forge comment, or scored 100 on your own re-check. File:line, what's wrong, why it matters. With two reviewers this section is small; that is expected, not a sign the review was thin.
 2. **Disagreements** — from the synthesis step above, with both positions stated. Highest value: a blind finding the context waves away usually means context is doing work the code should do itself; a sighted finding with no code defect behind it usually means a requirement nobody implemented.
 3. **Single-source** — surviving findings from one agent, ranked.
 4. **Forge overlap** — which existing PR comments the reviewers corroborated, and which they contradicted.
@@ -116,6 +129,8 @@ Hand findings to `superpowers:receiving-code-review` — verify before implement
 
 | Mistake | Consequence |
 |---|---|
-| Pasting intent context into a blind prompt "for context" | Collapses two lenses into one; you paid for eight agents and got four |
+| Pasting intent context into a blind prompt "for context" | Collapses two lenses into one; you paid for two reviewers and got one |
 | Giving the sighted reviewer the implementation plan | Findings become "deviates from plan" rather than "is wrong" |
-| Including a simplifier or fixer in the roster | A reviewer that edits invalidates every other reviewer's diff |
+| Including a simplifier or fixer in the roster | A reviewer that edits invalidates the other reviewer's diff |
+| Splitting an aspect out into its own agent "to be thorough" | The aspect is already in the blind prompt; you buy a duplicate diff read and duplicate findings |
+| Reviewing a >1000-line diff that the gate called incoherent | Findings scatter across unrelated changes and the sighted lens has no intent to review against |

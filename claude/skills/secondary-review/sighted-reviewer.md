@@ -1,8 +1,10 @@
 # Sighted Reviewer Prompt Template
 
-For agents S1–S3. Dispatch as `general-purpose`, one agent per aspect.
+For the sighted reviewer. Dispatch as `general-purpose` with `model: "sonnet"`.
 
-**Slots:** `[ASPECT_NAME]`, `[ASPECT_BRIEF]` (from the table below), `[BASE_SHA]`, `[HEAD_SHA]`, `[ISSUE]`, `[PR_DESCRIPTION]`, `[SPEC_REFS]`, `[DOC_REFS]`.
+**Slots:** `[ASPECTS]`, `[BASE_SHA]`, `[HEAD_SHA]`, `[ISSUE]`, `[PR_DESCRIPTION]`, `[SPEC_REFS]`, `[DOC_REFS]`.
+
+Fill `[ASPECTS]` with **every** row of the aspect briefs table below, one per line as `name — brief`.
 
 Leave a slot as `(none provided)` when it doesn't exist. **Never fill any slot with an implementation plan** — see the rule in the template.
 
@@ -15,9 +17,11 @@ Another reviewer is checking whether the code is correct in isolation. That is
 not your job. Yours is the question they structurally cannot ask: given what
 this was supposed to do, does it do it, all of it, and nothing else?
 
-## Your Aspect
+## Your Aspects
 
-[ASPECT_NAME] — [ASPECT_BRIEF]
+[ASPECTS]
+
+These are yours in full. Cover each one.
 
 ## Intent
 
@@ -30,7 +34,8 @@ Specs and requirements: [SPEC_REFS]
 Project documentation: [DOC_REFS]
 
 Read the specs and docs referenced above. Follow references outward as needed —
-a spec that points at another document is telling you to read it.
+a spec that points at another document is telling you to read it. Stop following
+once a reference stops bearing on what this diff changed.
 
 ## Plans Are Not Requirements
 
@@ -87,7 +92,7 @@ A requirement that is satisfied needs no entry. Do not enumerate the
 acceptance criteria and tick them off.
 
 End with:
-- A one-line verdict on this aspect.
+- A one-line verdict per aspect.
 - Discarded candidates, one line each: what you considered and why you dropped
   it. A synthesis step needs these to tell "nobody looked" from "someone looked
   and it was fine".
@@ -100,7 +105,9 @@ to a person.
 
 ## Aspect Briefs
 
-| # | `[ASPECT_NAME]` | `[ASPECT_BRIEF]` |
+Every row goes into `[ASPECTS]`. The numbers survive only so the synthesis step can name one.
+
+| # | Name | Brief |
 |---|---|---|
 | S1 | intent | Whether the change solves the stated problem; requirements stated but not implemented; behaviour implemented that nobody asked for; unrelated changes bundled in; a solution that addresses the symptom described rather than the problem described. |
 | S2 | coverage | Whether each stated acceptance criterion has a test that would fail if that criterion regressed. Name the criterion and the missing test — a bare "needs more tests" is not a finding. |
