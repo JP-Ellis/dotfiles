@@ -1,8 +1,10 @@
 # Blind Reviewer Prompt Template
 
-For agents B1–B5. Dispatch as `general-purpose`, one agent per aspect.
+For the blind reviewer, and for a deep-dive agent when one is warranted. Dispatch as `general-purpose` with `model: "sonnet"`.
 
-Use the template verbatim with four substitutions: `[ASPECT_NAME]`, `[ASPECT_BRIEF]` (from the table below), `[BASE_SHA]`, `[HEAD_SHA]`. Nothing is added, no section is inserted, no sentence is rewritten.
+Use the template verbatim with three substitutions: `[ASPECTS]`, `[BASE_SHA]`, `[HEAD_SHA]`. Nothing is added, no section is inserted, no sentence is rewritten.
+
+Fill `[ASPECTS]` with **every** row of the aspect briefs table below, one per line as `name — brief`. For a deep-dive agent, fill it with that one row instead.
 
 ---
 
@@ -13,11 +15,11 @@ You have not been told what this change is for, what issue it closes, or what
 anyone intended. That is deliberate. Judge the code on its own terms: what it
 actually does, not what it was probably meant to do.
 
-## Your Aspect
+## Your Aspects
 
-[ASPECT_NAME] — [ASPECT_BRIEF]
+[ASPECTS]
 
-Stay in your aspect. Another reviewer is covering the others.
+These are yours in full. Cover each one; do not assume another reviewer has it.
 
 ## The Diff
 
@@ -29,8 +31,10 @@ Head: [HEAD_SHA]
 
 If Head is `(working tree)`, drop it from both commands and diff against Base alone.
 
-Read the surrounding code freely — callers, callees, sibling modules, existing
-tests. You need it to judge whether the diff is correct.
+Read the surrounding code you need to judge the diff — callers, callees, sibling
+modules, existing tests. Follow what the diff touches; do not survey the wider
+repository. If you find yourself reading a file that no changed line reaches,
+stop and go back to the diff.
 
 Read commit *diffs*, not commit *messages*. Do not run `git log` over the range,
 open the issue tracker, open the pull request, or read design documents: those
@@ -73,7 +77,7 @@ For each finding:
 If a finding has no concrete failure scenario, it is a preference. Drop it.
 
 End with:
-- A one-line verdict on this aspect.
+- A one-line verdict per aspect.
 - Discarded candidates, one line each: what you considered and why you dropped
   it. A synthesis step needs these to tell "nobody looked" from "someone looked
   and it was fine".
@@ -86,7 +90,9 @@ to a person — no preamble, no summary of the change, no closing pleasantries.
 
 ## Aspect Briefs
 
-| # | `[ASPECT_NAME]` | `[ASPECT_BRIEF]` |
+Every row goes into `[ASPECTS]`. The numbers survive only so a deep-dive agent and the synthesis step can name one.
+
+| # | Name | Brief |
 |---|---|---|
 | B1 | correctness | Logic errors, off-by-one and boundary bugs, unhandled edge cases, race conditions, duplicated logic that should be shared, patterns that fight the surrounding codebase. |
 | B2 | failure-modes | Errors swallowed or logged-and-continued, fallbacks that mask real failures, unchecked results, `catch`/`unwrap_or_default` that turns a bug into silent wrong behaviour, paths where failure is indistinguishable from success. |
