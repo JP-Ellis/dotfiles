@@ -37,7 +37,7 @@ link_dir \
   "$HOME/.claude/skills/diataxis/diataxis-documentation-framework"
 
 # MARK: macOS gpg-agent LaunchAgent
-# Registers the LaunchAgent deployed by the `macos` package, and retires Apple's
+# Registers the LaunchAgent deployed by the `gpg` package, and retires Apple's
 # ssh-agent job. The latter matters because it declares its socket with
 # SecureSocketWithKey, so launchd stamps SSH_AUTH_SOCK across the whole login
 # session and races whatever gpg-agent publishes. Keychain-backed ssh keys go
