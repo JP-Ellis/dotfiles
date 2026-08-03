@@ -1,5 +1,3 @@
-#:tombi toml-version = "v1.0.0"
-
 [default]
   [default.variables]
   app-browser = "brave"
@@ -21,7 +19,10 @@
   "claude/CLAUDE.md"                  = "~/.claude/CLAUDE.md"
   "claude/RTK.md"                     = "~/.claude/RTK.md"
   "claude/rules"                      = "~/.claude/rules"
-  "claude/settings.json"              = { target = "~/.claude/settings.json", type = "symbolic" }
+  "claude/settings.json"              = {
+    target = "~/.claude/settings.json",
+    type   = "symbolic"
+  }
   "claude/skills/secondary-review"    = "~/.claude/skills/secondary-review"
   "claude/skills/diataxis/SKILL.md"   = "~/.claude/skills/diataxis/SKILL.md"
   "claude/skills/diataxis/evals"      = "~/.claude/skills/diataxis/evals"
@@ -29,7 +30,11 @@
 
 [bin]
   [bin.files]
-  "bin/gpg-agent-launchd" = { target = "~/.local/bin/gpg-agent-launchd", type = "symbolic", if = "dotter.macos" }
+  "bin/gpg-agent-launchd" = {
+    target = "~/.local/bin/gpg-agent-launchd",
+    type   = "symbolic",
+    if     = "dotter.macos"
+  }
   "bin/pinentry-auto"     = "~/.local/bin/pinentry-auto"
   "bin/transcode-hevc"    = "~/.local/bin/transcode-hevc"
   "bin/update"            = "~/.local/bin/update"
@@ -97,12 +102,32 @@
 
   ## Service manager integration: systemd user units on Linux, a LaunchAgent on
   ## macOS. Windows has no gpg-agent supervision here yet.
-  "gpg/systemd/gpg-agent-browser.socket.conf" = { target = "~/.config/systemd/user/gpg-agent-browser.socket.d/gnupghome.conf", type = "symbolic", if = "dotter.linux" }
-  "gpg/systemd/gpg-agent-extra.socket.conf"   = { target = "~/.config/systemd/user/gpg-agent-extra.socket.d/gnupghome.conf", type = "symbolic", if = "dotter.linux" }
-  "gpg/systemd/gpg-agent-ssh.socket.conf"     = { target = "~/.config/systemd/user/gpg-agent-ssh.socket.d/gnupghome.conf", type = "symbolic", if = "dotter.linux" }
-  "gpg/systemd/gpg-agent.socket.conf"         = { target = "~/.config/systemd/user/gpg-agent.socket.d/gnupghome.conf", type = "symbolic", if = "dotter.linux" }
+  "gpg/systemd/gpg-agent-browser.socket.conf" = {
+    target = "~/.config/systemd/user/gpg-agent-browser.socket.d/gnupghome.conf",
+    type   = "symbolic",
+    if     = "dotter.linux"
+  }
+  "gpg/systemd/gpg-agent-extra.socket.conf"   = {
+    target = "~/.config/systemd/user/gpg-agent-extra.socket.d/gnupghome.conf",
+    type   = "symbolic",
+    if     = "dotter.linux"
+  }
+  "gpg/systemd/gpg-agent-ssh.socket.conf"     = {
+    target = "~/.config/systemd/user/gpg-agent-ssh.socket.d/gnupghome.conf",
+    type   = "symbolic",
+    if     = "dotter.linux"
+  }
+  "gpg/systemd/gpg-agent.socket.conf"         = {
+    target = "~/.config/systemd/user/gpg-agent.socket.d/gnupghome.conf",
+    type   = "symbolic",
+    if     = "dotter.linux"
+  }
 
-  "gpg/launchd/me.jpellis.gpg-agent.plist" = { target = "~/Library/LaunchAgents/me.jpellis.gpg-agent.plist", type = "symbolic", if = "dotter.macos" }
+  "gpg/launchd/me.jpellis.gpg-agent.plist" = {
+    target = "~/Library/LaunchAgents/me.jpellis.gpg-agent.plist",
+    type   = "symbolic",
+    if     = "dotter.macos"
+  }
 
 [kitty]
   [kitty.files]
@@ -118,7 +143,10 @@
 
 [mathematica]
   [mathematica.files]
-  "Mathematica/Kernel.m" = { target = "~/.config/mathematica/Kernel/init.m", type = "symbolic" }
+  "Mathematica/Kernel.m" = {
+    target = "~/.config/mathematica/Kernel/init.m",
+    type   = "symbolic"
+  }
 
 [mise]
   [mise.files]
@@ -165,6 +193,9 @@
   "zsh/zshrc"                  = "~/.config/zsh/.zshrc"
   "zsh/zstyles"                = "~/.config/zsh/zstyles"
   "zsh/conf.d"                 = "~/.config/zsh/conf.d"
-  "zsh/sheldon.toml"           = { target = "~/.config/sheldon/plugins.toml", type = "symbolic" }
+  "zsh/sheldon.toml"           = {
+    target = "~/.config/sheldon/plugins.toml",
+    type   = "symbolic"
+  }
   "zsh/sheldon-update.service" = "~/.config/systemd/user/sheldon-update.service"
   "zsh/sheldon-update.timer"   = "~/.config/systemd/user/sheldon-update.timer"
