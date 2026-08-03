@@ -26,6 +26,15 @@ various templates or snippets.
 (setq user-full-name "{{ username }}"
       user-mail-address "{{ email }}")
 #+end_src
+** GPG
+Explicitly set ~GNUPGHOME~ so subprocesses (git, gpg) always use the correct
+keyring regardless of env file loading order. GPG 2.5+ creates ~~/.gnupg~ with
+~use-keyboxd~ enabled; without this, any subprocess that inherits a missing
+~GNUPGHOME~ falls back to that empty keybox and reports "No secret key".
+#+begin_src emacs-lisp
+(setenv "GNUPGHOME" (expand-file-name "~/.local/share/gnupg"))
+(setq epa-pinentry-mode 'loopback)
+#+end_src
 * Display
 Change the visual appearance of Doom Emacs
 ** Font
