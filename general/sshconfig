@@ -7,6 +7,15 @@ Host *
     ControlMaster auto
     ControlPath {{#if tmpdir}}{{tmpdir}}{{else}}/tmp{{/if}}/ssh-%C.socket
     ControlPersist 30m
+{{#if dotter.macos}}
+
+    ## macOS: launchd's com.openssh.ssh-agent stamps SSH_AUTH_SOCK into every
+    ## session from its own socket, so pointing ssh at gpg-agent explicitly is
+    ## more reliable than hoping the variable survives.  On Linux the systemd
+    ## user manager publishes the socket itself — see
+    ## gpg/systemd/gpg-agent-ssh.socket.conf.
+    IdentityAgent ~/.local/share/gnupg/S.gpg-agent.ssh
+{{/if}}
 
 ## Personal
 ################################################################################

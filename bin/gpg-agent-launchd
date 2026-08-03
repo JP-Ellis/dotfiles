@@ -1,0 +1,37 @@
+#!/bin/sh
+## Login job for gpg-agent on macOS, started by launchd (me.jpellis.gpg-agent).
+##
+## There is no launchd counterpart to systemd socket activation here:
+## `gpg-agent --supervised` expects sockets over sd_listen_fds, which launchd
+## cannot speak, so the agent is started eagerly instead.  Eager start matters
+## because gpg-agent only auto-spawns for the gpg binary — an ssh client
+## connecting to a socket with no agent behind it just fails.
+##
+## launchd sources neither ~/.profile nor ~/.config/environment.d, so GNUPGHOME
+## is re-derived here; without it gpgconf would act on the default ~/.gnupg.
+set -eu
+
+GNUPGHOME="${GNUPGHOME:-${XDG_DATA_HOME:-$HOME/.local/share}/gnupg}"
+export GNUPGHOME
+
+gpgconf=""
+for dir in /opt/homebrew/bin /usr/local/bin /usr/bin; do
+  if [ -x "$dir/gpgconf" ]; then
+    gpgconf="$dir/gpgconf"
+    break
+  fi
+done
+
+if [ -z "$gpgconf" ]; then
+  echo "gpg-agent-launchd: no gpgconf found" >&2
+  exit 0
+fi
+
+"$gpgconf" --launch gpg-agent
+
+## Publish the socket into the launchd user domain so GUI applications, which
+## never read the shell config, still reach gpg-agent.  This only holds while
+## Apple's com.openssh.ssh-agent is disabled — its SecureSocketWithKey socket
+## declaration re-stamps SSH_AUTH_SOCK across the whole session and would
+## otherwise take precedence.
+/bin/launchctl setenv SSH_AUTH_SOCK "$("$gpgconf" --list-dirs agent-ssh-socket)"
