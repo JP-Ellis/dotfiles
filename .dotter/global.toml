@@ -29,9 +29,10 @@
 
 [bin]
   [bin.files]
-  "bin/pinentry-auto"  = "~/.local/bin/pinentry-auto"
-  "bin/transcode-hevc" = "~/.local/bin/transcode-hevc"
-  "bin/update"         = "~/.local/bin/update"
+  "bin/gpg-agent-launchd" = { target = "~/.local/bin/gpg-agent-launchd", type = "symbolic", if = "dotter.macos" }
+  "bin/pinentry-auto"     = "~/.local/bin/pinentry-auto"
+  "bin/transcode-hevc"    = "~/.local/bin/transcode-hevc"
+  "bin/update"            = "~/.local/bin/update"
 
 [borgmatic]
   [borgmatic.files]
@@ -94,10 +95,14 @@
   "gpg/gpg-agent.conf" = "~/.local/share/gnupg/gpg-agent.conf"
   "gpg/sshcontrol"     = "~/.local/share/gnupg/sshcontrol"
 
-  "gpg/systemd/gpg-agent-browser.socket.conf" = "~/.config/systemd/user/gpg-agent-browser.socket.d/gnupghome.conf"
-  "gpg/systemd/gpg-agent-extra.socket.conf"   = "~/.config/systemd/user/gpg-agent-extra.socket.d/gnupghome.conf"
-  "gpg/systemd/gpg-agent-ssh.socket.conf"     = "~/.config/systemd/user/gpg-agent-ssh.socket.d/gnupghome.conf"
-  "gpg/systemd/gpg-agent.socket.conf"         = "~/.config/systemd/user/gpg-agent.socket.d/gnupghome.conf"
+  ## Service manager integration: systemd user units on Linux, a LaunchAgent on
+  ## macOS. Windows has no gpg-agent supervision here yet.
+  "gpg/systemd/gpg-agent-browser.socket.conf" = { target = "~/.config/systemd/user/gpg-agent-browser.socket.d/gnupghome.conf", type = "symbolic", if = "dotter.linux" }
+  "gpg/systemd/gpg-agent-extra.socket.conf"   = { target = "~/.config/systemd/user/gpg-agent-extra.socket.d/gnupghome.conf", type = "symbolic", if = "dotter.linux" }
+  "gpg/systemd/gpg-agent-ssh.socket.conf"     = { target = "~/.config/systemd/user/gpg-agent-ssh.socket.d/gnupghome.conf", type = "symbolic", if = "dotter.linux" }
+  "gpg/systemd/gpg-agent.socket.conf"         = { target = "~/.config/systemd/user/gpg-agent.socket.d/gnupghome.conf", type = "symbolic", if = "dotter.linux" }
+
+  "gpg/launchd/me.jpellis.gpg-agent.plist" = { target = "~/Library/LaunchAgents/me.jpellis.gpg-agent.plist", type = "symbolic", if = "dotter.macos" }
 
 [kitty]
   [kitty.files]
