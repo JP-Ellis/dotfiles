@@ -35,7 +35,6 @@
   +icons)
 
  :ui
- deft                          ; notational velocity for Emacs
  doom                          ; what makes DOOM look the way it does
  dashboard                     ; a nifty splash screen for Emacs
  doom-quit                     ; DOOM quit-message prompts when you quit Emacs
@@ -50,7 +49,6 @@
  minimap                       ; show a map of the code on the side
  modeline                      ; snazzy, Atom-inspired modeline, plus API
  nav-flash                     ; blink cursor line after big motions
- neotree                       ; a project drawer, like NERDTree for vim
  ophints                       ; highlight the region an operation acts on
  (popup                        ; tame sudden yet inevitable temporary windows
   +defaults)
@@ -105,14 +103,14 @@
   +aspell
   +everywhere)                 ; Spell check in comments of programming mode
  (syntax                       ; tasing you for every semicolon you forget
-  +childframe)
+  +childframe
+  +icons)
 
  :tools
  ;; ansible
  biblio                        ; Writes a PhD for you (citation needed)
  ;; collab                     ; Collaborative editing via crdt
- (debugger                     ; FIXME stepping through code, to help you add bugs
-  +lsp)
+ debugger                      ; stepping through code, to help you add bugs
  (:if (not (featurep :system 'windows)) direnv)
  docker
  editorconfig                  ; let someone else argue about tabs vs spaces
@@ -182,8 +180,9 @@
  ;; lean                       ; for folks with too much to prove
  ;; ledger                     ; be audit you can be
  (lua +lsp +tree-sitter)       ; one-based indices? one-based indices
- (markdown
-  +grip)                       ; writing docs for people to ignore
+ (markdown                     ; writing docs for people to ignore
+  +lsp
+  +tree-sitter)
  ;; nim                        ; python + lisp at the speed of c
  ;; (nix +lsp +tree-sitter)    ; I hereby declare "nix geht mehr!"
  ;; (ocaml +lsp +tree-sitter)  ; an objective camel
@@ -196,8 +195,7 @@
   +noter
   +pandoc
   +present
-  +pretty
-  +roam)
+  +pretty)
  ;; (php +lsp +tree-sitter)    ; perl's insecure younger brother
  ;; plantuml                   ; diagrams for confusing people more
  ;; purescript                 ; javascript, but functional
@@ -205,9 +203,7 @@
          +tree-sitter
          ;; +conda
          ;; +cython
-         +poetry
-         +pyenv
-         +pyright)
+         +uv)
  ;; qt                         ; the 'cutest' gui framework ever
  ;; (racket +lsp +xp)          ; a DSL for DSLs
  ;; raku                       ; the artist formerly known as perl6
@@ -215,10 +211,7 @@
   +jq)                         ; With support for jq
  rst                           ; ReST in peace
  (ruby +lsp +tree-sitter       ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
-       +chruby
-       +rails
-       +rbenv
-       +rvm)
+       +rails)
  (rust +lsp +tree-sitter)      ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
  (scala +lsp +tree-sitter)     ; java, but good
  ;; (scheme                    ; a fully conniving family of lisps
