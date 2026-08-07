@@ -55,8 +55,7 @@
  (popup                        ; tame sudden yet inevitable temporary windows
   +defaults)
  ;; tabs                       ; a tab bar for Emacs
- (treemacs                     ; a project drawer, like neotree but cooler
-  +lsp)
+ treemacs                      ; a project drawer, like neotree but cooler
  unicode                       ; extended unicode support for various languages
  (vc-gutter                    ; vcs diff in the fringe
   +pretty)
@@ -122,7 +121,6 @@
   +overlay)
  lookup                        ; navigate your code and its documentation
  (lsp                          ; M-x vscode
-  +peek
   +eglot)
  (magit                        ; a git porcelain for Emacs
   +forge)
@@ -199,7 +197,7 @@
   +pandoc
   +present
   +pretty
-  +roam2)
+  +roam)
  ;; (php +lsp +tree-sitter)    ; perl's insecure younger brother
  ;; plantuml                   ; diagrams for confusing people more
  ;; purescript                 ; javascript, but functional
