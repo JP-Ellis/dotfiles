@@ -94,10 +94,23 @@ Enable the use of Gravatars
 (setq magit-revision-show-gravatars t)
 #+end_src
 ** Projectile
-Define where to search for projects.
+Define where to search for projects. Repositories under ~~/src~ are filed one
+organisation deep (~~/src/<org>/<repo>~), so that entry needs an explicit depth
+of 2 --- the default of 1 only ever sees the organisation directories, which are
+not themselves projects, and so discovers nothing at all.
 
 #+begin_src emacs-lisp
-(setq projectile-project-search-path '("~/src" "~/.dotfiles"))
+(after! projectile
+  (setq projectile-project-search-path '(("~/src" . 2) "~/.dotfiles")))
+#+end_src
+Populate the known-projects list automatically rather than requiring each
+project be visited once by hand. A full scan of ~~/src~ finds roughly 300
+repositories in about half a second, which is cheap, but there is no reason to
+spend it during startup --- ~after!~ defers this until something first pulls
+Projectile in, and the idle timer then waits for a pause in typing.
+#+begin_src emacs-lisp
+(after! projectile
+  (run-with-idle-timer 2 nil #'projectile-discover-projects-in-search-path))
 #+end_src
 ** Markdown
 Eglot ships no default server for Markdown, so point it at [[https://github.com/rvben/rumdl][rumdl]], which serves
