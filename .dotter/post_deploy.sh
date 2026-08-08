@@ -12,14 +12,6 @@ link_dir() {
   local rel="$1" dest="$2"
   local src="$repo_root/$rel"
 
-  if [ ! -e "$src/index.rst" ]; then
-    git -C "$repo_root" submodule update --init -- "$rel" ||
-      {
-        echo "post_deploy: could not init submodule $rel" >&2
-        return 0
-      }
-  fi
-
   if [ -L "$dest" ]; then
     [ "$(readlink "$dest")" = "$src" ] && return 0
     rm "$dest"
@@ -32,9 +24,30 @@ link_dir() {
   ln -s "$src" "$dest"
 }
 
-link_dir \
+link_submodule_dir() {
+  local rel="$1" dest="$2"
+
+  if [ ! -e "$repo_root/$rel/index.rst" ]; then
+    git -C "$repo_root" submodule update --init -- "$rel" ||
+      {
+        echo "post_deploy: could not init submodule $rel" >&2
+        return 0
+      }
+  fi
+
+  link_dir "$rel" "$dest"
+}
+
+link_submodule_dir \
   "claude/skills/diataxis/diataxis-documentation-framework" \
   "$HOME/.claude/skills/diataxis/diataxis-documentation-framework"
+
+# MARK: Neovim configuration
+# Neovim writes lazy-lock.json and lazyvim.json into its own config directory, and
+# new plugin files accumulate there. Dotter's per-file recursion would leave those
+# writes outside the repository, so link the directory whole.
+
+link_dir "nvim" "$HOME/.config/nvim"
 
 # MARK: macOS gpg-agent LaunchAgent
 # Registers the LaunchAgent deployed by the `gpg` package, and retires Apple's
