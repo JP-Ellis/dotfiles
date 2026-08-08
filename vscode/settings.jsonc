@@ -82,9 +82,6 @@
   "claudeCode.preferredLocation": "sidebar",
   "claudeCode.selectedModel": "us.anthropic.claude-sonnet-4-6",
   "containers.containerClient": "com.microsoft.visualstudio.containers.podman",
-  "containers.environment": {
-    "DOCKER_HOST": "unix:///tmp/josh/podman/podman-machine-default-api.sock"
-  },
   "cSpell.autoFormatConfigFile": true,
   "cSpell.diagnosticLevel": "Hint",
   "cSpell.language": "en-GB",
@@ -96,9 +93,6 @@
   "diffEditor.experimental.useTrueInlineView": true,
   "diffEditor.ignoreTrimWhitespace": false,
   "diffEditor.maxComputationTime": 0,
-  "docker.environment": {
-    "DOCKER_HOST": "unix:///tmp/josh/podman/podman-machine-default-api.sock"
-  },
   "docker.extension.enableComposeLanguageServer": false,
   "editor.cursorBlinking": "smooth",
   "editor.cursorSmoothCaretAnimation": "on",
@@ -332,7 +326,6 @@
   "python.analysis.typeEvaluation.strictDictionaryInference": true,
   "python.analysis.typeEvaluation.strictListInference": true,
   "python.analysis.typeEvaluation.strictSetInference": true,
-  "python.defaultInterpreterPath": "/opt/homebrew/bin/python3",
   "python.useEnvironmentsExtension": true,
   "redhat.telemetry.enabled": true,
   "remote.tunnels.alwaysUpdateCLI": true,
@@ -431,7 +424,6 @@
   "terminal.integrated.shellIntegration.enabled": true,
   "terminal.integrated.smoothScrolling": true,
   "terminal.integrated.suggest.enabled": false,
-  "todo-tree.ripgrep.ripgrep": "/Users/joshua.ellis/.local/share/mise/installs/cargo-ripgrep/15/bin/rg",
   "update.showReleaseNotes": false,
   "vim.normalModeKeyBindingsNonRecursive": [
     {
@@ -552,7 +544,6 @@
   "rubyLsp.rubyVersionManager": {
     "identifier": "mise"
   },
-  "rubyLsp.rubyExecutablePath": "/Users/joshua.ellis/.local/share/mise/installs/ruby/3.2.11/bin/ruby",
   "yaml.disableSchemaDetection": [
     "**/.github/workflows/*.yml",
     "**/.github/workflows/*.yaml",
