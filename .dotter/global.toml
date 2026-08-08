@@ -38,6 +38,7 @@
   "bin/pinentry-auto"     = "~/.local/bin/pinentry-auto"
   "bin/transcode-hevc"    = "~/.local/bin/transcode-hevc"
   "bin/update"            = "~/.local/bin/update"
+  "bin/vscode-extensions" = "~/.local/bin/vscode-extensions"
 
 [borgmatic]
   [borgmatic.files]
