@@ -1,0 +1,50 @@
+#!/bin/sh
+## Keeps the checked-in extension manifest and the running Code - Insiders
+## installation in step.
+##
+## Settings Sync already carries extensions between machines, so this is not
+## the primary mechanism. It exists so the extension set is visible in review,
+## and so a machine Sync has never seen can be stood up from the repository.
+##
+## Enablement state is NOT captured here. Twenty-odd extensions are disabled
+## globally and re-enabled per workspace, and that lives in globalStorage's
+## SQLite database, which is Sync's UI State resource rather than anything
+## dotter can manage. A machine populated by `install` alone gets every
+## extension enabled.
+set -eu
+
+manifest="${DOTFILES_DIR:-$HOME/.dotfiles}/vscode/extensions.txt"
+
+if ! command -v code-insiders >/dev/null 2>&1; then
+  echo "vscode-extensions: code-insiders is not on PATH" >&2
+  exit 1
+fi
+
+case "${1:-}" in
+export)
+  ## --list-extensions already emits one identifier per line in sorted
+  ## order, but the sort is restated so that a future change in the editor
+  ## cannot turn a no-op export into a whole-file diff.
+  code-insiders --list-extensions | LC_ALL=C sort -f >"$manifest"
+  echo "vscode-extensions: wrote $(wc -l <"$manifest" | tr -d ' ') entries"
+  ;;
+install)
+  if [ ! -f "$manifest" ]; then
+    echo "vscode-extensions: $manifest not found" >&2
+    exit 1
+  fi
+  installed="$(code-insiders --list-extensions)"
+  while IFS= read -r extension; do
+    [ -n "$extension" ] || continue
+    if printf '%s\n' "$installed" | grep -qixF "$extension"; then
+      continue
+    fi
+    echo "vscode-extensions: installing $extension"
+    code-insiders --install-extension "$extension" --force
+  done <"$manifest"
+  ;;
+*)
+  echo "usage: vscode-extensions (export|install)" >&2
+  exit 2
+  ;;
+esac
