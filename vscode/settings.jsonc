@@ -1,0 +1,565 @@
+{
+  "[c]": {
+    "editor.defaultFormatter": "xaver.clang-format"
+  },
+  "[dockercompose]": {
+    "editor.autoIndent": "advanced",
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.insertSpaces": true,
+    "editor.quickSuggestions": {
+      "comments": false,
+      "other": true,
+      "strings": true
+    },
+    "editor.tabSize": 2
+  },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.formatOnSave": false
+  },
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "[instructions]": {
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one",
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrapColumn": 80,
+    "editor.wrappingIndent": "indent",
+    "editor.wrappingStrategy": "advanced",
+    "rewrap.wrappingColumn": 0
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[latex]": {
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrapColumn": 80,
+    "editor.wrappingIndent": "indent",
+    "editor.wrappingStrategy": "advanced",
+    "rewrap.wrappingColumn": 0
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one",
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrapColumn": 80,
+    "editor.wrappingIndent": "indent",
+    "editor.wrappingStrategy": "advanced",
+    "rewrap.wrappingColumn": 0
+  },
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  },
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+  },
+  "[shellscript]": {
+    "editor.defaultFormatter": "mkhl.shfmt"
+  },
+  "[toml]": {
+    "editor.defaultFormatter": "tombi-toml.tombi"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[wolfram]": {
+    "editor.formatOnSave": false
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "DotJoshJohnson.xml"
+  },
+  "[yaml]": {
+    "editor.formatOnSave": false
+  },
+  "chat.tools.terminal.outputLocation": "chat",
+  "chat.useAgentSkills": true,
+  "chat.viewSessions.orientation": "stacked",
+  "claudeCode.preferredLocation": "sidebar",
+  "claudeCode.selectedModel": "us.anthropic.claude-sonnet-4-6",
+  "containers.containerClient": "com.microsoft.visualstudio.containers.podman",
+  "containers.environment": {
+    "DOCKER_HOST": "unix:///tmp/josh/podman/podman-machine-default-api.sock"
+  },
+  "cSpell.autoFormatConfigFile": true,
+  "cSpell.diagnosticLevel": "Hint",
+  "cSpell.language": "en-GB",
+  "cSpell.userWords": ["pactflow", "PactFlow"],
+  "debug.onTaskErrors": "debugAnyway",
+  "debugpy.debugJustMyCode": false,
+  "dev.containers.dockerPath": "podman",
+  "diffEditor.experimental.showMoves": true,
+  "diffEditor.experimental.useTrueInlineView": true,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "diffEditor.maxComputationTime": 0,
+  "docker.environment": {
+    "DOCKER_HOST": "unix:///tmp/josh/podman/podman-machine-default-api.sock"
+  },
+  "docker.extension.enableComposeLanguageServer": false,
+  "editor.cursorBlinking": "smooth",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.cursorSurroundingLines": 5,
+  "editor.experimental.preferTreeSitter.css": true,
+  "editor.experimental.preferTreeSitter.ini": true,
+  "editor.experimental.preferTreeSitter.regex": true,
+  "editor.experimental.preferTreeSitter.typescript": true,
+  "editor.experimental.treeSitterTelemetry": true,
+  "editor.experimentalEditContextEnabled": true,
+  "editor.fontFamily": "Fira Code, Monaspace Neon Var, ui-monospace, monospace",
+  // Monaspace ligatures:
+  // "editor.fontLigatures": "'calt', 'liga', 'dlig', 'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'ss07', 'ss08'",
+  // Fira Code ligature:
+  "editor.fontLigatures": "'calt', 'ss03', 'ss04', 'ss07', 'ss09', 'ss10', 'cv18', 'cv25', 'cv26', 'cv32', 'cv28', 'zero', 'onum'",
+  "editor.fontSize": 12,
+  "editor.fontVariations": true,
+  "editor.fontWeight": "400",
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
+  "editor.inlineSuggest.enabled": true,
+  "editor.inlineSuggest.experimental.showOnSuggestConflict": "always",
+  "editor.lineNumbers": "relative",
+  "editor.linkedEditing": true,
+  "editor.minimap.renderCharacters": false,
+  "editor.occurrencesHighlight": "multiFile",
+  "editor.rulers": [80, 100],
+  "editor.semanticHighlighting.enabled": true,
+  "editor.smoothScrolling": true,
+  "editor.stickyScroll.enabled": true,
+  "editor.unicodeHighlight.ambiguousCharacters": false,
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "cmd": "yamlfix -c .yamlfix.toml '${file}'",
+        "match": ".*\\.ya?ml$"
+      }
+    ]
+  },
+  "eslint.format.enable": true,
+  "eslint.lintTask.enable": true,
+  "evenBetterToml.formatter.alignComments": true,
+  "evenBetterToml.formatter.alignEntries": true,
+  "evenBetterToml.formatter.allowedBlankLines": 2,
+  "evenBetterToml.formatter.arrayAutoCollapse": true,
+  "evenBetterToml.formatter.arrayAutoExpand": true,
+  "evenBetterToml.formatter.arrayTrailingComma": true,
+  "evenBetterToml.formatter.columnWidth": 80,
+  "evenBetterToml.formatter.indentTables": true,
+  "evenBetterToml.formatter.reorderInlineTables": true,
+  "evenBetterToml.formatter.reorderKeys": true,
+  "evenBetterToml.formatter.trailingNewline": true,
+  "evenBetterToml.schema.links": true,
+  "evenBetterToml.semanticTokens": true,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "extensions.experimental.affinity": {
+    "asvetliakov.vscode-neovim": 1,
+    "vscodevim.vim": 1
+  },
+  "extensions.experimental.deferredStartupFinishedActivation": true,
+  "files.insertFinalNewline": true,
+  "files.readonlyFromPermissions": true,
+  "files.readonlyInclude": {
+    "**/node_modules/": true
+  },
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "git.allowForcePush": true,
+  "git.allowNoVerifyCommit": true,
+  "git.alwaysSignOff": true,
+  "git.autofetch": true,
+  "git.autoStash": true,
+  "git.blame.editorDecoration.enabled": true,
+  "git.blame.ignoreWhitespace": true,
+  "git.branchRandomName.enable": true,
+  "git.detectWorktrees": true,
+  "git.enableCommitSigning": true,
+  "git.fetchOnPull": true,
+  "git.openRepositoryInParentFolders": "always",
+  "git.pruneOnFetch": true,
+  "git.rebaseWhenSync": true,
+  "git.timeline.showUncommitted": true,
+  "github.copilot.chat.agent.thinkingTool": true,
+  "github.copilot.chat.codesearch.enabled": true,
+  "github.copilot.chat.editor.temporalContext.enabled": true,
+  "github.copilot.chat.edits.temporalContext.enabled": true,
+  "github.copilot.chat.generateTests.codeLens": true,
+  "github.copilot.chat.languageContext.typescript.enabled": true,
+  "github.copilot.chat.newWorkspace.useContext7": true,
+  "github.copilot.chat.scopeSelection": true,
+  "github.copilot.chat.startDebugging.enabled": true,
+  "github.copilot.enable": {
+    "*": true,
+    "markdown": true,
+    "plaintext": true,
+    "scminput": true
+  },
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "githubIssues.queries": [
+    {
+      "label": "Created Issues",
+      "query": "author:${user} state:open repo:${owner}/${repository} sort:created-desc"
+    },
+    {
+      "label": "Recent Issues",
+      "query": "state:open repo:${owner}/${repository} sort:updated-desc"
+    }
+  ],
+  "githubPullRequests.defaultMergeMethod": "rebase",
+  "githubPullRequests.experimental.chat": true,
+  "githubPullRequests.experimental.useQuickChat": true,
+  "githubPullRequests.focusedMode": "multiDiff",
+  "githubPullRequests.pullBranch": "never",
+  "githubPullRequests.terminalLinksHandler": "github",
+  "gitlens.ai.model": "vscode",
+  "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+  "gitlens.autolinks": [
+    {
+      "prefix": "PACT-",
+      "url": "https://smartbear.atlassian.net/browse/PACT-<num>"
+    }
+  ],
+  "gitlens.blame.toggleMode": "window",
+  "gitlens.changes.toggleMode": "window",
+  "gitlens.codeLens.scopes": ["document", "containers"],
+  "gitlens.graph.dimMergeCommits": true,
+  "gitlens.graph.statusBar.enabled": false,
+  "gitlens.heatmap.toggleMode": "window",
+  "gitlens.views.scm.grouped.views": {
+    "branches": true,
+    "commits": true,
+    "contributors": true,
+    "fileHistory": false,
+    "launchpad": true,
+    "remotes": true,
+    "repositories": true,
+    "searchAndCompare": false,
+    "stashes": true,
+    "tags": true,
+    "worktrees": true
+  },
+  "json.schemaDownload.trustedDomains": {
+    "https://biomejs.dev": true,
+    "https://biomejs.dev/schemas/": true,
+    "https://developer.microsoft.com/json-schemas/": true,
+    "https://json-schema.org/": true,
+    "https://json.schemastore.org/": true,
+    "https://raw.githubusercontent.com/devcontainers/spec/": true,
+    "https://raw.githubusercontent.com/microsoft/vscode/": true,
+    "https://schemastore.azurewebsites.net/": true,
+    "https://www.schemastore.org/": true
+  },
+  "jupyter.askForKernelRestart": false,
+  "jupyter.executionAnalysis.enabled": true,
+  "jupyter.themeMatplotlibPlots": true,
+  "jupyter.widgetScriptSources": ["jsdelivr.com", "unpkg.com"],
+  "latex-workshop.bibtex-fields.sort.enabled": true,
+  "latex-workshop.bibtex-format.sort.enabled": true,
+  "latex-workshop.bibtex-format.trailingComma": true,
+  "latex-workshop.formatting.latex": "tex-fmt",
+  "latex-workshop.intellisense.citation.backend": "biblatex",
+  "latex-workshop.kpsewhich.enabled": true,
+  "latex-workshop.latex.recipe.default": "lastUsed",
+  "liveshare.guestApprovalRequired": true,
+  "liveshare.languages.allowGuestCommandControl": true,
+  "magit.forge-enabled": true,
+  "magit.quick-switch-enabled": true,
+  "markdown.editor.pasteUrlAsFormattedLink.enabled": "smart",
+  "markdown.extension.print.imgToBase64": true,
+  "markdown.extension.toc.orderedList": true,
+  "markdown.preview.typographer": true,
+  "material-icon-theme.files.associations": {
+    ".azuredevops/**.yaml": "azure-pipelines",
+    ".azuredevops/**.yml": "azure-pipelines"
+  },
+  "material-icon-theme.folders.associations": {
+    ".azuredevops": "azure-pipelines"
+  },
+  "material-icon-theme.hidesExplorerArrows": true,
+  "mermaid-chat.enabled": true,
+  "mise.configureExtensionsAutomatically": true,
+  "multiDiffEditor.experimental.enabled": true,
+  "mypy-type-checker.importStrategy": "fromEnvironment",
+  "notebook.formatOnCellExecution": true,
+  "notebook.formatOnSave.enabled": true,
+  "notebook.output.scrolling": true,
+  "notebook.stickyScroll.enabled": true,
+  "notebook.variablesView": true,
+  "outline.collapseItems": "alwaysCollapse",
+  "presentation-mode.active": {
+    "activityBar.visibility": "hidden",
+    "breadcrumbs.enabled": false,
+    "editor.hover.enabled": false,
+    "editor.minimap.enabled": false,
+    "editor.parameterHints.enabled": false,
+    "editor.quickSuggestions": {
+      "comments": false,
+      "other": false,
+      "strings": false
+    },
+    "hints.visibility": false,
+    "problems.visibility": false,
+    "statusBar.visibility": "hidden",
+    "window.zoomLevel": 2,
+    "window.titleBarStyle": "custom",
+    "workbench.activityBar.visible": false,
+    "workbench.statusBar.visible": false,
+    "workbench.titleBar.visible": false
+  },
+  "prettier.bracketSameLine": true,
+  "prettier.documentSelectors": [
+    "**/*.{ts,tsx}",
+    "**/*.{js,cjs,jsx}",
+    "**/*.{htm,html,xhtml}",
+    "**/*.svelte"
+  ],
+  "prettier.enableDebugLogs": true,
+  "prettier.proseWrap": "always",
+  "prettier.trailingComma": "all",
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.inlayHints.callArgumentNames": "partial",
+  "python.analysis.inlayHints.functionReturnTypes": true,
+  "python.analysis.inlayHints.pytestParameters": true,
+  "python.analysis.inlayHints.variableTypes": true,
+  "python.analysis.typeCheckingMode": "strict",
+  "python.analysis.typeEvaluation.deprecateTypingAliases": true,
+  "python.analysis.typeEvaluation.enableExperimentalFeatures": true,
+  "python.analysis.typeEvaluation.enableReachabilityAnalysis": true,
+  "python.analysis.typeEvaluation.strictDictionaryInference": true,
+  "python.analysis.typeEvaluation.strictListInference": true,
+  "python.analysis.typeEvaluation.strictSetInference": true,
+  "python.defaultInterpreterPath": "/opt/homebrew/bin/python3",
+  "python.useEnvironmentsExtension": true,
+  "redhat.telemetry.enabled": true,
+  "remote.tunnels.alwaysUpdateCLI": true,
+  "rewrap.reformat": true,
+  "rewrap.wholeComment": false,
+  "rumdl.fixOnSave": true,
+  "rumdl.rules.disable": ["MD013"],
+  "rust-analyzer.assist.emitMustUse": true,
+  "rust-analyzer.cargo.cfgs": ["debug_assertions"],
+  "rust-analyzer.cargo.extraEnv": {
+    "RUSTC_BOOTSTRAP": "1"
+  },
+  "rust-analyzer.cargo.features": "all",
+  "rust-analyzer.check.command": "clippy",
+  "rust-analyzer.check.features": "all",
+  "rust-analyzer.diagnostics.experimental.enable": true,
+  "rust-analyzer.diagnostics.styleLints.enable": true,
+  "rust-analyzer.diagnostics.useRustcErrorCode": true,
+  "rust-analyzer.hover.actions.references.enable": true,
+  "rust-analyzer.imports.granularity.enforce": true,
+  "rust-analyzer.imports.preferNoStd": true,
+  "rust-analyzer.imports.prefix": "crate",
+  "rust-analyzer.inlayHints.bindingModeHints.enable": true,
+  "rust-analyzer.inlayHints.closureCaptureHints.enable": true,
+  "rust-analyzer.inlayHints.closureReturnTypeHints.enable": "with_block",
+  "rust-analyzer.inlayHints.discriminantHints.enable": "fieldless",
+  "rust-analyzer.inlayHints.lifetimeElisionHints.useParameterNames": true,
+  "rust-analyzer.inlayHints.rangeExclusiveHints.enable": true,
+  "rust-analyzer.interpret.tests": true,
+  "rust-analyzer.lens.references.adt.enable": true,
+  "rust-analyzer.lens.references.enumVariant.enable": true,
+  "rust-analyzer.lens.references.method.enable": true,
+  "rust-analyzer.lens.references.trait.enable": true,
+  "rust-analyzer.restartServerOnConfigChange": true,
+  "rust-analyzer.rustfmt.extraArgs": ["+nightly"],
+  "rust-analyzer.rustfmt.rangeFormatting.enable": true,
+  "rust-analyzer.semanticHighlighting.operator.specialization.enable": true,
+  "rust-analyzer.semanticHighlighting.punctuation.enable": true,
+  "rust-analyzer.semanticHighlighting.punctuation.separate.macro.bang": true,
+  "rust-analyzer.semanticHighlighting.punctuation.specialization.enable": true,
+  "rust-analyzer.testExplorer": true,
+  "scm.defaultViewMode": "tree",
+  "scm.diffDecorationsGutterPattern": {
+    "added": true
+  },
+  "scm.diffDecorationsGutterWidth": 1,
+  "scm.diffDecorationsIgnoreTrimWhitespace": "inherit",
+  "settingsSync.ignoredExtensions": ["mkhl.direnv"],
+  "settingsSync.ignoredSettings": ["wolfram.kernel"],
+  "shellcheck.useWorkspaceRootAsCwd": true,
+  "svelte.enable-ts-plugin": true,
+  "taskexplorer.enabledTasks": {
+    "make": true
+  },
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.defaultProfile.windows": "PowerShell 7",
+  "terminal.integrated.enableImages": true,
+  "terminal.integrated.fontSize": 12,
+  "terminal.integrated.gpuAcceleration": "on",
+  "terminal.integrated.hideOnStartup": "whenEmpty",
+  "terminal.integrated.inheritEnv": false,
+  "terminal.integrated.profiles.linux": {
+    "bash": {
+      "args": ["-l"],
+      "path": "bash"
+    },
+    "fish": {
+      "args": ["-l"],
+      "path": "fish"
+    },
+    "zsh": {
+      "args": ["-l"],
+      "path": "zsh"
+    }
+  },
+  "terminal.integrated.profiles.osx": {
+    "bash": {
+      "args": ["-l"],
+      "path": "bash"
+    },
+    "fish": {
+      "args": ["-l"],
+      "path": "fish"
+    },
+    "zsh": {
+      "args": ["-l"],
+      "path": "zsh"
+    }
+  },
+  "terminal.integrated.profiles.windows": {
+    "PowerShell 7": {
+      "icon": "terminal-powershell",
+      "path": "pwsh.exe"
+    }
+  },
+  "terminal.integrated.shellIntegration.enabled": true,
+  "terminal.integrated.smoothScrolling": true,
+  "terminal.integrated.suggest.enabled": false,
+  "todo-tree.ripgrep.ripgrep": "/Users/joshua.ellis/.local/share/mise/installs/cargo-ripgrep/15/bin/rg",
+  "update.showReleaseNotes": false,
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<space>"],
+      "commands": ["vspacecode.space"]
+    },
+    {
+      "before": [","],
+      "commands": [
+        "vspacecode.space",
+        {
+          "args": "m",
+          "command": "whichkey.triggerKey"
+        }
+      ]
+    }
+  ],
+  "vim.smartRelativeLine": true,
+  "vim.useSystemClipboard": true,
+  "vim.visualModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<space>"],
+      "commands": ["vspacecode.space"]
+    },
+    {
+      "before": [","],
+      "commands": [
+        "vspacecode.space",
+        {
+          "args": "m",
+          "command": "whichkey.triggerKey"
+        }
+      ]
+    },
+    {
+      "before": [">"],
+      "commands": ["editor.action.indentLines"]
+    },
+    {
+      "before": ["<"],
+      "commands": ["editor.action.outdentLines"]
+    }
+  ],
+  "vspacecode.bindingOverrides": [
+    {
+      "command": "git.stageSelectedRanges",
+      "keys": "g.s",
+      "name": "stage selection",
+      "type": "command"
+    },
+    {
+      "command": "git.unstageSelectedRanges",
+      "keys": "g.u",
+      "name": "unstage selection",
+      "type": "command"
+    },
+    {
+      "command": "coverage-gutters.toggleCoverage",
+      "keys": "t.C",
+      "name": "toggle code coverage",
+      "type": "command"
+    }
+  ],
+  "whichkey.sortOrder": "custom",
+  "window.autoDetectColorScheme": true,
+  "window.commandCenter": true,
+  "window.newWindowProfile": "Default",
+  "window.restoreWindows": "none",
+  "window.systemColorTheme": "auto",
+  "window.zoomLevel": 0,
+  "wolfram.command": [
+    "`kernel`",
+    "-noinit",
+    "-noprompt",
+    "-nopaclet",
+    "-noicon",
+    "-nostartuppaclets",
+    "-run",
+    "Needs[\"LSPServer`\"];LSPServer`StartServer[]"
+  ],
+  "workbench.colorTheme": "Ayu Dark",
+  "workbench.commandPalette.experimental.suggestCommands": true,
+  "workbench.editor.empty.hint": "hidden",
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.list.smoothScrolling": true,
+  "workbench.preferredDarkColorTheme": "Ayu Dark Bordered",
+  "workbench.preferredLightColorTheme": "Ayu Light",
+  "yaml.customTags": [
+    "!And",
+    "!And sequence",
+    "!If",
+    "!If sequence",
+    "!Not",
+    "!Not sequence",
+    "!Equals",
+    "!Equals sequence",
+    "!Or",
+    "!Or sequence",
+    "!FindInMap",
+    "!FindInMap sequence",
+    "!Base64",
+    "!Join",
+    "!Join sequence",
+    "!Cidr",
+    "!Ref",
+    "!Sub",
+    "!Sub sequence",
+    "!GetAtt",
+    "!GetAZs",
+    "!ImportValue",
+    "!ImportValue sequence",
+    "!Select",
+    "!Select sequence",
+    "!Split",
+    "!Split sequence"
+  ],
+  "editor.renderWhitespace": "none",
+  "rubyLsp.rubyVersionManager": {
+    "identifier": "mise"
+  },
+  "rubyLsp.rubyExecutablePath": "/Users/joshua.ellis/.local/share/mise/installs/ruby/3.2.11/bin/ruby",
+  "yaml.disableSchemaDetection": [
+    "**/.github/workflows/*.yml",
+    "**/.github/workflows/*.yaml",
+    "**/.gitea/workflows/*.yml",
+    "**/.gitea/workflows/*.yaml",
+    "**/.forgejo/workflows/*.yml",
+    "**/.forgejo/workflows/*.yaml"
+  ],
+  "chat.titleBar.openInAgentsWindow.enabled": false
+}

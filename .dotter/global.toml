@@ -207,11 +207,21 @@
     type   = "symbolic",
     if     = "dotter.macos"
   }
+  "vscode/settings.jsonc"    = {
+    target = "~/Library/Application Support/Code - Insiders/User/settings.json",
+    type   = "symbolic",
+    if     = "dotter.macos"
+  }
 
 [vscode-linux]
   [vscode-linux.files]
   "vscode/keybindings.jsonc" = {
     target = "~/.config/Code - Insiders/User/keybindings.json",
+    type   = "symbolic",
+    if     = "dotter.linux"
+  }
+  "vscode/settings.jsonc"    = {
+    target = "~/.config/Code - Insiders/User/settings.json",
     type   = "symbolic",
     if     = "dotter.linux"
   }
