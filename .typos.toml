@@ -6,3 +6,6 @@ extend-ignore-re = [
   "(?ms)(#|//|;)\\s*codespell:ignore:start$.*(#|//|;)\\s*codespell:ignore:end$",
   "(?m)^.*(#|//|;)\\s*noqa$",
 ]
+
+  [default.extend-words]
+  noice = "noice"
