@@ -2,3 +2,12 @@
 !/.dotter/global.toml
 !/.dotter/windows.toml
 !/.dotter/post_deploy.sh
+
+/nvim/tt.*
+/nvim/.tests
+/nvim/doc/tags
+/nvim/debug
+/nvim/.repro
+/nvim/foo.*
+/nvim/*.log
+/nvim/data
