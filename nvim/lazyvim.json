@@ -1,5 +1,24 @@
 {
-  "extras": [],
+  "extras": [
+    "lazyvim.plugins.extras.lang.astro",
+    "lazyvim.plugins.extras.lang.git",
+    "lazyvim.plugins.extras.lang.go",
+    "lazyvim.plugins.extras.lang.json",
+    "lazyvim.plugins.extras.lang.markdown",
+    "lazyvim.plugins.extras.lang.python",
+    "lazyvim.plugins.extras.lang.ruby",
+    "lazyvim.plugins.extras.lang.rust",
+    "lazyvim.plugins.extras.lang.sql",
+    "lazyvim.plugins.extras.lang.svelte",
+    "lazyvim.plugins.extras.lang.toml",
+    "lazyvim.plugins.extras.lang.typescript",
+    "lazyvim.plugins.extras.lang.typescript.biome",
+    "lazyvim.plugins.extras.lang.typescript.tsgo",
+    "lazyvim.plugins.extras.lang.typst",
+    "lazyvim.plugins.extras.lang.yaml",
+    "lazyvim.plugins.extras.util.gh",
+    "lazyvim.plugins.extras.vscode"
+  ],
   "install_version": 8,
   "news": {
     "NEWS.md": "11866"
