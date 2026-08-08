@@ -1,10 +1,14 @@
 #!/bin/sh
-## Keeps the checked-in extension manifest and the running Code - Insiders
+## Keeps the checked-in extension manifests and the running Code - Insiders
 ## installation in step.
 ##
 ## Settings Sync already carries extensions between machines, so this is not
 ## the primary mechanism. It exists so the extension set is visible in review,
 ## and so a machine Sync has never seen can be stood up from the repository.
+##
+## With no profile name, the Default profile and vscode/extensions.txt are
+## used. A profile name targets that profile and vscode/extensions-<slug>.txt,
+## where the slug is the name lowercased with spaces replaced by hyphens.
 ##
 ## Enablement state is NOT captured here. Twenty-odd extensions are disabled
 ## globally and re-enabled per workspace, and that lives in globalStorage's
@@ -13,19 +17,73 @@
 ## extension enabled.
 set -eu
 
-manifest="${DOTFILES_DIR:-$HOME/.dotfiles}/vscode/extensions.txt"
+dotfiles="${DOTFILES_DIR:-$HOME/.dotfiles}"
+
+action="${1:-}"
+profile="${2:-}"
+
+case "$action" in
+export | install) ;;
+*)
+  echo "usage: vscode-extensions (export|install) [profile-name]" >&2
+  exit 2
+  ;;
+esac
 
 if ! command -v code-insiders >/dev/null 2>&1; then
   echo "vscode-extensions: code-insiders is not on PATH" >&2
   exit 1
 fi
 
-case "${1:-}" in
+if [ -n "$profile" ]; then
+  slug="$(printf '%s' "$profile" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')"
+  manifest="$dotfiles/vscode/extensions-$slug.txt"
+else
+  manifest="$dotfiles/vscode/extensions.txt"
+fi
+
+## A profile name that does not exist is created on demand by `--profile`, which
+## would turn a typo into a new profile populated with the whole manifest. The
+## name is checked against the editor's own profile list first.
+if [ -n "$profile" ]; then
+  case "$(uname -s)" in
+  Darwin) user_dir="$HOME/Library/Application Support/Code - Insiders/User" ;;
+  *) user_dir="${XDG_CONFIG_HOME:-$HOME/.config}/Code - Insiders/User" ;;
+  esac
+  storage="$user_dir/globalStorage/storage.json"
+
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "vscode-extensions: jq is not on PATH" >&2
+    exit 1
+  fi
+
+  if [ ! -f "$storage" ]; then
+    echo "vscode-extensions: $storage not found" >&2
+    exit 1
+  fi
+
+  if ! jq -e --arg name "$profile" \
+    'any((.userDataProfiles // [])[]; .name == $name)' "$storage" >/dev/null; then
+    echo "vscode-extensions: no profile named '$profile'" >&2
+    echo "vscode-extensions: create it in the editor before syncing" >&2
+    exit 1
+  fi
+fi
+
+code_cli() {
+  if [ -n "$profile" ]; then
+    code-insiders --profile "$profile" "$@"
+  else
+    code-insiders "$@"
+  fi
+}
+
+case "$action" in
 export)
   ## --list-extensions already emits one identifier per line in sorted
   ## order, but the sort is restated so that a future change in the editor
   ## cannot turn a no-op export into a whole-file diff.
-  extensions="$(code-insiders --list-extensions)"
+  extensions="$(code_cli --list-extensions)"
   if [ -z "$extensions" ]; then
     echo "vscode-extensions: listing came back empty" >&2
     exit 1
@@ -38,18 +96,14 @@ install)
     echo "vscode-extensions: $manifest not found" >&2
     exit 1
   fi
-  installed="$(code-insiders --list-extensions)"
+  installed="$(code_cli --list-extensions)"
   while IFS= read -r extension; do
     [ -n "$extension" ] || continue
     if printf '%s\n' "$installed" | grep -qixF "$extension"; then
       continue
     fi
     echo "vscode-extensions: installing $extension"
-    code-insiders --install-extension "$extension" --force </dev/null
+    code_cli --install-extension "$extension" --force </dev/null
   done <"$manifest"
-  ;;
-*)
-  echo "usage: vscode-extensions (export|install)" >&2
-  exit 2
   ;;
 esac
