@@ -25,7 +25,12 @@ export)
   ## --list-extensions already emits one identifier per line in sorted
   ## order, but the sort is restated so that a future change in the editor
   ## cannot turn a no-op export into a whole-file diff.
-  code-insiders --list-extensions | LC_ALL=C sort -f >"$manifest"
+  extensions="$(code-insiders --list-extensions)"
+  if [ -z "$extensions" ]; then
+    echo "vscode-extensions: listing came back empty" >&2
+    exit 1
+  fi
+  printf '%s\n' "$extensions" | LC_ALL=C sort -f >"$manifest"
   echo "vscode-extensions: wrote $(wc -l <"$manifest" | tr -d ' ') entries"
   ;;
 install)
