@@ -183,6 +183,39 @@
   [sway.variables]
   terminal = "kitty"
 
+[vscode-macos]
+  ## VSCode owns these files at runtime, so they deploy as symlinks and can
+  ## never use dotter templating: the editor rewrites them in place and would
+  ## overwrite any handlebars expression. Machine-specific values are deleted
+  ## rather than parameterised.
+  ##
+  ## Settings Sync stays enabled so it keeps carrying extensions and UI state,
+  ## but its Settings and Keybindings resources must be deselected on every
+  ## machine. Sync writes on its own schedule and would otherwise overwrite
+  ## these files behind dotter's back. That toggle lives in the editor's own
+  ## account state and cannot be expressed here.
+  ##
+  ## The repository copies are named .jsonc so biome parses the comments the
+  ## files carry; VSCode requires the .json names at the target.
+  ##
+  ## macOS and Linux are separate packages rather than one package with `if`
+  ## per entry, because the same source maps to two targets and TOML forbids
+  ## the duplicate key that would need. Each machine selects one in local.toml.
+  [vscode-macos.files]
+  "vscode/keybindings.jsonc" = {
+    target = "~/Library/Application Support/Code - Insiders/User/keybindings.json",
+    type   = "symbolic",
+    if     = "dotter.macos"
+  }
+
+[vscode-linux]
+  [vscode-linux.files]
+  "vscode/keybindings.jsonc" = {
+    target = "~/.config/Code - Insiders/User/keybindings.json",
+    type   = "symbolic",
+    if     = "dotter.linux"
+  }
+
 [windows-terminal]
   [windows-terminal.files]
   "windows-terminal/settings.json" = "~/scoop/apps/windows-terminal/current/settings/settings.json"
