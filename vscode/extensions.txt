@@ -24,7 +24,6 @@ davidanson.vscode-markdownlint
 dbaeumer.vscode-eslint
 docker.docker
 donjayamanne.githistory
-dorzey.vscode-sqlfluff
 dotjoshjohnson.xml
 eamodio.gitlens
 editorconfig.editorconfig
