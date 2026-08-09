@@ -15,6 +15,16 @@
 ## SQLite database, which is Sync's UI State resource rather than anything
 ## dotter can manage. A machine populated by `install` alone gets every
 ## extension enabled.
+##
+## A profile this script targets must already exist, created via the Command
+## Palette's Profiles: Create Profile... dialog with Copy from: None, and with
+## Settings, Snippets, Tasks and MCP servers set to use the Default profile
+## while Extensions and Keyboard Shortcuts stay profile-specific.
+## `code-insiders --profile <name>` on a name that does not yet exist instead
+## creates a fully independent profile with no fallback to Default, breaking
+## that sharing. Install extensions into a freshly created profile before
+## opening repository files in it, or the editor's built-in formatter runs
+## with none installed and can rewrite files like `.jsonc` on save.
 set -eu
 
 dotfiles="${DOTFILES_DIR:-$HOME/.dotfiles}"
