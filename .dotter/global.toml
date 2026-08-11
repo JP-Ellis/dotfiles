@@ -21,6 +21,7 @@
     type   = "symbolic",
     if     = "dotter.macos"
   }
+  "bin/gpg-refresh"       = "~/.local/bin/gpg-refresh"
   "bin/pinentry-auto"     = "~/.local/bin/pinentry-auto"
   "bin/transcode-hevc"    = "~/.local/bin/transcode-hevc"
   "bin/update"            = "~/.local/bin/update"
