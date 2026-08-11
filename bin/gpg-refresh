@@ -1,0 +1,46 @@
+#!/bin/sh
+## gpg-agent measures max-cache-ttl from the moment a passphrase was entered and
+## never extends it on use, so a cached key cannot be renewed in place.  The
+## only way to open a fresh window is to discard every cached passphrase and
+## immediately re-enter it.  Run this before a long unattended stretch to move
+## the prompt to a moment when someone is actually at the keyboard.
+set -e
+
+_tmp=$(mktemp -d)
+trap 'rm -rf "$_tmp"' EXIT
+
+## ssh-add -T needs the public key material, and reading it while the current
+## agent is still up avoids depending on socket activation to answer a list
+## request in the same breath as the restart.
+ssh-add -L >"$_tmp/keys" 2>/dev/null || :
+
+gpgconf --kill gpg-agent
+
+## Clear-signing empty input is the cheapest operation that forces a passphrase
+## prompt without otherwise touching the keyring.
+_signer=$(git config --get user.signingkey 2>/dev/null || :)
+if [ -n "$_signer" ]; then
+  printf '' | gpg --quiet --local-user "$_signer" --clearsign -o /dev/null
+else
+  printf '' | gpg --quiet --clearsign -o /dev/null
+fi
+echo "gpg-refresh: signing key cached"
+
+## Each key in sshcontrol is cached under its own keygrip, so every one needs a
+## signature of its own to be primed.  ssh-add -l would list them without
+## authenticating and leave the cache empty.
+_n=0
+while IFS= read -r _key; do
+  [ -n "$_key" ] || continue
+  _n=$((_n + 1))
+  printf '%s\n' "$_key" >"$_tmp/key.$_n.pub"
+  if ssh-add -T "$_tmp/key.$_n.pub" >/dev/null 2>&1; then
+    echo "gpg-refresh: ssh key $_n cached"
+  else
+    echo "gpg-refresh: ssh key $_n FAILED" >&2
+  fi
+done <"$_tmp/keys"
+
+if [ "$_n" -eq 0 ]; then
+  echo "gpg-refresh: no ssh keys listed by the agent" >&2
+fi
