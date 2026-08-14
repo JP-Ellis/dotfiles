@@ -50,31 +50,64 @@ Do not mutate the working tree, index, HEAD, or branch state. Inspect with
 
 ## Calibration
 
-Report defects, not preferences. Before writing a finding, ask: would a senior
-engineer raise this in review, or is it a nitpick dressed as a concern?
+Report defects. A preference is a defect you cannot name a victim for: no
+reader misled, no caller broken, no user affected. Name the victim and it is a
+finding.
+
+Do not suppress a small defect for being small. A stale docstring, a missing
+assertion, a divergence from the pattern its three neighbours follow — each is
+real, each costs almost nothing to fix, and each scores low severity rather
+than going unreported. Severity and effort are separate scores below; use them.
 
 Skip entirely:
 - Anything a compiler, linter, type-checker, or formatter catches — CI runs separately
-- Problems on lines this diff did not touch
 - Vague improvements with no specific gap named
 - Issues explicitly silenced in code (`#[expect(...)]`, lint-ignore comments)
+
+## Untouched Code
+
+Report a defect on a line this diff did not touch only when the diff is what
+makes it matter: the change makes the old code wrong, reaches a path nothing
+reached before, or leaves the old code inconsistent with what it now sits
+beside. Tag those findings `pre-existing`.
+
+A latent defect the diff never disturbs is out of scope, however real it is.
+You are reviewing one change, not auditing a repository.
 
 ## Output
 
 For each finding:
 
   file:line
+  Scope — in-diff, or pre-existing
   What is wrong — one sentence, stated as a defect
-  Failure scenario — concrete input or state, and the wrong result it produces
-  Why it matters
+  Consequence — for a runtime defect, a concrete input or state and the wrong
+    result it produces; for a defect with no runtime path, what a reader is
+    misled into believing and what they would do about it
   Confidence, using these anchors exactly:
     0   false positive under light scrutiny
     25  might be real; you could not verify it
-    50  verified real, but a nitpick or rare in practice
+    50  verified real, but rare in practice
     75  verified, will be hit in practice, current approach insufficient
     100 confirmed by direct evidence
+  Severity, using these anchors exactly:
+    0   cosmetic; nobody is misled
+    25  a reader is misled; no runtime consequence
+    50  wrong behaviour on an uncommon path, or a genuine coverage gap
+    75  wrong behaviour a user will hit, or a failure that stays silent
+    100 data loss, a security hole, or a broken documented contract
+  Effort, using these anchors exactly:
+    0   one line in one file: a reword, a guard, a rename
+    25  one function plus its test
+    50  several functions or a few files, contained inside one component
+    75  crosses a component boundary, or changes an interface others depend on
+    100 multi-file refactor across domains, with no single obvious approach
 
-If a finding has no concrete failure scenario, it is a preference. Drop it.
+Score the three independently. A finding can be certain, harmless, and free to
+fix — that is confidence 100, severity 25, effort 0, and it is worth reporting.
+Do not let a low severity pull the confidence down.
+
+If you cannot name the consequence, it is a preference. Drop it.
 
 End with:
 - A one-line verdict per aspect.

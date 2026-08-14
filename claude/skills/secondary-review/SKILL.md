@@ -44,7 +44,7 @@ Splitting these into one agent per aspect produced findings that mostly overlapp
 
 Neither reuses `pr-review-toolkit`'s equivalent agents: those fetch PR context by design, which defeats the blind lens.
 
-Forge comments are not an agent. Run `gh pr view --comments` (or the forge equivalent) yourself and reduce it to one line per comment as `file:line — claim`, with no judgement attached.
+Forge comments are not an agent. Run `gh pr view --comments` (or the forge equivalent) yourself and reduce it to one line per comment as `file:line — claim`, with no judgement attached. Mark each one `forge-bot` or `forge-human`. Rejecting a human comment has to be said out loud; rejecting a bot comment does not.
 
 **Escalation, at most one extra agent.** A deep dive is a second, dedicated pass on an aspect the blind reviewer already covers — depth, not coverage:
 
@@ -53,7 +53,7 @@ Forge comments are not an agent. Run `gh pr view --comments` (or the forge equiv
 
 If both trigger, take the one the diff is more about. Never dispatch both.
 
-Reviewers run on Sonnet, so the confidence filter below is doing real work rather than rubber-stamping. Do not skip it.
+Reviewers run on Sonnet. The scoring pass below is doing real work. Do not skip it.
 
 ## Scope and Sizing
 
@@ -93,37 +93,88 @@ The blind reviewer uses [blind-reviewer.md](blind-reviewer.md); the sighted revi
 
 **The blind prompt is the template verbatim with three substitutions: `[ASPECTS]`, `[BASE_SHA]`, `[HEAD_SHA]`. Nothing is added, no section is inserted, no sentence is rewritten.** `[ASPECTS]` gets every row of that file's aspect briefs table — all five — unless this is the deep-dive agent, which gets one. The sighted prompt is the template with its seven slots filled, `[ASPECTS]` likewise taking all three rows.
 
-## Confidence Filter
+## Scoring
 
-Reviewers self-score, but **you re-score every finding** before it reaches the user — their scales are not calibrated against each other.
+Every finding carries three independent scores. Reviewers self-score all three; **you re-score all three** before anything reaches the user, because the two reviewers' scales are not calibrated against each other.
+
+**Confidence — is this real?** This axis, and only this axis, drops findings.
 
 | Score | Meaning |
 |---|---|
 | 0 | False positive under light scrutiny |
 | 25 | Might be real; could not verify |
-| 50 | Verified real, but a nitpick or rare in practice |
+| 50 | Verified real, but rare in practice |
 | 75 | Verified, will be hit in practice, current approach insufficient |
 | 100 | Confirmed by direct evidence |
 
-Drop below 75. Re-score against the code, not against the reviewer's reasoning — a Sonnet reviewer that argues its way to 75 has still only argued. A finding you cannot reproduce from the diff yourself is a 25. Reviewers are already told to skip compiler-caught, untouched-line, vague, and explicitly-silenced issues; drop any that slip through, plus behaviour changes that are plainly the point of the change.
+Drop below 75. Re-score against the code, not against the reviewer's reasoning — a Sonnet reviewer that argues its way to 75 has still only argued. A finding you cannot reproduce from the diff yourself is a 25. Reviewers are already told to skip compiler-caught, vague, and explicitly-silenced issues; drop any that slip through, plus behaviour changes that are plainly the point of the change.
+
+**Severity — how much damage does it do?**
+
+| Score | Meaning |
+|---|---|
+| 0 | Cosmetic; nobody is misled |
+| 25 | A reader is misled; no runtime consequence — a stale docstring lives here |
+| 50 | Wrong behaviour on an uncommon path, or a genuine coverage gap |
+| 75 | Wrong behaviour a user will hit, or a failure that stays silent |
+| 100 | Data loss, a security hole, or a broken documented contract |
+
+**Effort — how much work is the fix?**
+
+| Score | Meaning |
+|---|---|
+| 0 | One line in one file: a reword, a guard, a rename |
+| 25 | One function plus its test |
+| 50 | Several functions or a few files, contained inside one component |
+| 75 | Crosses a component boundary, or changes an interface other code depends on |
+| 100 | Multi-file refactor across domains, with no single obvious approach |
+
+Severity and effort are descriptive. Neither one drops a finding, and low severity is never a reason to bury something that costs a one-line fix. A stale docstring scores confidence 100, severity 25, effort 0, and gets fixed.
+
+One drop rule beyond confidence: **severity below 25 with effort above 75.** A repo-wide refactor bought for a cosmetic gain is noise.
+
+## Scope
+
+Every finding is tagged `in-diff` or `pre-existing`.
+
+A `pre-existing` finding is admissible when this change is what makes it matter — the diff makes the old code wrong, newly reachable, or newly inconsistent with its neighbours. A latent defect the diff never disturbs stays out, however real it is.
+
+Tag these clearly. A `pre-existing` finding asks the author to fix code they did not write, which is a different conversation from fixing code they did.
 
 ## Synthesis
 
 Disagreements do not fall out of the reports — you produce them. Before writing the output, take each blind finding and re-check it yourself against the intent context. If the context explains it away, that is a disagreement, not a dismissal. Do the same in reverse for sighted findings with no corresponding code defect.
 
+A disagreement is not its own section. It rides on the finding, with both positions stated. Two of them are worth extra attention: a blind finding the context waves away usually means context is doing work the code should do itself; a sighted finding with no code defect behind it usually means a requirement nobody implemented.
+
 ## Output Contract
 
-Group by agreement, not by agent.
+Group by what the reader would do about each finding. Sections run in effort order; inside each one, order by severity descending.
 
-1. **Confirmed** — corroborated by both lenses or by an existing forge comment, or scored 100 on your own re-check. File:line, what's wrong, why it matters. With two reviewers this section is small; that is expected, not a sign the review was thin.
-2. **Disagreements** — from the synthesis step above, with both positions stated. Highest value: a blind finding the context waves away usually means context is doing work the code should do itself; a sighted finding with no code defect behind it usually means a requirement nobody implemented.
-3. **Single-source** — surviving findings from one agent, ranked.
-4. **Forge overlap** — which existing PR comments the reviewers corroborated, and which they contradicted.
+Every finding carries its three scores, its scope tag, and its sources — `blind`, `sighted`, `forge-bot`, `forge-human`, more than one where they corroborate.
+
+1. **Fix now** — effort ≤ 25. File:line, what's wrong, why it matters. Cheap findings of every severity collect here. The section is long by design.
+2. **Scoped work** — effort 26–75. Same format. Each one needs a real change, and none needs a conversation first.
+3. **Needs discussion** — effort > 75. Each one proposes a handover document instead of a fix; see below.
+4. **Dismissed** — human forge comments you are rejecting, with the reason. Nothing else goes here: a bot comment that fails re-scoring disappears silently, like any other unreal finding.
 5. **Verdict** — ready to merge: yes / no / with fixes, in one sentence.
 
 Do not post to the forge unless asked. Do not apply fixes as part of the review.
 
 Hand findings to `superpowers:receiving-code-review` — verify before implementing, push back where a reviewer is wrong.
+
+## Handover Documents
+
+Above effort 75, a fix is a project. Propose a handover document and stop there — writing it is a separate request, and the review has no mandate to design anything.
+
+State what the document would contain:
+
+- The finding, in enough detail that a reader who never saw the diff can follow it
+- What it costs to leave alone
+- What it touches — files, components, callers, anything downstream
+- The desired end state, described as behaviour
+
+**No solution.** The point of the document is to open a discussion that discovers one. A review that arrives with the answer attached has closed the discussion it asked for.
 
 ## Common Mistakes
 
@@ -134,3 +185,7 @@ Hand findings to `superpowers:receiving-code-review` — verify before implement
 | Including a simplifier or fixer in the roster | A reviewer that edits invalidates the other reviewer's diff |
 | Splitting an aspect out into its own agent "to be thorough" | The aspect is already in the blind prompt; you buy a duplicate diff read and duplicate findings |
 | Reviewing a >1000-line diff that the gate called incoherent | Findings scatter across unrelated changes and the sighted lens has no intent to review against |
+| Dropping a finding because its severity is low | Severity does not gate. A severity-25 defect with a one-line fix is the cheapest win in the report |
+| Scoring severity and effort as one number | The two are independent. Collapsing them hides exactly the cheap-and-real findings this skill exists to surface |
+| Proposing a fix alongside a handover document | The document exists to open a discussion. An attached solution closes it before anyone joins |
+| Reporting a pre-existing defect the diff never disturbs | Turns a review of one change into an audit of the repository |
