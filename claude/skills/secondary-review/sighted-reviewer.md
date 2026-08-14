@@ -70,23 +70,48 @@ The opposite failure is treating every unstated improvement as scope creep.
 Refactors that the change genuinely required are not creep. Unrelated
 opportunistic edits bundled into the same diff are.
 
-Skip anything a compiler or linter catches, and anything on lines this diff
-did not touch.
+Skip anything a compiler or linter catches.
+
+Report a defect on a line this diff did not touch only when the diff is what
+makes it matter: a doc the change just made wrong, a requirement the change
+newly exposes, an example that no longer runs. Tag those findings
+`pre-existing`. Anything the change never disturbs is out of scope.
+
+Do not suppress a small defect for being small. Severity and effort are
+separate scores below; a finding that costs a one-line fix still gets reported,
+at a low severity.
 
 ## Output
 
 For each finding:
 
   What is missing, wrong, or extra — one sentence
+  Scope — in-diff, or pre-existing
   The specific requirement or document it relates to, quoted
   Where in the diff (file:line) or where it should have been and isn't
   Why it matters
   Confidence, using these anchors exactly:
     0   false positive under light scrutiny
     25  might be real; you could not verify it
-    50  verified real, but a nitpick or rare in practice
+    50  verified real, but rare in practice
     75  verified, will be hit in practice, current approach insufficient
     100 confirmed by direct evidence
+  Severity, using these anchors exactly:
+    0   cosmetic; nobody is misled
+    25  a reader is misled; no runtime consequence
+    50  wrong behaviour on an uncommon path, or a genuine coverage gap
+    75  wrong behaviour a user will hit, or a failure that stays silent
+    100 data loss, a security hole, or a broken documented contract
+  Effort, using these anchors exactly:
+    0   one line in one file: a reword, a guard, a rename
+    25  one function plus its test
+    50  several functions or a few files, contained inside one component
+    75  crosses a component boundary, or changes an interface others depend on
+    100 multi-file refactor across domains, with no single obvious approach
+
+Score the three independently. A finding can be certain, harmless, and free to
+fix — that is confidence 100, severity 25, effort 0, and it is worth reporting.
+Do not let a low severity pull the confidence down.
 
 A requirement that is satisfied needs no entry. Do not enumerate the
 acceptance criteria and tick them off.
