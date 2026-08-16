@@ -126,6 +126,16 @@ if check_command "mise"; then
 fi
 
 ########################################
+# Neovim
+########################################
+
+# LazyVim. The lock file is not tracked, so each machine resolves plugins to
+# whatever is current at update time.
+if check_command "nvim"; then
+  nvim --headless "+Lazy! sync" +qa
+fi
+
+########################################
 # Emacs
 ########################################
 
