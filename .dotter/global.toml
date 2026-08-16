@@ -163,6 +163,14 @@
   "python/environment.d/90-python.conf" = "~/.config/environment.d/90-python.conf"
   "python/hatch.toml"                   = "~/.config/hatch/config.toml"
 
+[rustic]
+  [rustic.files]
+  "rustic/rustic-backup.service" = "~/.local/share/systemd/user/rustic-backup.service"
+  "rustic/rustic-backup.timer"   = "~/.local/share/systemd/user/rustic-backup.timer"
+  "rustic/rustic-prune.service"  = "~/.local/share/systemd/user/rustic-prune.service"
+  "rustic/rustic-prune.timer"    = "~/.local/share/systemd/user/rustic-prune.timer"
+  "rustic/rustic.toml"           = "~/.config/rustic/rustic.toml"
+
 [sheldon]
   [sheldon.files]
 

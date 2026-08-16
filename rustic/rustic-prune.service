@@ -1,0 +1,23 @@
+[Unit]
+Description=rustic retention and prune (home)
+ConditionPathExists=/mnt/nas/rustic/config
+# forget and prune rewrite the index, so they must not overlap a backup.
+# Conflicts stops an in-flight backup first; the next one follows 20 minutes
+# later, so nothing of value is lost.
+Conflicts=rustic-backup.service
+After=rustic-backup.service
+
+[Service]
+Type=oneshot
+
+TimeoutStartSec=6h
+
+Nice=19
+CPUSchedulingPolicy=batch
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+IOWeight=100
+
+Restart=no
+# Retention comes from the [forget] table in rustic.toml, scoped to this host.
+ExecStart=%h/.local/share/mise/shims/rustic forget --prune

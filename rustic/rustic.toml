@@ -1,0 +1,42 @@
+# MARK: Repository
+
+[repository]
+repository    = "/mnt/nas/rustic"
+# The password is deliberately untracked. On a new machine, write it to this
+# path and chmod 600 before the first backup.
+password-file = "/home/josh/.config/rustic/password"
+
+# MARK: Retention
+
+[forget]
+# The repository is shared with the MacBook. Scoping retention to this host
+# keeps a prune here from expiring another machine's snapshots.
+filter-host = ["jpellis-desktop"]
+
+keep-last           = 12
+keep-within-hourly  = "2 days"
+keep-within-daily   = "28 days"
+keep-within-weekly  = "1 year"
+keep-within-monthly = "7 years"
+
+# MARK: Backup
+
+[backup]
+# Exclusions are expressed as .gitignore-syntax files spread through the tree
+# (~/.gitignore, ~/.local/.gitignore, and others). Those files drive rustic and
+# other sync tools, and mostly sit outside any git repository, so no-require-git
+# is what makes them apply. Both settings are load-bearing.
+git-ignore     = true
+no-require-git = true
+
+# Backups run every 20 minutes; an unchanged tree records no new snapshot.
+skip-if-unchanged = true
+
+exclude-if-present = ["CACHEDIR.TAG", ".nobackup"]
+
+  [[backup.snapshots]]
+  name    = "jpellis-desktop"
+  # Pinned so the snapshot group stays stable regardless of whether gethostname()
+  # returns the FQDN or an mDNS fallback.
+  host    = "jpellis-desktop"
+  sources = ["/home/josh"]
