@@ -161,8 +161,6 @@
   rustic-repository = "/mnt/nas/rustic"
 
   [rustic.files]
-  "rustic/rustic.toml" = "~/.config/rustic/rustic.toml"
-
   ## Scheduling is per-platform: systemd timers on Linux, LaunchAgents on macOS.
   ## systemd expresses the mount guard and the backup/prune/check exclusion
   ## itself; launchd cannot, so on macOS the jobs go through a wrapper that also
@@ -217,6 +215,32 @@
     target = "~/.local/share/systemd/user/rustic-prune.timer",
     type   = "symbolic",
     if     = "dotter.linux"
+  }
+
+## rustic resolves its config through the platform's native directory and
+## ignores XDG_CONFIG_HOME on macOS, where the search path is
+## `~/Library/Application Support/rustic/rustic.toml`, then `/etc/rustic`, then
+## `./rustic.toml`. A config deployed under ~/.config is therefore read on Linux
+## and silently ignored on macOS.
+##
+## One source mapping to two targets needs the duplicate key TOML forbids, so
+## the config file sits in its own per-OS package the way vscode's does. Every
+## machine enables `rustic` plus exactly one of these; the `if` guards are a
+## backstop against enabling the wrong one, not a licence to enable both.
+[rustic-linux]
+  [rustic-linux.files]
+  "rustic/rustic.toml" = {
+    target = "~/.config/rustic/rustic.toml",
+    type   = "template",
+    if     = "dotter.linux"
+  }
+
+[rustic-macos]
+  [rustic-macos.files]
+  "rustic/rustic.toml" = {
+    target = "~/Library/Application Support/rustic/rustic.toml",
+    type   = "template",
+    if     = "dotter.macos"
   }
 
 [sheldon]
