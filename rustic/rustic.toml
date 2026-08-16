@@ -10,14 +10,28 @@ repository    = "{{rustic-repository}}"
 # before the first backup.
 password-file = "{{rustic-home}}/.config/rustic/password"
 
+# MARK: Snapshot filter
+
+# Every machine shares one repository, which is what lets snapshots deduplicate
+# against each other. Scoping snapshot selection to this host keeps a prune here
+# from expiring another machine's snapshots.
+#
+# rustic reads the filter from this table alone. The key is plural, while the
+# equivalent command line flag is singular `--filter-host`, and an unrecognised
+# key is ignored in silence: both a singular `filter-host` and a `filter-hosts`
+# placed under [forget] leave the filter empty and widen a prune to every host
+# in the repository. A repository holding one host hides that, because an
+# unfiltered prune and a filtered one then select the same snapshots.
+#
+# This is a default rather than a restriction: `rustic snapshots` lists only
+# this host, while `--filter-host` overrides the table and an explicit snapshot
+# id still resolves, so restoring another machine's files stays available.
+[snapshot-filter]
+filter-hosts = ["{{rustic-host}}"]
+
 # MARK: Retention
 
 [forget]
-# Every machine shares one repository, which is what lets snapshots deduplicate
-# against each other. Scoping retention to this host keeps a prune here from
-# expiring another machine's snapshots.
-filter-host = ["{{rustic-host}}"]
-
 keep-last           = 12
 keep-within-hourly  = "2 days"
 keep-within-daily   = "28 days"
