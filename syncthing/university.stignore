@@ -1,0 +1,40 @@
+// Deployed by dotter from ~/.dotfiles/syncthing/. Edit there, not here.
+// Syncthing takes the FIRST matching line, so order decides.
+
+// MARK: Syncthing
+.stversions
+
+// MARK: OS artefacts
+.DS_Store
+.Spotlight-V100
+.Trashes
+._*
+desktop.ini
+ehthumbs.db
+Thumbs.db
+
+// MARK: Editor and browser scratch
+*~
+.*.swp
+*.part
+*.crdownload
+
+// MARK: Python
+__pycache__
+.venv
+.pytest_cache
+.ruff_cache
+.mypy_cache
+.ipynb_checkpoints
+
+// MARK: Node
+node_modules
+bower_components
+
+// MARK: LaTeX build output
+auto
+_minted-*
+*.aux
+*.fdb_latexmk
+*.fls
+*.synctex.gz
