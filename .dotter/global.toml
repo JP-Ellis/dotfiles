@@ -27,13 +27,6 @@
   "bin/update"            = "~/.local/bin/update"
   "bin/vscode-extensions" = "~/.local/bin/vscode-extensions"
 
-[borgmatic]
-  [borgmatic.files]
-  "borgmatic/borgmatic.service" = "~/.local/share/systemd/user/borgmatic.service"
-  "borgmatic/borgmatic.timer"   = "~/.local/share/systemd/user/borgmatic.timer"
-  "borgmatic/config.yaml"       = "~/.config/borgmatic/config.yaml"
-  "borgmatic/patterns"          = "~/.config/borgmatic/patterns"
-
 [claude]
   [claude.files]
   "claude/CLAUDE.md"                  = "~/.claude/CLAUDE.md"
@@ -137,12 +130,6 @@
   "kitty/kitty.conf"       = "~/.config/kitty/kitty.conf"
   "kitty/light.theme.conf" = "~/.config/kitty/light.theme.conf"
 
-[kopia]
-  [kopia.files]
-  "kopia/kopia-home.service" = "~/.local/share/systemd/user/kopia-home.service"
-  "kopia/kopia-home.timer"   = "~/.local/share/systemd/user/kopia-home.timer"
-  "kopia/repository.config"  = "~/.config/kopia/repository.config"
-
 [mathematica]
   [mathematica.files]
   "Mathematica/Kernel.m" = {
@@ -164,12 +151,49 @@
   "python/hatch.toml"                   = "~/.config/hatch/config.toml"
 
 [rustic]
+  ## One repository serves every machine, so snapshots deduplicate against each
+  ## other. Each machine claims its own snapshot group through rustic-host, and
+  ## prunes only that group. Defaults describe the Linux desktop; other machines
+  ## override these in .dotter/local.toml.
+  [rustic.variables]
+  rustic-home       = "/home/josh"
+  rustic-host       = "jpellis-desktop"
+  rustic-repository = "/mnt/nas/rustic"
+
   [rustic.files]
-  "rustic/rustic-backup.service" = "~/.local/share/systemd/user/rustic-backup.service"
-  "rustic/rustic-backup.timer"   = "~/.local/share/systemd/user/rustic-backup.timer"
-  "rustic/rustic-prune.service"  = "~/.local/share/systemd/user/rustic-prune.service"
-  "rustic/rustic-prune.timer"    = "~/.local/share/systemd/user/rustic-prune.timer"
-  "rustic/rustic.toml"           = "~/.config/rustic/rustic.toml"
+  "rustic/rustic.toml" = "~/.config/rustic/rustic.toml"
+
+  ## Scheduling is per-platform. macOS needs LaunchAgents equivalent to these.
+  "rustic/systemd/rustic-backup.service" = {
+    target = "~/.local/share/systemd/user/rustic-backup.service",
+    type   = "template",
+    if     = "dotter.linux"
+  }
+  "rustic/systemd/rustic-backup.timer"   = {
+    target = "~/.local/share/systemd/user/rustic-backup.timer",
+    type   = "symbolic",
+    if     = "dotter.linux"
+  }
+  "rustic/systemd/rustic-check.service"  = {
+    target = "~/.local/share/systemd/user/rustic-check.service",
+    type   = "template",
+    if     = "dotter.linux"
+  }
+  "rustic/systemd/rustic-check.timer"    = {
+    target = "~/.local/share/systemd/user/rustic-check.timer",
+    type   = "symbolic",
+    if     = "dotter.linux"
+  }
+  "rustic/systemd/rustic-prune.service"  = {
+    target = "~/.local/share/systemd/user/rustic-prune.service",
+    type   = "template",
+    if     = "dotter.linux"
+  }
+  "rustic/systemd/rustic-prune.timer"    = {
+    target = "~/.local/share/systemd/user/rustic-prune.timer",
+    type   = "symbolic",
+    if     = "dotter.linux"
+  }
 
 [sheldon]
   [sheldon.files]

@@ -1,0 +1,25 @@
+[Unit]
+Description=rustic integrity check (home)
+ConditionPathExists={{rustic-repository}}/config
+# A backup writing packs and index files underneath a check produces spurious
+# errors, so the two are kept apart.
+Conflicts=rustic-backup.service
+After=rustic-backup.service rustic-prune.service
+
+[Service]
+Type=oneshot
+
+TimeoutStartSec=6h
+
+Nice=19
+CPUSchedulingPolicy=batch
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+IOWeight=100
+
+Restart=no
+# Structure and metadata are verified in full every week. Reading every pack
+# would pull the whole repository back over NFS, so a random tenth is read each
+# run instead, which covers the repository over a couple of months and surfaces
+# bit rot long before a restore needs the data.
+ExecStart=%h/.local/share/mise/shims/rustic check --read-data --read-data-subset 10%%
