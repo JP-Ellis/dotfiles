@@ -1,0 +1,19 @@
+// Deployed by dotter from ~/.dotfiles/syncthing/claude.stignore.
+// ALLOWLIST: everything is local unless named below. Order is load-bearing —
+// Syncthing takes the first matching line, so the catch-all must come last.
+
+// MARK: Never sync, regardless of what follows
+.credentials.json
+
+// MARK: Session state that replicates
+!/projects
+!/projects/**
+!/file-history
+!/file-history/**
+!/session-env
+!/session-env/**
+!/sessions
+!/sessions/**
+
+// MARK: Everything else stays on this machine
+**
