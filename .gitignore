@@ -11,3 +11,7 @@
 /nvim/foo.*
 /nvim/*.log
 /nvim/data
+
+# Resolved per machine by `bin/update`; committing it conflicts whenever two
+# machines update independently.
+/nvim/lazy-lock.json
