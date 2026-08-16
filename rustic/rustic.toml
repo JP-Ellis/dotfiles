@@ -1,17 +1,22 @@
+# Machine-specific values come from the rustic-* dotter variables. The defaults
+# describe the Linux desktop; other machines override them in .dotter/local.toml.
+
 # MARK: Repository
 
 [repository]
-repository    = "/mnt/nas/rustic"
-# The password is deliberately untracked. On a new machine, write it to this
-# path and chmod 600 before the first backup.
-password-file = "/home/josh/.config/rustic/password"
+repository    = "{{rustic-repository}}"
+# The password is deliberately untracked, and rustic does not expand `~`, so the
+# path is templated. On a new machine, write the password here and chmod 600
+# before the first backup.
+password-file = "{{rustic-home}}/.config/rustic/password"
 
 # MARK: Retention
 
 [forget]
-# The repository is shared with the MacBook. Scoping retention to this host
-# keeps a prune here from expiring another machine's snapshots.
-filter-host = ["jpellis-desktop"]
+# Every machine shares one repository, which is what lets snapshots deduplicate
+# against each other. Scoping retention to this host keeps a prune here from
+# expiring another machine's snapshots.
+filter-host = ["{{rustic-host}}"]
 
 keep-last           = 12
 keep-within-hourly  = "2 days"
@@ -35,8 +40,8 @@ skip-if-unchanged = true
 exclude-if-present = ["CACHEDIR.TAG", ".nobackup"]
 
   [[backup.snapshots]]
-  name    = "jpellis-desktop"
-  # Pinned so the snapshot group stays stable regardless of whether gethostname()
-  # returns the FQDN or an mDNS fallback.
-  host    = "jpellis-desktop"
-  sources = ["/home/josh"]
+  name    = "{{rustic-host}}"
+  # Pinned so this machine keeps one snapshot group no matter what gethostname()
+  # reports. macOS in particular alternates between its FQDN and an mDNS name.
+  host    = "{{rustic-host}}"
+  sources = ["{{rustic-home}}"]

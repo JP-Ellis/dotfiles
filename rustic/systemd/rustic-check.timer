@@ -1,0 +1,11 @@
+[Unit]
+Description=Run rustic integrity check (home)
+
+[Timer]
+# Offset from the nightly prune so the two do not contend for the NAS.
+OnCalendar=Sun 03:00
+Persistent=true
+RandomizedDelaySec=1h
+
+[Install]
+WantedBy=timers.target
