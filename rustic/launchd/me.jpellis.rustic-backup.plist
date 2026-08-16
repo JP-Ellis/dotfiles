@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>me.jpellis.rustic-backup</string>
+
+  <!-- Wrapped in a shell so $HOME resolves; launchd does not expand it in
+       ProgramArguments. The wrapper supplies what launchd cannot: the
+       repository guard, the cross-job lock, and the battery back-off. -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/sh</string>
+    <string>-c</string>
+    <string>exec /bin/sh "$HOME/.local/bin/rustic-scheduled" backup</string>
+  </array>
+
+  <!-- Fires every 20 minutes. On battery the wrapper drops this to hourly. -->
+  <key>StartInterval</key>
+  <integer>1200</integer>
+
+  <key>Nice</key>
+  <integer>19</integer>
+  <key>ProcessType</key>
+  <string>Background</string>
+  <key>LowPriorityIO</key>
+  <true/>
+
+  <key>StandardOutPath</key>
+  <string>/tmp/me.jpellis.rustic-backup.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/me.jpellis.rustic-backup.log</string>
+</dict>
+</plist>
