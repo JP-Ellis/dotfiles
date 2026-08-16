@@ -163,7 +163,31 @@
   [rustic.files]
   "rustic/rustic.toml" = "~/.config/rustic/rustic.toml"
 
-  ## Scheduling is per-platform. macOS needs LaunchAgents equivalent to these.
+  ## Scheduling is per-platform: systemd timers on Linux, LaunchAgents on macOS.
+  ## systemd expresses the mount guard and the backup/prune/check exclusion
+  ## itself; launchd cannot, so on macOS the jobs go through a wrapper that also
+  ## drops the backup to hourly while on battery.
+  "rustic/bin/rustic-scheduled"                   = {
+    target = "~/.local/bin/rustic-scheduled",
+    type   = "template",
+    if     = "dotter.macos"
+  }
+  "rustic/launchd/me.jpellis.rustic-backup.plist" = {
+    target = "~/Library/LaunchAgents/me.jpellis.rustic-backup.plist",
+    type   = "symbolic",
+    if     = "dotter.macos"
+  }
+  "rustic/launchd/me.jpellis.rustic-check.plist"  = {
+    target = "~/Library/LaunchAgents/me.jpellis.rustic-check.plist",
+    type   = "symbolic",
+    if     = "dotter.macos"
+  }
+  "rustic/launchd/me.jpellis.rustic-prune.plist"  = {
+    target = "~/Library/LaunchAgents/me.jpellis.rustic-prune.plist",
+    type   = "symbolic",
+    if     = "dotter.macos"
+  }
+
   "rustic/systemd/rustic-backup.service" = {
     target = "~/.local/share/systemd/user/rustic-backup.service",
     type   = "template",

@@ -1,0 +1,63 @@
+#!/bin/sh
+# Runs a rustic command under the three constraints launchd cannot express on
+# its own: skip while the repository is unreachable, never overlap another
+# rustic job, and back off to hourly while on battery.
+#
+# Invoked by the me.jpellis.rustic-* LaunchAgents with the rustic subcommand and
+# its arguments, e.g. `rustic-scheduled backup`.
+
+set -eu
+
+repository="{{rustic-repository}}"
+rustic="$HOME/.local/share/mise/shims/rustic"
+
+state_dir="$HOME/.local/state/rustic"
+lock_dir="$state_dir/scheduled.lock"
+stamp="$state_dir/last-backup"
+
+# On AC the LaunchAgent's own 20 minute interval governs. On battery a backup
+# runs only once this many seconds have passed since the last successful one.
+battery_interval=3600
+
+# A lock left behind by a hard kill would otherwise stop every rustic job
+# permanently, so it ages out.
+lock_max_age=21600
+
+mkdir -p "$state_dir"
+
+# The repository sits on a network share. Away from the LAN it is simply absent,
+# and skipping is the right outcome there rather than failing every 20 minutes.
+[ -e "$repository/config" ] || exit 0
+
+now=$(date +%s)
+
+# One lock across backup, prune and check, since prune and check rewrite the
+# index and a backup underneath them produces spurious errors.
+if [ -d "$lock_dir" ]; then
+  lock_mtime=$(stat -f %m "$lock_dir" 2>/dev/null || echo "$now")
+  if [ $((now - lock_mtime)) -lt "$lock_max_age" ]; then
+    exit 0
+  fi
+  rmdir "$lock_dir" 2>/dev/null || true
+fi
+
+mkdir "$lock_dir" 2>/dev/null || exit 0
+# shellcheck disable=SC2064 # lock_dir is fixed here; expand it now, not at exit.
+trap "rmdir '$lock_dir' 2>/dev/null || true" EXIT INT TERM
+
+if [ "${1:-}" = "backup" ] && ! pmset -g ps | grep -q 'AC Power'; then
+  if [ -f "$stamp" ]; then
+    stamp_mtime=$(stat -f %m "$stamp" 2>/dev/null || echo 0)
+    if [ $((now - stamp_mtime)) -lt "$battery_interval" ]; then
+      exit 0
+    fi
+  fi
+fi
+
+"$rustic" "$@"
+
+# Only a completed backup advances the stamp, so the battery interval measures
+# time since real progress rather than since the last attempt.
+if [ "${1:-}" = "backup" ]; then
+  touch "$stamp"
+fi

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>me.jpellis.rustic-check</string>
+
+  <!-- Structure and metadata are verified in full, alongside a random tenth of
+       the pack data. Reading every pack would pull the whole repository back
+       over the network each week. -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/sh</string>
+    <string>-c</string>
+    <string>exec /bin/sh "$HOME/.local/bin/rustic-scheduled" check --read-data --read-data-subset 10%</string>
+  </array>
+
+  <!-- Sunday, offset from the nightly prune. -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Weekday</key>
+    <integer>0</integer>
+    <key>Hour</key>
+    <integer>3</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+
+  <key>Nice</key>
+  <integer>19</integer>
+  <key>ProcessType</key>
+  <string>Background</string>
+  <key>LowPriorityIO</key>
+  <true/>
+
+  <key>StandardOutPath</key>
+  <string>/tmp/me.jpellis.rustic-check.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/me.jpellis.rustic-check.log</string>
+</dict>
+</plist>

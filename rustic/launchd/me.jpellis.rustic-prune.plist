@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>me.jpellis.rustic-prune</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/sh</string>
+    <string>-c</string>
+    <string>exec /bin/sh "$HOME/.local/bin/rustic-scheduled" forget --prune</string>
+  </array>
+
+  <!-- Retention comes from the [forget] table in rustic.toml, scoped to this
+       host. A run missed while asleep fires once on wake. -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>0</integer>
+    <key>Minute</key>
+    <integer>30</integer>
+  </dict>
+
+  <key>Nice</key>
+  <integer>19</integer>
+  <key>ProcessType</key>
+  <string>Background</string>
+  <key>LowPriorityIO</key>
+  <true/>
+
+  <key>StandardOutPath</key>
+  <string>/tmp/me.jpellis.rustic-prune.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/me.jpellis.rustic-prune.log</string>
+</dict>
+</plist>
