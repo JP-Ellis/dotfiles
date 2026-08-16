@@ -1,0 +1,22 @@
+[Unit]
+Description=rustic backup (home)
+# /mnt/nas is an autofs direct mount. Probing the repository config triggers the
+# automount, and yields ENOENT rather than blocking when the NAS is unreachable,
+# so an offline NAS skips the run instead of failing it.
+ConditionPathExists=/mnt/nas/rustic/config
+
+[Service]
+Type=oneshot
+
+# Bound the run so a wedged NFS handle cannot hold the unit active forever.
+TimeoutStartSec=3h
+
+# Lower CPU and I/O priority to keep backups clear of interactive work.
+Nice=19
+CPUSchedulingPolicy=batch
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+IOWeight=100
+
+Restart=no
+ExecStart=%h/.local/share/mise/shims/rustic backup
