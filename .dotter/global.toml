@@ -265,6 +265,25 @@
   [sway.variables]
   terminal = "kitty"
 
+[syncthing]
+  ## Syncthing reads .stignore only from a folder root and never replicates it
+  ## between devices, so each machine needs its own copy. Deploying through
+  ## dotter puts one reviewed version in git and lands it identically on every
+  ## machine, which the older .stignore-sync scheme could not guarantee.
+  [syncthing.files]
+  "syncthing/documents.stignore"  = {
+    target = "~/Documents/.stignore",
+    type   = "copy"
+  }
+  "syncthing/university.stignore" = {
+    target = "~/University/.stignore",
+    type   = "copy"
+  }
+  "syncthing/claude.stignore"     = {
+    target = "~/.claude/.stignore",
+    type   = "copy"
+  }
+
 ## VSCode owns these files at runtime, so they deploy as symlinks and can never
 ## use dotter templating: the editor rewrites them in place and would overwrite
 ## any handlebars expression. Machine-specific values are deleted rather than
