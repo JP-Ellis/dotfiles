@@ -273,15 +273,15 @@
   [syncthing.files]
   "syncthing/documents.stignore"  = {
     target = "~/Documents/.stignore",
-    type   = "copy"
+    type   = "template"
   }
   "syncthing/university.stignore" = {
     target = "~/University/.stignore",
-    type   = "copy"
+    type   = "template"
   }
   "syncthing/claude.stignore"     = {
     target = "~/.claude/.stignore",
-    type   = "copy"
+    type   = "template"
   }
 
 ## VSCode owns these files at runtime, so they deploy as symlinks and can never
