@@ -283,6 +283,10 @@
     target = "~/.claude/.stignore",
     type   = "template"
   }
+  "syncthing/src.stignore"        = {
+    target = "~/src/.stignore",
+    type   = "template"
+  }
 
 ## VSCode owns these files at runtime, so they deploy as symlinks and can never
 ## use dotter templating: the editor rewrites them in place and would overwrite
