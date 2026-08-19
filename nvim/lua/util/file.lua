@@ -97,4 +97,30 @@ function M.yank_path(opts)
   Snacks.notify("Yanked `" .. path .. "`")
 end
 
+--- Reopen the current file through suda.vim, so reads and writes run as root.
+function M.sudo_this_file()
+  local from = current_file()
+  if not from then
+    return
+  end
+  if vim.bo.modified then
+    return Snacks.notify.error("Buffer has unsaved changes; write or discard them first")
+  end
+
+  -- SudaRead opens a new `suda://` buffer, so the cursor does not carry over.
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  vim.cmd.SudaRead()
+  pcall(vim.api.nvim_win_set_cursor, 0, cursor)
+end
+
+--- Prompt for a path and open it as root.
+function M.sudo_find_file()
+  vim.ui.input({ prompt = "Find File (root): ", completion = "file" }, function(value)
+    if not value or value == "" then
+      return
+    end
+    vim.cmd.SudaRead({ args = { vim.fs.normalize(vim.fs.abspath(value)) } })
+  end)
+end
+
 return M
