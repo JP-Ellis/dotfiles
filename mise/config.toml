@@ -90,7 +90,7 @@
 "aqua:neovim/neovim" = "0.12.4"
 
 # LLM and AI tools
-"aqua:anthropics/claude-code" = "2.1.235"
+"aqua:anthropics/claude-code" = "2.1.236"
 "github:rtk-ai/rtk"           = "0.45.0"
 "github:ggml-org/llama.cpp"   = { version = "latest", version_prefix = "b" }
 
