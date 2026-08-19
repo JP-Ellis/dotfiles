@@ -2,83 +2,95 @@
 # Global tool and runtime configuration.
 # Run `mise install` on a new machine to get a complete environment.
 # See: https://mise.jdx.dev
+#
+# Versions are pinned exactly so Renovate opens the bumps. llama.cpp is the
+# exception: it releases most days, which is more churn than the pin is worth.
 
 [tools]
 # Language runtimes
-"core:nodejs" = "24"
-"core:python" = "3.14"
-"core:ruby"   = "4.0"
+"core:nodejs" = "24.19.0"
+"core:python" = "3.14.7"
+"core:ruby"   = "4.0.6"
 "core:rust"   = { version = "1.97.1", components = "rustfmt,clippy,rust-src" }
-"core:golang" = "1"
+"core:golang" = "1.26.6"
 
 # Core package/runtime tools
-"aqua:cargo-bins/cargo-binstall" = "1"
-"cargo:mise"                     = "2026"
-"cargo:uv"                       = "0.12"
-"github:endevco/aube"            = "1"
+"aqua:cargo-bins/cargo-binstall" = "1.21.1"
+"cargo:mise"                     = "2026.8.8"
+"cargo:uv"                       = "0.12.5"
+"github:endevco/aube"            = "1.41.0"
 
 # Shell and navigation
-"aqua:direnv/direnv"     = "2"
+"aqua:direnv/direnv"     = "2.37.1"
 "aqua:junegunn/fzf"      = "0.74.3"
-"aqua:starship/starship" = "1"
-"cargo:zoxide"           = "0.10"
-"cargo:sheldon"          = "0.8"
-"cargo:zsh-patina"       = "1"
+"aqua:starship/starship" = "1.26.0"
+"cargo:sheldon"          = "0.8.5"
+"cargo:zoxide"           = "0.10.0"
+"cargo:zsh-patina"       = "1.9.0"
 
 # Git and repo workflows
-"aqua:cli/cli"                    = "2"
-"aqua:git-lfs/git-lfs"            = "3"
-"aqua:orhun/git-cliff"            = "2"
-"cargo:cargo-dist"                = "0.32"
-"cargo:committed"                 = "1"
-"cargo:git-absorb"                = "0.9"
-"cargo:gitu"                      = "0.43"
-"cargo:prek"                      = "0.4"
+"aqua:cli/cli"                    = "2.97.0"
+"aqua:git-lfs/git-lfs"            = "3.7.1"
+"aqua:orhun/git-cliff"            = "2.13.1"
+"cargo:cargo-dist"                = "0.32.0"
+"cargo:committed"                 = "1.1.11"
+"cargo:git-absorb"                = "0.9.0"
+"cargo:gitu"                      = "0.43.0"
+"cargo:prek"                      = "0.4.14"
 "pipx:git-delete-merged-branches" = "7.6.1"
 
 # Everyday text, search, and data tools
-"aqua:biomejs/biome"  = "2"
-"aqua:jqlang/jq"      = "1"
-"cargo:bat"           = "0.26"
-"cargo:eza"           = "0.23"
-"cargo:fd-find"       = "10"
-"cargo:hexyl"         = "0.17"
-"cargo:hwatch"        = "0.4"
-"cargo:jaq"           = "3"
-"cargo:ripgrep"       = "15"
+"aqua:biomejs/biome"  = "2.5.9"
+"aqua:jqlang/jq"      = "1.8.2"
+"aqua:mikefarah/yq"   = "4.53.3"
+"cargo:bat"           = "0.26.1"
+"cargo:eza"           = "0.23.5"
+"cargo:fd-find"       = "10.4.2"
+"cargo:hexyl"         = "0.17.0"
+"cargo:hwatch"        = "0.4.2"
+"cargo:jaq"           = "3.1.1"
+"cargo:ripgrep"       = "15.2.0"
 "cargo:watchexec-cli" = "2.5.1"
 "cargo:yazi-fm"       = "26.5.6"
 
 # Task runners and quality checks
-"aqua:koalaman/shellcheck" = "0.11"
-"aqua:mvdan/sh"            = "3"
-"aqua:tombi-toml/tombi"    = "1"
-"cargo:cargo-machete"      = "0.9"
-"cargo:cargo-nextest"      = "0.9"
-"cargo:just"               = "1"
-"cargo:tokei"              = "14"
-"cargo:typos-cli"          = "1"
-"github:rvben/rumdl"       = "v0.2"
-"npm:eslint"               = "10"
-"npm:prettier"             = "3"
+"aqua:koalaman/shellcheck" = "0.11.0"
+"aqua:mvdan/sh"            = "3.13.1"
+"aqua:tombi-toml/tombi"    = "1.4.0"
+"cargo:cargo-machete"      = "0.9.2"
+"cargo:cargo-nextest"      = "0.9.143"
+"cargo:just"               = "1.58.0"
+"cargo:tokei"              = "14.0.0"
+"cargo:typos-cli"          = "1.49.0"
+"github:rvben/rumdl"       = "0.2.55"
+"npm:eslint"               = "10.8.1"
+"npm:prettier"             = "3.9.6"
 "pipx:hatch"               = "1.18.0"
+"pipx:yamlfix"             = "1.19.1"
+
+# Language servers and language-specific linters
+"aqua:astral-sh/ruff"            = "0.16.3"
+"aqua:astral-sh/ty"              = "0.0.72"
+"npm:typescript"                 = "7.0.2"
+"npm:typescript-language-server" = "5.3.0"
 
 # Cloud and platform CLIs
-"aqua:aws/aws-cli"              = "2"
-"github:DataDog/pup"            = "1"
-"vfox:mise-plugins/vfox-gcloud" = "565"
+"aqua:aws/aws-cli"                = "2.36.25"
+"aqua:aws/session-manager-plugin" = "1.2.835.0"
+"github:DataDog/pup"              = "1.11.1"
+"vfox:mise-plugins/vfox-gcloud"   = "581.0.0"
 
 # Editor CLI for quick edits across repos
-"aqua:neovim/neovim" = "0.12"
+"aqua:neovim/neovim" = "0.12.4"
 
 # LLM and AI tools
-"aqua:anthropics/claude-code" = "2"
-"github:rtk-ai/rtk"           = "v0.45.0"
+"aqua:anthropics/claude-code" = "2.1.234"
+"github:rtk-ai/rtk"           = "0.45.0"
 "github:ggml-org/llama.cpp"   = { version = "latest", version_prefix = "b" }
 
 # Backups and storage
 "cargo:dotter"    = "0.13.5"
-"cargo:rustic-rs" = "0.11"
+"cargo:rustic-rs" = "0.11.3"
 
 [settings]
 experimental = true
