@@ -96,7 +96,7 @@
 
 # Backups and storage
 "cargo:dotter"    = "0.13.5"
-"cargo:rustic-rs" = "0.11.3"
+"cargo:rustic-rs" = "0.11.4"
 
 [settings]
 experimental = true
