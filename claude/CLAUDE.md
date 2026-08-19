@@ -1,31 +1,25 @@
 # CLAUDE.md
 
-RTK is used to optimise token usage across all commands. Compatible commands are automatically rewritten with a hook. Avoid filtering commands with `grep` as RTK should have abbreviated the output already. Only use `rtk proxy` as a last resort if you must get the full output.
+RTK abbreviates command output through a hook, so do not pipe that output through `grep`. Use `rtk proxy` only when you need the untrimmed version. Redirect a slow command to a file in the scratchpad, then search the file. Never re-run a slow command to filter it.
 
 ## Writing
 
-These rules bind everything you produce: chat replies, code comments, docs, commit messages, PR bodies. No exceptions.
+Applies to chat, comments, docs, commit messages, PR bodies.
 
-- End on the specific thing. Never close with a general truth about its category.
-- Drop "X rather than Y" and "X, not Y" constructions. State X. Stop.
-- Use `the` only for a noun already introduced. A fresh noun takes `a`, or gets named properly.
-- Use simple past for past events: "marked", never "was marking".
-- Name the referent. Ban "that job", "this pattern", "that asymmetry".
-- Give objects no intentions and no strength. A comma does no job.
-- One idea per sentence. If a sentence hinges on "and", split it and cut the decorative half.
+- Close on a concrete detail. No closing moral about the category.
+- State the choice. Cut "X rather than Y" and "X, not Y".
+- Name the thing. No bare "that job", "this pattern", "that asymmetry".
+- Inanimate things take no agency. A comma does no job.
+- One idea per sentence. Split on "and"; keep both halves when both carry information.
 
-## Tool Usage
+## Git
 
-- **Prefer dedicated file tools over bash.** Use Read, Grep, and Glob for reading and searching files rather than `cat`, `sed`, `head`, `tail`, or `find` in bash. Only reach for bash when you need shell execution (build, test, git, etc.).
-- **Capture long command output before grepping.** For commands that take more than a few seconds, redirect to a temp file first: `command > /tmp/out.log 2>&1`, then `grep` the file. Don't re-run slow commands just to filter their output.
-
-## Git Workflow
-
-- **Never push without an explicit user request.** After committing, stop and let the user vet the result before it goes to the remote.
-- Explain the intent of a change in the commit. Leave implementation details out.
+- Never push unless asked.
+- A commit message explains the intent of its own change. Give it the depth it needs — git history outlives any forge.
+- A PR body explains the arc across its commits: the goal, the sequence, the alternatives weighed.
 
 ## Code Style
 
-- **Describe the present.** Comments, READMEs, and docs state what the code does now, plus why when the reason is non-obvious.
-- **Keep history out of the codebase.** How something reached its present shape belongs in commit messages and PR bodies. Never write `/* darkened from 0.56 — was failing WCAG AA */`, "refactored from X, Y and Z", or "adopted from our previous stack" into a source or docs file.
-- **Section markers:** use `# MARK: SectionName` in config and source files. Avoid `# === SectionName ===`. VSCode highlights `MARK:` in the minimap and outline panel for faster navigation.
+- Comments and docs describe current behaviour. Give a reason only when it is non-obvious, in one to three lines.
+- Keep history, process and README restatement out of source and docs files. That material belongs in commit messages and PR bodies. A historical reason that constrains present code stays: a compat shim, an upstream workaround.
+- Section markers: `# MARK: Name`.
