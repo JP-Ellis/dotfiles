@@ -43,7 +43,7 @@
 "aqua:biomejs/biome"  = "2.5.9"
 "aqua:dathere/qsv"    = "22.0.1"
 "aqua:jqlang/jq"      = "1.8.2"
-"aqua:mikefarah/yq"   = "4.53.3"
+"aqua:mikefarah/yq"   = "4.53.4"
 "cargo:bat"           = "0.26.1"
 "cargo:eza"           = "0.23.5"
 "cargo:fd-find"       = "10.4.2"
