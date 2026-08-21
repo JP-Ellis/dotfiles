@@ -81,7 +81,7 @@
 "npm:typescript-language-server" = "5.3.0"
 
 # Cloud and platform CLIs
-"aqua:aws/aws-cli"                = "2.36.27"
+"aqua:aws/aws-cli"                = "2.36.28"
 "aqua:aws/session-manager-plugin" = "1.2.835.0"
 "github:DataDog/pup"              = "1.12.0"
 "vfox:mise-plugins/vfox-gcloud"   = "581.0.0"
