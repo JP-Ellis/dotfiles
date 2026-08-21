@@ -18,3 +18,19 @@ map("n", "<leader>fD", file.delete, { desc = "Delete File" })
 map("n", "<leader>fy", function() file.yank_path() end, { desc = "Yank File Path" })
 map("n", "<leader>fY", function() file.yank_path({ relative = true }) end, { desc = "Yank File Path (Root Dir)" })
 -- stylua: ignore end
+
+-- MARK: UI
+
+-- LazyVim's <leader>ud toggles diagnostics wholesale. This drops only the
+-- end-of-line messages, per buffer, and pairs with the markdown autocmd in
+-- config/autocmds.lua.
+Snacks.toggle({
+  name = "Diagnostic Virtual Text",
+  get = function()
+    return vim.b.diagnostic_virtual_text ~= false
+  end,
+  set = function(state)
+    vim.b.diagnostic_virtual_text = state
+    vim.diagnostic.show(nil, 0)
+  end,
+}):map("<leader>uv")
