@@ -11,7 +11,7 @@
 "core:nodejs" = "24.19.0"
 "core:python" = "3.14.7"
 "core:ruby"   = "4.0.6"
-"core:rust"   = { version = "1.97.1", components = "rustfmt,clippy,rust-src" }
+"core:rust"   = { version = "1.98.0", components = "rustfmt,clippy,rust-src" }
 "core:golang" = "1.26.6"
 
 # Core package/runtime tools
