@@ -26,7 +26,7 @@
 "aqua:starship/starship" = "1.26.0"
 "cargo:sheldon"          = "0.8.5"
 "cargo:zoxide"           = "0.10.0"
-"cargo:zsh-patina"       = "1.9.0"
+"cargo:zsh-patina"       = "1.10.0"
 
 # Git and repo workflows
 "aqua:cli/cli"                    = "2.98.0"
