@@ -18,7 +18,7 @@
 "aqua:cargo-bins/cargo-binstall" = "1.22.0"
 "cargo:mise"                     = "2026.8.12"
 "cargo:uv"                       = "0.12.5"
-"github:endevco/aube"            = "2.1.0"
+"github:endevco/aube"            = "2.2.0"
 
 # Shell and navigation
 "aqua:direnv/direnv"     = "2.37.1"
