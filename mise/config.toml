@@ -46,7 +46,7 @@
 "aqua:mikefarah/yq"   = "4.53.6"
 "cargo:bat"           = "0.26.1"
 "cargo:eza"           = "0.23.5"
-"cargo:fd-find"       = "10.4.2"
+"cargo:fd-find"       = "10.5.0"
 "cargo:hexyl"         = "0.17.0"
 "cargo:htmlq"         = "0.4.0"
 "cargo:hwatch"        = "0.4.2"
