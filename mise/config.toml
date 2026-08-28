@@ -36,7 +36,7 @@
 "cargo:committed"                 = "1.1.11"
 "cargo:git-absorb"                = "0.9.0"
 "cargo:gitu"                      = "0.43.0"
-"cargo:prek"                      = "0.4.14"
+"cargo:prek"                      = "0.5.0"
 "pipx:git-delete-merged-branches" = "7.6.1"
 
 # Everyday text, search, and data tools
