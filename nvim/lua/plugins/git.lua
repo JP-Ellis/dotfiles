@@ -18,6 +18,13 @@ return {
         staged_diff_split_kind = "vsplit",
         spell_check = true,
       },
+      mappings = {
+        popup = {
+          ["p"] = "PushPopup",
+          ["P"] = false,
+          ["F"] = "PullPopup",
+        },
+      },
       integrations = {
         diffview = true,
         snacks = true,
