@@ -69,7 +69,7 @@
 "cargo:tokei"                     = "14.0.0"
 "cargo:typos-cli"                 = "1.49.0"
 "github:rvben/rumdl"              = "0.2.61"
-"npm:eslint"                      = "10.9.0"
+"npm:eslint"                      = "10.9.1"
 "npm:prettier"                    = "3.9.6"
 "pipx:hatch"                      = "1.18.0"
 "pipx:yamlfix"                    = "1.19.1"
