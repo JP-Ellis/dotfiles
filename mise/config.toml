@@ -59,7 +59,7 @@
 "aqua:google/yamlfmt"             = "0.21.0"
 "aqua:hadolint/hadolint"          = "2.15.1"
 "aqua:koalaman/shellcheck"        = "0.11.0"
-"aqua:mvdan/sh"                   = "3.13.1"
+"aqua:mvdan/sh"                   = "3.14.0"
 "aqua:rhysd/actionlint"           = "1.7.12"
 "aqua:tombi-toml/tombi"           = "1.5.0"
 "aqua:trufflesecurity/trufflehog" = "3.97.1"
