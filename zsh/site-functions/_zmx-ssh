@@ -1,0 +1,48 @@
+#compdef zmx-ssh
+
+## Completes ssh hosts first, then the zmx sessions running on the chosen host.
+##
+## The session probe only runs when a ControlMaster socket for that host is
+## already up (`ssh -O check`).  Without that guard, tabbing after a cold host
+## would open a fresh connection and hang the prompt until it finished.
+
+_zmx-ssh() {
+  local curcontext="$curcontext" state line ret=1
+  typeset -A opt_args
+
+  _arguments -C \
+    '(-r --reconnect)'{-r,--reconnect}'[choose from the sessions already running on the host]' \
+    '1: :->host' \
+    '2: :->session' \
+    && ret=0
+
+  case $state in
+    host)
+      ## Same source as the ssh completion, so ssh_config Host aliases and
+      ## known_hosts entries both show up.
+      _ssh_hosts && ret=0
+      ;;
+    session)
+      local host=${line[1]}
+      [[ -n $host ]] || return ret
+
+      ## A cold host offers nothing rather than blocking.
+      ssh -O check "$host" >/dev/null 2>&1 || return ret
+
+      local -a sessions
+      sessions=(${(f)"$(ssh -o BatchMode=yes "$host" \
+        'if ! command -v zmx >/dev/null 2>&1; then
+           [ -r "$HOME/.profile" ] && . "$HOME/.profile"
+         fi
+         zmx ls --short' 2>/dev/null)"})
+
+      if (( ${#sessions} )); then
+        _describe -t zmx-sessions 'zmx session' sessions && ret=0
+      fi
+      ;;
+  esac
+
+  return ret
+}
+
+_zmx-ssh "$@"
