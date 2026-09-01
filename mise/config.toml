@@ -31,7 +31,7 @@
 # Git and repo workflows
 "aqua:cli/cli"                    = "2.99.0"
 "aqua:git-lfs/git-lfs"            = "3.8.0"
-"aqua:orhun/git-cliff"            = "2.13.1"
+"aqua:orhun/git-cliff"            = "2.14.1"
 "cargo:cargo-dist"                = "0.32.0"
 "cargo:committed"                 = "1.1.11"
 "cargo:git-absorb"                = "0.9.0"
