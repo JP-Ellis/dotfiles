@@ -129,12 +129,6 @@
     if     = "dotter.macos"
   }
 
-[kitty]
-  [kitty.files]
-  "kitty/dark.theme.conf"  = "~/.config/kitty/dark.theme.conf"
-  "kitty/kitty.conf"       = "~/.config/kitty/kitty.conf"
-  "kitty/light.theme.conf" = "~/.config/kitty/light.theme.conf"
-
 [mathematica]
   [mathematica.files]
   "Mathematica/Kernel.m" = {
@@ -250,25 +244,6 @@
 
 [sheldon]
   [sheldon.files]
-
-[sway]
-  [sway.files]
-  "sway/background.png"                            = "~/.config/sway/background.png"
-  "sway/config"                                    = "~/.config/sway/config"
-  "sway/mako"                                      = "~/.config/mako/config"
-  "sway/mako.service"                              = "~/.config/systemd/user/mako.service"
-  "sway/polkit-gnome-authentication-agent.service" = "~/.config/systemd/user/polkit-gnome-authentication-agent.service"
-  "sway/sway-session.target"                       = "~/.config/systemd/user/sway-session.target"
-  "sway/swayidle.service"                          = "~/.config/systemd/user/swayidle.service"
-  "sway/swaylock"                                  = "~/.config/sway/swaylock"
-  "sway/udiskie.service"                           = "~/.config/systemd/user/udiskie.service"
-  "sway/udiskie.yml"                               = "~/.config/udiskie/config.yml"
-  "sway/waybar.css"                                = "~/.config/waybar/style.css"
-  "sway/waybar.jsonc"                              = "~/.config/waybar/config"
-  "sway/waybar.service"                            = "~/.config/systemd/user/waybar.service"
-
-  [sway.variables]
-  terminal = "kitty"
 
 [syncthing]
   ## Syncthing reads .stignore only from a folder root and never replicates it
