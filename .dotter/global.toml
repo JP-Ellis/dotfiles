@@ -26,6 +26,7 @@
   "bin/transcode-hevc"    = "~/.local/bin/transcode-hevc"
   "bin/update"            = "~/.local/bin/update"
   "bin/vscode-extensions" = "~/.local/bin/vscode-extensions"
+  "bin/zmx-ssh"           = "~/.local/bin/zmx-ssh"
 
 [claude]
   [claude.files]

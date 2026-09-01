@@ -1,0 +1,62 @@
+#!/bin/sh
+## Attaches to a persistent zmx session over ssh and offers to reconnect when
+## the link drops.  zmx runs one daemon per session on the far side, so a dead
+## connection leaves the session running and reattaching restores the terminal
+## state rather than starting over.
+##
+## ssh reserves exit status 255 for its own transport failures, which is what
+## separates a dead link from the remote side finishing on purpose.  A ctrl+\
+## detach, `zmx detach`, or the session's shell exiting all report their own
+## status, and those pass straight through without a prompt.
+set -e
+
+_usage() {
+  echo "usage: zmx-ssh <host> [session]" >&2
+  exit 64
+}
+
+[ $# -ge 1 ] && [ $# -le 2 ] || _usage
+case $1 in
+-*) _usage ;;
+esac
+
+_host=$1
+_session=${2:-main}
+
+## ssh joins the remote command with spaces before the login shell sees it, so a
+## session name carrying whitespace or metacharacters would be re-split there.
+case $_session in
+*[!A-Za-z0-9._-]*)
+  echo "zmx-ssh: session name must be [A-Za-z0-9._-]" >&2
+  exit 64
+  ;;
+esac
+
+## sshd runs the remote command in a non-interactive shell.  zsh sources
+## ~/.profile only from .zshrc, so that shell never picks up the mise shims that
+## put zmx on PATH, and `ssh host zmx` fails where an interactive login works.
+## Sourcing the profile on the far side fixes it without paying for a full
+## interactive startup.
+_remote="if ! command -v zmx >/dev/null 2>&1; then
+  [ -r \"\$HOME/.profile\" ] && . \"\$HOME/.profile\"
+fi
+exec zmx attach $_session"
+
+while :; do
+  ## set -e would abort here, and reading the status is the whole point.
+  _status=0
+  ssh -t "$_host" "$_remote" || _status=$?
+
+  [ "$_status" -eq 255 ] || exit "$_status"
+
+  echo "zmx-ssh: connection to $_host lost" >&2
+
+  ## stdin belongs to the ssh session that just died, so the prompt reads the
+  ## terminal directly.  No tty means nobody can answer, so stop retrying.
+  printf 'reconnect to session "%s"? [Y/n] ' "$_session" >/dev/tty 2>/dev/null || exit 255
+  read -r _reply </dev/tty 2>/dev/null || exit 255
+
+  case $_reply in
+  [Nn]*) exit 255 ;;
+  esac
+done
