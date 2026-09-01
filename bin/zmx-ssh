@@ -59,7 +59,7 @@ _check_session_name() {
 ## interactive startup.
 ##
 ## $HOME is meant to reach the remote shell unexpanded, hence the single quotes.
-# shellcheck disable=SC2016
+# shellcheck disable=SC2016,SC2089
 _prelude='if ! command -v zmx >/dev/null 2>&1; then
   [ -r "$HOME/.profile" ] && . "$HOME/.profile"
 fi
@@ -74,8 +74,12 @@ fi
 ## reconnect.
 _restore_terminal() {
   {
-    printf '\033[?1049l\033[?1000l\033[?1002l\033[?1003l\033[?1006l\033[?1015l'
-    printf '\033[?2004l\033[?25h\033[0m'
+    ## Mouse reporting, in every dialect an application might have enabled.
+    printf '\033[?9l\033[?1000l\033[?1001l\033[?1002l\033[?1003l'
+    printf '\033[?1005l\033[?1006l\033[?1015l\033[?1016l'
+    ## Focus tracking, which otherwise leaks ^[[I and ^[[O on every click.
+    printf '\033[?1004l'
+    printf '\033[?1049l\033[?2004l\033[?25h\033[0m'
   } >/dev/tty 2>/dev/null || return 0
   stty sane </dev/tty >/dev/null 2>&1 || :
 }
@@ -115,31 +119,34 @@ _format_sessions() {
   '
 }
 
-## Resolving zmx once up front keeps the list and preview commands to a plain
-## path, which is far easier to quote into fzf than the prelude would be.  The
-## extra round trip rides the ControlMaster connection the picker needs anyway.
+## Every remote zmx call has to go through the prelude, not just the attach.
+## ~/.profile sets TMPDIR, and zmx derives its socket directory from it, so a
+## call made without the profile looks in the wrong place and reports that no
+## sessions exist while the attach happily talks to them.
 _choose_session() {
-  ## $_prelude and $_zmx are meant to expand here, not on the remote: the point
-  ## is to send a resolved path.
   # shellcheck disable=SC2029
-  _zmx=$(ssh "$_host" "${_prelude}command -v zmx" 2>/dev/null) || _zmx=
-  if [ -z "$_zmx" ]; then
-    echo "zmx-ssh: zmx not found on $_host" >&2
+  _raw=$(ssh "$_host" "${_prelude}zmx ls" 2>/dev/null) || {
+    echo "zmx-ssh: could not list sessions on $_host" >&2
     exit 1
-  fi
+  }
 
-  # shellcheck disable=SC2029
-  _rows=$(ssh "$_host" "$_zmx ls" 2>/dev/null | _format_sessions) || _rows=
+  ## `zmx ls` says "no sessions found in ..." on stdout and still exits 0, but
+  ## that line carries no name= field and the formatter drops it.
+  _rows=$(printf '%s\n' "$_raw" | _format_sessions)
   if [ -z "$_rows" ]; then
     echo "zmx-ssh: no sessions running on $_host" >&2
     exit 1
   fi
 
   if command -v fzf >/dev/null 2>&1; then
+    ## Passed through the environment because fzf shell-quotes {1} itself,
+    ## which would collide with another layer of quoting in --preview.
+    # shellcheck disable=SC2090
+    export ZMX_PRELUDE="$_prelude"
     _choice=$(printf '%s\n' "$_rows" | fzf \
       --delimiter='\t' --with-nth=1,2,3,4 \
       --header="zmx sessions on $_host" \
-      --preview="ssh $_host $_zmx history {1} 2>/dev/null | tail -n 200" \
+      --preview="ssh $_host \"\$ZMX_PRELUDE zmx history {1} 2>/dev/null | tail -n 200\"" \
       --preview-window='down,60%,wrap') || exit 130
   else
     ## POSIX sh has no `select`, and the fallback only has to be usable.

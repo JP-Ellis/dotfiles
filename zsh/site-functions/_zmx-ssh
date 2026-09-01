@@ -24,21 +24,31 @@ _zmx-ssh() {
       ;;
     session)
       local host=${line[1]}
-      [[ -n $host ]] || return ret
-
-      ## A cold host offers nothing rather than blocking.
-      ssh -O check "$host" >/dev/null 2>&1 || return ret
-
       local -a sessions
-      sessions=(${(f)"$(ssh -o BatchMode=yes "$host" \
-        'if ! command -v zmx >/dev/null 2>&1; then
-           [ -r "$HOME/.profile" ] && . "$HOME/.profile"
-         fi
-         zmx ls --short' 2>/dev/null)"})
 
-      if (( ${#sessions} )); then
-        _describe -t zmx-sessions 'zmx session' sessions && ret=0
+      ## zmx reads its socket directory from TMPDIR, which ~/.profile sets, so
+      ## the probe has to source the profile exactly as the wrapper does or it
+      ## looks in the wrong place and reports nothing.
+      if [[ -n $host ]] && ssh -O check "$host" >/dev/null 2>&1; then
+        sessions=(${(f)"$(ssh -o BatchMode=yes "$host" \
+          'if ! command -v zmx >/dev/null 2>&1; then
+             [ -r "$HOME/.profile" ] && . "$HOME/.profile"
+           fi
+           zmx ls --short' 2>/dev/null)"})
       fi
+
+      ## Returning through an _arguments `->state` leaves no _tags loop
+      ## running, so anything that requests a tag on its own adds nothing:
+      ## _describe stays silent and _alternative drops the sessions.  _wanted
+      ## sets the loop up itself and is the only form that works here.
+      if (( ${#sessions} )); then
+        _wanted zmx-sessions expl 'zmx session' compadd -a sessions && ret=0
+      fi
+
+      ## _arguments only volunteers options once the word starts with a dash,
+      ## and on a host with no sessions yet --reconnect is the only useful
+      ## completion left, so offer the flags here too.
+      _wanted options expl 'option' compadd -- -r --reconnect && ret=0
       ;;
   esac
 
