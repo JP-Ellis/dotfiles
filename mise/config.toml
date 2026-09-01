@@ -29,7 +29,7 @@
 "cargo:zsh-patina"       = "1.10.0"
 
 # Git and repo workflows
-"aqua:cli/cli"                    = "2.98.0"
+"aqua:cli/cli"                    = "2.99.0"
 "aqua:git-lfs/git-lfs"            = "3.8.0"
 "aqua:orhun/git-cliff"            = "2.13.1"
 "cargo:cargo-dist"                = "0.32.0"
