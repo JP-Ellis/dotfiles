@@ -4,7 +4,8 @@
   },
   "attribution": {
     "commit": "Assisted-by: Claude Code:{{claude:model}}",
-    "pr": ""
+    "pr": "",
+    "sessionUrl": false
   },
   "permissions": {
     "allow": ["Read(~/.claude/plugins/cache/claude-plugins-official/)"],
