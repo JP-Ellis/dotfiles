@@ -11,41 +11,164 @@
 set -e
 
 _usage() {
-  echo "usage: zmx-ssh <host> [session]" >&2
+  cat >&2 <<'USAGE'
+usage: zmx-ssh <host> [session]
+       zmx-ssh <host> --reconnect
+
+Attaches to a zmx session on <host>, defaulting to "main".
+
+  -r, --reconnect   choose from the sessions already running on <host>
+USAGE
   exit 64
 }
 
-[ $# -ge 1 ] && [ $# -le 2 ] || _usage
+[ $# -ge 1 ] || _usage
 case $1 in
 -*) _usage ;;
 esac
-
 _host=$1
-_session=${2:-main}
+shift
+
+_pick=no
+_session=main
+if [ $# -gt 0 ]; then
+  case $1 in
+  -r | --reconnect) _pick=yes ;;
+  -*) _usage ;;
+  *) _session=$1 ;;
+  esac
+  shift
+fi
+[ $# -eq 0 ] || _usage
 
 ## ssh joins the remote command with spaces before the login shell sees it, so a
 ## session name carrying whitespace or metacharacters would be re-split there.
-case $_session in
-*[!A-Za-z0-9._-]*)
-  echo "zmx-ssh: session name must be [A-Za-z0-9._-]" >&2
-  exit 64
-  ;;
-esac
+_check_session_name() {
+  case $1 in
+  '' | *[!A-Za-z0-9._-]*)
+    echo "zmx-ssh: session name must be [A-Za-z0-9._-]" >&2
+    exit 64
+    ;;
+  esac
+}
 
 ## sshd runs the remote command in a non-interactive shell.  zsh sources
 ## ~/.profile only from .zshrc, so that shell never picks up the mise shims that
 ## put zmx on PATH, and `ssh host zmx` fails where an interactive login works.
 ## Sourcing the profile on the far side fixes it without paying for a full
 ## interactive startup.
-_remote="if ! command -v zmx >/dev/null 2>&1; then
-  [ -r \"\$HOME/.profile\" ] && . \"\$HOME/.profile\"
+##
+## $HOME is meant to reach the remote shell unexpanded, hence the single quotes.
+# shellcheck disable=SC2016
+_prelude='if ! command -v zmx >/dev/null 2>&1; then
+  [ -r "$HOME/.profile" ] && . "$HOME/.profile"
 fi
-exec zmx attach $_session"
+'
+
+## A killed ssh never lets the remote application clean up, so the alternate
+## screen, mouse reporting and bracketed paste stay latched on this terminal and
+## scrolling starts emitting control characters at the shell.  Undo exactly
+## those modes: `reset` and `tput init` would also clear the scrollback, which
+## is the last thing wanted after losing a session.  zmx replays the modes and
+## the screen contents when a client reattaches, so this costs nothing on
+## reconnect.
+_restore_terminal() {
+  {
+    printf '\033[?1049l\033[?1000l\033[?1002l\033[?1003l\033[?1006l\033[?1015l'
+    printf '\033[?2004l\033[?25h\033[0m'
+  } >/dev/tty 2>/dev/null || return 0
+  stty sane </dev/tty >/dev/null 2>&1 || :
+}
+
+## `zmx ls` reports tab-separated key=value pairs.  Names alone are not much use
+## after a crash, so the picker shows how long a session has been up, whether
+## anything is still attached, and where it started.
+_format_sessions() {
+  awk -F'\t' -v now="$(date +%s)" '
+    function age(t,   d) {
+      if (t == "") return "?"
+      d = now - t
+      if (d < 60)    return d "s"
+      if (d < 3600)  return int(d / 60) "m"
+      if (d < 86400) return int(d / 3600) "h"
+      return int(d / 86400) "d"
+    }
+    {
+      name = ""; clients = ""; created = ""; dir = ""
+      for (i = 1; i <= NF; i++) {
+        ## The first field carries the leading indent, so trim before locating
+        ## the separator or the key comes out short by however much was cut.
+        k = $i
+        sub(/^[ \t]+/, "", k)
+        eq = index(k, "=")
+        if (eq == 0) continue
+        v = substr(k, eq + 1)
+        k = substr(k, 1, eq - 1)
+        if (k == "name")            name = v
+        else if (k == "clients")    clients = v
+        else if (k == "created")    created = v
+        else if (k == "start_dir")  dir = v
+      }
+      if (name != "")
+        printf "%s\t%s\t%s attached\t%s\n", name, age(created), clients, dir
+    }
+  '
+}
+
+## Resolving zmx once up front keeps the list and preview commands to a plain
+## path, which is far easier to quote into fzf than the prelude would be.  The
+## extra round trip rides the ControlMaster connection the picker needs anyway.
+_choose_session() {
+  ## $_prelude and $_zmx are meant to expand here, not on the remote: the point
+  ## is to send a resolved path.
+  # shellcheck disable=SC2029
+  _zmx=$(ssh "$_host" "${_prelude}command -v zmx" 2>/dev/null) || _zmx=
+  if [ -z "$_zmx" ]; then
+    echo "zmx-ssh: zmx not found on $_host" >&2
+    exit 1
+  fi
+
+  # shellcheck disable=SC2029
+  _rows=$(ssh "$_host" "$_zmx ls" 2>/dev/null | _format_sessions) || _rows=
+  if [ -z "$_rows" ]; then
+    echo "zmx-ssh: no sessions running on $_host" >&2
+    exit 1
+  fi
+
+  if command -v fzf >/dev/null 2>&1; then
+    _choice=$(printf '%s\n' "$_rows" | fzf \
+      --delimiter='\t' --with-nth=1,2,3,4 \
+      --header="zmx sessions on $_host" \
+      --preview="ssh $_host $_zmx history {1} 2>/dev/null | tail -n 200" \
+      --preview-window='down,60%,wrap') || exit 130
+  else
+    ## POSIX sh has no `select`, and the fallback only has to be usable.
+    printf '%s\n' "$_rows" | awk -F'\t' '{ printf "%3d) %-20s %-6s %-12s %s\n", NR, $1, $2, $3, $4 }' >&2
+    printf 'session number: ' >/dev/tty
+    read -r _n </dev/tty || exit 130
+    _choice=$(printf '%s\n' "$_rows" | sed -n "${_n}p")
+    [ -n "$_choice" ] || {
+      echo "zmx-ssh: no such session" >&2
+      exit 1
+    }
+  fi
+
+  _session=${_choice%%	*}
+}
+
+if [ "$_pick" = yes ]; then
+  _choose_session
+fi
+_check_session_name "$_session"
 
 while :; do
   ## set -e would abort here, and reading the status is the whole point.
   _status=0
-  ssh -t "$_host" "$_remote" || _status=$?
+  ssh -t "$_host" "${_prelude}exec zmx attach $_session" || _status=$?
+
+  ## The terminal is left in whatever state the remote application had it in, so
+  ## restore it before anything else writes to the screen.
+  _restore_terminal
 
   [ "$_status" -eq 255 ] || exit "$_status"
 
