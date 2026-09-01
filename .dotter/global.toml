@@ -31,6 +31,11 @@
   [claude.files]
   "claude/CLAUDE.md"                  = "~/.claude/CLAUDE.md"
   "claude/RTK.md"                     = "~/.claude/RTK.md"
+  "claude/git-config"                 = "~/.config/git/config.d/claude"
+  "claude/git-hooks"                  = {
+    target = "~/.config/git/hooks",
+    type   = "symbolic"
+  }
   "claude/rules"                      = "~/.claude/rules"
   "claude/settings.json"              = {
     target = "~/.claude/settings.json",

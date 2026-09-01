@@ -1,0 +1,53 @@
+#!/bin/sh
+# Stamps the commit with the Claude model that wrote it, then hands off to the
+# repository's own prepare-commit-msg hook.
+#
+# Claude Code exports CLAUDECODE, CLAUDE_CODE_SESSION_ID and CLAUDE_EFFORT into
+# the shell, but never the model, and its own `attribution.commit` setting is
+# copied into the prompt verbatim without substitution. The session transcript
+# is the only local record of which model actually served the turn, so the
+# trailer is rewritten here from that rather than trusted from the message.
+
+set -eu
+
+msg_file=$1
+
+claude_model() {
+  [ "${CLAUDECODE:-}" = "1" ] || return 1
+  [ -n "${CLAUDE_CODE_SESSION_ID:-}" ] || return 1
+
+  for transcript in "$HOME/.claude/projects"/*/"$CLAUDE_CODE_SESSION_ID.jsonl"; do
+    [ -f "$transcript" ] || continue
+    model=$(grep '"type":"assistant"' "$transcript" |
+      sed -n 's/.*"model":"\([^"]*\)".*/\1/p' |
+      tail -n 1)
+    [ -n "$model" ] || continue
+    printf '%s\n' "$model"
+    return 0
+  done
+
+  return 1
+}
+
+chain() {
+  local_hook="$(git rev-parse --git-common-dir)/hooks/prepare-commit-msg"
+  [ -x "$local_hook" ] || exit 0
+  exec "$local_hook" "$@"
+}
+
+model=$(claude_model) || chain "$@"
+
+# Claude may write the placeholder through literally when it does not resolve
+# it, and the placeholder can land outside the trailer block.
+if grep -q '{{claude:model}}' "$msg_file"; then
+  tmp=$(mktemp)
+  sed "s|{{claude:model}}|$model|g" "$msg_file" >"$tmp"
+  mv "$tmp" "$msg_file"
+fi
+
+git interpret-trailers \
+  --if-exists replace \
+  --trailer "Assisted-by: Claude Code:$model" \
+  --in-place "$msg_file"
+
+chain "$@"

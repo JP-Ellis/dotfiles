@@ -1,0 +1,4 @@
+# Deployed by the claude package. git ignores an include path that does not
+# exist, so a machine without that package keeps .git/hooks working.
+[core]
+	hooksPath = ~/.config/git/hooks

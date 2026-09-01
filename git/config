@@ -23,6 +23,12 @@
 [format]
 	signoff = true
 
+# Claude Code commit attribution, deployed by the claude package. Setting
+# core.hooksPath here unconditionally would silently disable every repository's
+# own hooks on a machine without that package.
+[include]
+	path = config.d/claude
+
 [alias]
 	lg = log \
 		--graph \

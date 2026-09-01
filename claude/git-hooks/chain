@@ -1,0 +1,15 @@
+#!/bin/sh
+# Runs the repository's own hook of this name.
+#
+# core.hooksPath points git at this directory globally, which shadows
+# .git/hooks entirely. Every hook name that a repository might install is
+# present here so that pre-commit frameworks, husky and hand-written hooks
+# keep running.
+
+set -eu
+
+hook=${0##*/}
+local_hook="$(git rev-parse --git-common-dir)/hooks/$hook"
+
+[ -x "$local_hook" ] || exit 0
+exec "$local_hook" "$@"
