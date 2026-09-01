@@ -16,7 +16,16 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opus[1m]",
+  "skillOverrides": {
+    "cloudflare": "user-invocable-only",
+    "cloudflare-email-service": "user-invocable-only",
+    "durable-objects": "user-invocable-only",
+    "web-perf": "user-invocable-only",
+    "workers-best-practices": "user-invocable-only",
+    "wrangler": "user-invocable-only",
+    "agents-sdk": "user-invocable-only",
+    "sandbox-sdk": "user-invocable-only"
+  },
   "hooks": {
     "PreToolUse": [
       {
@@ -29,6 +38,9 @@
         ]
       }
     ]
+  },
+  "worktree": {
+    "baseRef": "fresh"
   },
   "allowManagedMcpServersOnly": false,
   "enabledPlugins": {
@@ -46,20 +58,14 @@
     "github@claude-plugins-official": true
   },
   "effortLevel": "medium",
+  "dialogExpiry": "never",
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
   "theme": "auto",
+  "editorMode": "vim",
+  "verbose": false,
+  "autoContinueAtUsageLimit": true,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true,
-  "skillOverrides": {
-    "cloudflare": "user-invocable-only",
-    "cloudflare-email-service": "user-invocable-only",
-    "durable-objects": "user-invocable-only",
-    "web-perf": "user-invocable-only",
-    "workers-best-practices": "user-invocable-only",
-    "wrangler": "user-invocable-only",
-    "agents-sdk": "user-invocable-only",
-    "sandbox-sdk": "user-invocable-only"
-  }
+  "skipAutoPermissionPrompt": true
 }
