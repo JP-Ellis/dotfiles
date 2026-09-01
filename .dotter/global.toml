@@ -325,6 +325,7 @@
   "zsh/zshrc"                  = "~/.config/zsh/.zshrc"
   "zsh/zstyles"                = "~/.config/zsh/zstyles"
   "zsh/conf.d"                 = "~/.config/zsh/conf.d"
+  "zsh/site-functions"         = "~/.local/share/zsh/site-functions"
   "zsh/sheldon.toml"           = {
     target = "~/.config/sheldon/plugins.toml",
     type   = "symbolic"
