@@ -5,11 +5,9 @@ return {
       "sindrets/diffview.nvim",
       "folke/snacks.nvim",
     },
+    -- Keys live in config/keymaps.lua: LazyVim's lazygit maps overwrite lazy's
+    -- key stubs at VeryLazy, so <leader>gg has to be claimed after that.
     cmd = "Neogit",
-    keys = {
-      { "<leader>gm", "<cmd>Neogit<cr>", desc = "Neogit (magit)" },
-      { "<leader>gM", "<cmd>Neogit cwd=%:p:h<cr>", desc = "Neogit (cwd)" },
-    },
     opts = {
       graph_style = "unicode",
       kind = "tab",

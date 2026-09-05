@@ -5,6 +5,8 @@ extend-ignore-re = [
   "(?m)^.*(#|//|;)\\s*codespell:ignore$",
   "(?ms)(#|//|;)\\s*codespell:ignore:start$.*(#|//|;)\\s*codespell:ignore:end$",
   "(?m)^.*(#|//|;)\\s*noqa$",
+  # Vim key notation: <leader>ot is a key sequence, not a misspelling.
+  "<leader>[a-zA-Z]+",
 ]
 
   [default.extend-words]
