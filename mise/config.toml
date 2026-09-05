@@ -15,7 +15,7 @@
 "core:golang" = "1.26.6"
 
 # Core package/runtime tools
-"aqua:cargo-bins/cargo-binstall" = "1.22.0"
+"aqua:cargo-bins/cargo-binstall" = "1.23.0"
 "cargo:mise"                     = "2026.9.1"
 "cargo:uv"                       = "0.12.9"
 "github:endevco/aube"            = "2.2.4"
