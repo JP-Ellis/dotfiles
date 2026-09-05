@@ -34,3 +34,27 @@ Snacks.toggle({
     vim.diagnostic.show(nil, 0)
   end,
 }):map("<leader>uv")
+
+-- MARK: Open
+
+-- Doom Emacs gathers "applications" under SPC o. These are the ones LazyVim
+-- sets as plain keymaps; the rest of the group is assembled from plugin specs
+-- in plugins/open.lua. <leader>gg and <leader>gG take over lazygit's keys for
+-- Neogit, which is the only git UI in use here.
+local function unmap(lhs)
+  pcall(vim.keymap.del, "n", lhs)
+end
+
+unmap("<leader>ft")
+unmap("<leader>fT")
+unmap("<leader>l")
+
+-- stylua: ignore start
+map("n", "<leader>ot", function() Snacks.terminal(nil, { cwd = LazyVim.root() }) end, { desc = "Terminal (Root Dir)" })
+map("n", "<leader>oT", function() Snacks.terminal() end, { desc = "Terminal (cwd)" })
+map("n", "<leader>ol", "<cmd>Lazy<cr>", { desc = "Lazy" })
+map("n", "<leader>og", "<cmd>Neogit<cr>", { desc = "Neogit (Root Dir)" })
+map("n", "<leader>oG", "<cmd>Neogit cwd=%:p:h<cr>", { desc = "Neogit (cwd)" })
+map("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Neogit (Root Dir)" })
+map("n", "<leader>gG", "<cmd>Neogit cwd=%:p:h<cr>", { desc = "Neogit (cwd)" })
+-- stylua: ignore end
