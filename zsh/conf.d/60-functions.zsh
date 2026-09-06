@@ -21,7 +21,6 @@ mkcd() {
 
 ## bat-enhanced help — shows --help / -h output with syntax highlighting
 if (( $+commands[bat] )); then
-  export MANPAGER='bat -pl man'
   alias bat-help='bat -pl help'
 
   help() {
