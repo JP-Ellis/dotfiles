@@ -9,7 +9,10 @@
 set -eu
 
 hook=${0##*/}
-local_hook="$(git rev-parse --git-common-dir)/hooks/$hook"
+git_dir="$(git rev-parse --git-common-dir 2>/dev/null)" || exit 0
+[ -n "$git_dir" ] || exit 0
+
+local_hook="$git_dir/hooks/$hook"
 
 [ -x "$local_hook" ] || exit 0
 exec "$local_hook" "$@"
