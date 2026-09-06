@@ -66,11 +66,6 @@ mkcd() {
   mkdir "$1" && cd "$1"
 }
 
-## Use bat to format man page
-if command -v bat 2>&1 1>/dev/null ; then
-  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-fi
-
 ## Load starship
 if command -v starship 2>&1 1>/dev/null ; then
   eval "$(starship init bash)"
