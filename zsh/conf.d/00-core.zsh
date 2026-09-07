@@ -3,6 +3,20 @@
 ## Vi key bindings
 bindkey -v
 
+## Up/down search history for lines sharing the current prefix, leaving the
+## cursor at the end of the recalled line.  Bound for both cursor-key encodings:
+## terminals send ^[[A in normal mode and ^[OA in application mode.
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+for _core_keymap in viins vicmd; do
+  bindkey -M "$_core_keymap" '^[[A' up-line-or-beginning-search
+  bindkey -M "$_core_keymap" '^[OA' up-line-or-beginning-search
+  bindkey -M "$_core_keymap" '^[[B' down-line-or-beginning-search
+  bindkey -M "$_core_keymap" '^[OB' down-line-or-beginning-search
+done
+unset _core_keymap
+
 ## Colours
 autoload -Uz colors && colors
 
