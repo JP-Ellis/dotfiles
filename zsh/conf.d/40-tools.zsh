@@ -51,6 +51,13 @@
     [[ -f $_gcloud_comp ]] && _deferred+="source ${(q)_gcloud_comp}"$'\n'
   fi
 
+  ## fzf shell integration — Ctrl+R history search, Ctrl+T file paths, Alt+C cd.
+  ## `fzf --zsh` emits both the key bindings and the completion shim; it binds
+  ## into viins and vicmd itself, so it works under `bindkey -v`.
+  if _tool_enabled 'fzf' 'fzf'; then
+    _deferred+="$(fzf --zsh 2>/dev/null)"$'\n'
+  fi
+
   ## direnv — must be last (overrides other completions/aliases)
   if _tool_enabled 'direnv' 'direnv'; then
     _deferred+="$(direnv hook zsh 2>/dev/null)"$'\n'
