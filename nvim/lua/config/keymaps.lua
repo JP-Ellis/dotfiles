@@ -10,7 +10,7 @@ local map = vim.keymap.set
 -- LazyVim's <leader>f group covers finding files but not acting on the current
 -- one. These fill that half in, following Doom Emacs' SPC f bindings.
 -- stylua: ignore start
-map("n", "<leader>fs", "<cmd>update<cr>", { desc = "Save File" })
+map("n", "<leader>fs", file.save, { desc = "Save File" })
 map("n", "<leader>fS", file.save_as, { desc = "Save File As" })
 map("n", "<leader>fR", function() Snacks.rename.rename_file() end, { desc = "Rename/Move File" })
 map("n", "<leader>fC", file.copy, { desc = "Copy File" })

@@ -13,17 +13,17 @@ local function current_file()
 end
 
 --- Prompt for a destination path, seeded with the current file's path.
---- Paths are entered and resolved relative to the cwd.
+--- Paths are entered and resolved relative to the cwd. An unnamed buffer starts
+--- from an empty prompt.
 ---@param prompt string
 ---@param on_confirm fun(to: string)
 local function prompt_destination(prompt, on_confirm)
-  local from = current_file()
-  if not from then
-    return
+  local from = vim.api.nvim_buf_get_name(0)
+  local default = ""
+  if from ~= "" then
+    from = vim.fs.normalize(vim.fn.fnamemodify(from, ":p"))
+    default = vim.fs.relpath(vim.fs.normalize(vim.fn.getcwd(0)), from) or from
   end
-
-  local cwd = vim.fs.normalize(vim.fn.getcwd(0))
-  local default = vim.fs.relpath(cwd, from) or from
 
   vim.ui.input({ prompt = prompt, default = default, completion = "file" }, function(value)
     if not value or value == "" or value == default then
@@ -31,6 +31,14 @@ local function prompt_destination(prompt, on_confirm)
     end
     on_confirm(vim.fs.normalize(vim.fs.abspath(value)))
   end)
+end
+
+--- Write the buffer, prompting for a path when it has no file yet.
+function M.save()
+  if vim.api.nvim_buf_get_name(0) == "" then
+    return M.save_as()
+  end
+  vim.cmd.update()
 end
 
 --- Write the buffer to a new file and continue editing that file.
