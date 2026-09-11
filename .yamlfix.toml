@@ -1,6 +1,6 @@
 #:schema https://www.schemastore.org/any.json
 
-line_length        = 100
-whitelines         = 1
+line_length = 100
+whitelines = 1
 section_whitelines = 1
-sequence_style     = "block_style"
+sequence_style = "block_style"

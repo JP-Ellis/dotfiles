@@ -1,15 +1,15 @@
 #:schema https://json.schemastore.org/any.json
 #:tombi schema.strict = false
 
-mode    = "local"
+mode = "local"
 project = ""
-shell   = ""
+shell = ""
 
 [dirs]
 project = []
-python  = "isolated"
-data    = "~/.local/share/hatch"
-cache   = "~/.cache/hatch"
+python = "isolated"
+data = "~/.local/share/hatch"
+cache = "~/.cache/hatch"
 
   [dirs.env]
   virtual = ".hatch"
@@ -21,15 +21,15 @@ cache   = "~/.cache/hatch"
   repo = "main"
 
 [template]
-name  = "{{ username }}"
+name = "{{ username }}"
 email = "{{ email }}"
 
 [terminal]
   [terminal.styles]
-  info    = "bold"
+  info = "bold"
   success = "bold cyan"
-  error   = "bold red"
+  error = "bold red"
   warning = "bold yellow"
   waiting = "bold magenta"
-  debug   = "bold"
+  debug = "bold"
   spinner = "simpleDotsScrolling"

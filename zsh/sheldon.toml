@@ -41,7 +41,7 @@ defer = """
   # hooks.pre queues compinit via zsh-defer immediately before fzf-tab in the
   # defer queue, ensuring the correct order: compinit → fzf-tab → deja.
   github = "Aloxaf/fzf-tab"
-  apply  = ["defer"]
+  apply = ["defer"]
 
     [plugins.fzf-tab.hooks]
     pre = "zsh-defer -c '_compinit_load'"
@@ -52,5 +52,5 @@ defer = """
   # The plugin file sources ~/.local/share/deja/init.zsh, generated on first run.
   # Tab is left to fzf-tab: DEJA_CYCLE_KEY is set in conf.d/20-completion.zsh.
   github = "Giammarco-Ferranti/deja"
-  use    = ["deja.plugin.zsh"]
-  apply  = ["defer"]
+  use = ["deja.plugin.zsh"]
+  apply = ["defer"]

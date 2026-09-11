@@ -1,50 +1,40 @@
 [default]
   [default.variables]
   app-browser = "brave"
-  app-editor  = "vim"
-  app-pager   = "less"
-  app-visual  = "code-insiders -w"
-  email       = "josh@jpellis.me"
-  nproc       = 12
-  tmpdir      = "/tmp/josh"
-  username    = "JP-Ellis"
+  app-editor = "vim"
+  app-pager = "less"
+  app-visual = "code-insiders -w"
+  email = "josh@jpellis.me"
+  nproc = 12
+  tmpdir = "/tmp/josh"
+  username = "JP-Ellis"
 
 [bash]
   [bash.files]
   "bash/bash_profile" = "~/.bash_profile"
-  "bash/bashrc"       = "~/.bashrc"
+  "bash/bashrc" = "~/.bashrc"
 
 [bin]
   [bin.files]
-  "bin/gpg-agent-launchd" = {
-    target = "~/.local/bin/gpg-agent-launchd",
-    type   = "symbolic",
-    if     = "dotter.macos"
-  }
-  "bin/gpg-refresh"       = "~/.local/bin/gpg-refresh"
-  "bin/pinentry-auto"     = "~/.local/bin/pinentry-auto"
-  "bin/transcode-hevc"    = "~/.local/bin/transcode-hevc"
-  "bin/update"            = "~/.local/bin/update"
+  "bin/gpg-agent-launchd" = { target = "~/.local/bin/gpg-agent-launchd", type = "symbolic", if = "dotter.macos" }
+  "bin/gpg-refresh" = "~/.local/bin/gpg-refresh"
+  "bin/pinentry-auto" = "~/.local/bin/pinentry-auto"
+  "bin/transcode-hevc" = "~/.local/bin/transcode-hevc"
+  "bin/update" = "~/.local/bin/update"
   "bin/vscode-extensions" = "~/.local/bin/vscode-extensions"
-  "bin/zmx-ssh"           = "~/.local/bin/zmx-ssh"
+  "bin/zmx-ssh" = "~/.local/bin/zmx-ssh"
 
 [claude]
   [claude.files]
-  "claude/CLAUDE.md"                  = "~/.claude/CLAUDE.md"
-  "claude/RTK.md"                     = "~/.claude/RTK.md"
-  "claude/git-config"                 = "~/.config/git/config.d/claude"
-  "claude/git-hooks"                  = {
-    target = "~/.config/git/hooks",
-    type   = "symbolic"
-  }
-  "claude/rules"                      = "~/.claude/rules"
-  "claude/settings.json"              = {
-    target = "~/.claude/settings.json",
-    type   = "symbolic"
-  }
-  "claude/skills/secondary-review"    = "~/.claude/skills/secondary-review"
-  "claude/skills/diataxis/SKILL.md"   = "~/.claude/skills/diataxis/SKILL.md"
-  "claude/skills/diataxis/evals"      = "~/.claude/skills/diataxis/evals"
+  "claude/CLAUDE.md" = "~/.claude/CLAUDE.md"
+  "claude/RTK.md" = "~/.claude/RTK.md"
+  "claude/git-config" = "~/.config/git/config.d/claude"
+  "claude/git-hooks" = { target = "~/.config/git/hooks", type = "symbolic" }
+  "claude/rules" = "~/.claude/rules"
+  "claude/settings.json" = { target = "~/.claude/settings.json", type = "symbolic" }
+  "claude/skills/secondary-review" = "~/.claude/skills/secondary-review"
+  "claude/skills/diataxis/SKILL.md" = "~/.claude/skills/diataxis/SKILL.md"
+  "claude/skills/diataxis/evals" = "~/.claude/skills/diataxis/evals"
   "claude/skills/diataxis/references" = "~/.claude/skills/diataxis/references"
 
 [direnv]
@@ -53,89 +43,66 @@
 
 [doom]
   [doom.files]
-  "doom/config.org"   = "~/.config/doom/config.org"
-  "doom/init.el"      = "~/.config/doom/init.el"
-  "doom/packages.el"  = "~/.config/doom/packages.el"
+  "doom/config.org" = "~/.config/doom/config.org"
+  "doom/init.el" = "~/.config/doom/init.el"
+  "doom/packages.el" = "~/.config/doom/packages.el"
   "doom/packages.org" = "~/.config/doom/packages.org"
 
 [fonts]
   [fonts.files]
-  "fontconfig/conf.d/40-monospace.conf"  = "~/.config/fontconfig/conf.d/40-monospace.conf"
+  "fontconfig/conf.d/40-monospace.conf" = "~/.config/fontconfig/conf.d/40-monospace.conf"
   "fontconfig/conf.d/40-sans-serif.conf" = "~/.config/fontconfig/conf.d/40-sans-serif.conf"
-  "fontconfig/conf.d/40-serif.conf"      = "~/.config/fontconfig/conf.d/40-serif.conf"
+  "fontconfig/conf.d/40-serif.conf" = "~/.config/fontconfig/conf.d/40-serif.conf"
 
 [general]
   [general.files]
-  "general/profile"   = { target = "~/.profile", type = "symbolic" }
+  "general/profile" = { target = "~/.profile", type = "symbolic" }
   "general/sshconfig" = "~/.ssh/config"
 
   "general/environment.d/10-applications.conf" = "~/.config/environment.d/10-applications.conf"
-  "general/environment.d/10-xdg.conf"          = "~/.config/environment.d/10-xdg.conf"
-  "general/environment.d/90-aws.conf"          = "~/.config/environment.d/90-aws.conf"
-  "general/environment.d/90-bundle.conf"       = "~/.config/environment.d/90-bundle.conf"
-  "general/environment.d/90-calc.conf"         = "~/.config/environment.d/90-calc.conf"
-  "general/environment.d/90-gnupg.conf"        = "~/.config/environment.d/90-gnupg.conf"
-  "general/environment.d/90-go.conf"           = "~/.config/environment.d/90-go.conf"
-  "general/environment.d/90-grip.conf"         = "~/.config/environment.d/90-grip.conf"
-  "general/environment.d/90-java.conf"         = "~/.config/environment.d/90-java.conf"
-  "general/environment.d/90-make.conf"         = "~/.config/environment.d/90-make.conf"
-  "general/environment.d/90-mathematica.conf"  = "~/.config/environment.d/90-mathematica.conf"
-  "general/environment.d/90-minikube.conf"     = "~/.config/environment.d/90-minikube.conf"
-  "general/environment.d/90-parallel.conf"     = "~/.config/environment.d/90-parallel.conf"
-  "general/environment.d/90-rust.conf"         = "~/.config/environment.d/90-rust.conf"
-  "general/environment.d/90-sqlite.conf"       = "~/.config/environment.d/90-sqlite.conf"
-  "general/environment.d/90-texlive.conf"      = "~/.config/environment.d/90-texlive.conf"
+  "general/environment.d/10-xdg.conf" = "~/.config/environment.d/10-xdg.conf"
+  "general/environment.d/90-aws.conf" = "~/.config/environment.d/90-aws.conf"
+  "general/environment.d/90-bundle.conf" = "~/.config/environment.d/90-bundle.conf"
+  "general/environment.d/90-calc.conf" = "~/.config/environment.d/90-calc.conf"
+  "general/environment.d/90-gnupg.conf" = "~/.config/environment.d/90-gnupg.conf"
+  "general/environment.d/90-go.conf" = "~/.config/environment.d/90-go.conf"
+  "general/environment.d/90-grip.conf" = "~/.config/environment.d/90-grip.conf"
+  "general/environment.d/90-java.conf" = "~/.config/environment.d/90-java.conf"
+  "general/environment.d/90-make.conf" = "~/.config/environment.d/90-make.conf"
+  "general/environment.d/90-mathematica.conf" = "~/.config/environment.d/90-mathematica.conf"
+  "general/environment.d/90-minikube.conf" = "~/.config/environment.d/90-minikube.conf"
+  "general/environment.d/90-parallel.conf" = "~/.config/environment.d/90-parallel.conf"
+  "general/environment.d/90-rust.conf" = "~/.config/environment.d/90-rust.conf"
+  "general/environment.d/90-sqlite.conf" = "~/.config/environment.d/90-sqlite.conf"
+  "general/environment.d/90-texlive.conf" = "~/.config/environment.d/90-texlive.conf"
 
 [git]
   [git.files]
   "git/attributes" = "~/.config/git/attributes"
-  "git/config"     = "~/.config/git/config"
+  "git/config" = "~/.config/git/config"
 
   [git.variables]
-  signingKey     = "josh@jpellis.me"
+  signingKey = "josh@jpellis.me"
   usernameGithub = "JP-Ellis"
   usernameGitlab = "JP-Ellis"
 
 [gpg]
   [gpg.files]
   "gpg/gpg-agent.conf" = "~/.local/share/gnupg/gpg-agent.conf"
-  "gpg/sshcontrol"     = "~/.local/share/gnupg/sshcontrol"
+  "gpg/sshcontrol" = "~/.local/share/gnupg/sshcontrol"
 
   ## Service manager integration: systemd user units on Linux, a LaunchAgent on
   ## macOS. Windows has no gpg-agent supervision here yet.
-  "gpg/systemd/gpg-agent-browser.socket.conf" = {
-    target = "~/.config/systemd/user/gpg-agent-browser.socket.d/gnupghome.conf",
-    type   = "symbolic",
-    if     = "dotter.linux"
-  }
-  "gpg/systemd/gpg-agent-extra.socket.conf"   = {
-    target = "~/.config/systemd/user/gpg-agent-extra.socket.d/gnupghome.conf",
-    type   = "symbolic",
-    if     = "dotter.linux"
-  }
-  "gpg/systemd/gpg-agent-ssh.socket.conf"     = {
-    target = "~/.config/systemd/user/gpg-agent-ssh.socket.d/gnupghome.conf",
-    type   = "symbolic",
-    if     = "dotter.linux"
-  }
-  "gpg/systemd/gpg-agent.socket.conf"         = {
-    target = "~/.config/systemd/user/gpg-agent.socket.d/gnupghome.conf",
-    type   = "symbolic",
-    if     = "dotter.linux"
-  }
+  "gpg/systemd/gpg-agent-browser.socket.conf" = { target = "~/.config/systemd/user/gpg-agent-browser.socket.d/gnupghome.conf", type = "symbolic", if = "dotter.linux" }
+  "gpg/systemd/gpg-agent-extra.socket.conf" = { target = "~/.config/systemd/user/gpg-agent-extra.socket.d/gnupghome.conf", type = "symbolic", if = "dotter.linux" }
+  "gpg/systemd/gpg-agent-ssh.socket.conf" = { target = "~/.config/systemd/user/gpg-agent-ssh.socket.d/gnupghome.conf", type = "symbolic", if = "dotter.linux" }
+  "gpg/systemd/gpg-agent.socket.conf" = { target = "~/.config/systemd/user/gpg-agent.socket.d/gnupghome.conf", type = "symbolic", if = "dotter.linux" }
 
-  "gpg/launchd/me.jpellis.gpg-agent.plist" = {
-    target = "~/Library/LaunchAgents/me.jpellis.gpg-agent.plist",
-    type   = "symbolic",
-    if     = "dotter.macos"
-  }
+  "gpg/launchd/me.jpellis.gpg-agent.plist" = { target = "~/Library/LaunchAgents/me.jpellis.gpg-agent.plist", type = "symbolic", if = "dotter.macos" }
 
 [mathematica]
   [mathematica.files]
-  "Mathematica/Kernel.m" = {
-    target = "~/.config/mathematica/Kernel/init.m",
-    type   = "symbolic"
-  }
+  "Mathematica/Kernel.m" = { target = "~/.config/mathematica/Kernel/init.m", type = "symbolic" }
 
 [mise]
   [mise.files]
@@ -148,16 +115,17 @@
 [python]
   [python.files]
   "python/environment.d/90-python.conf" = "~/.config/environment.d/90-python.conf"
-  "python/hatch.toml"                   = "~/.config/hatch/config.toml"
+  "python/hatch.toml" = "~/.config/hatch/config.toml"
 
 [rustic]
+
   ## One repository serves every machine, so snapshots deduplicate against each
   ## other. Each machine claims its own snapshot group through rustic-host, and
   ## prunes only that group. Defaults describe the Linux desktop; other machines
   ## override these in .dotter/local.toml.
   [rustic.variables]
-  rustic-home       = "/home/josh"
-  rustic-host       = "jpellis-desktop"
+  rustic-home = "/home/josh"
+  rustic-host = "jpellis-desktop"
   rustic-repository = "/mnt/nas/rustic"
 
   [rustic.files]
@@ -165,56 +133,17 @@
   ## Both route through the rustic-scheduled wrapper. Its lock lives inside the
   ## repository, so a prune or check on one machine excludes the jobs on every
   ## other. The wrapper also drops the backup to hourly while on battery.
-  "rustic/bin/rustic-scheduled"                   = {
-    target = "~/.local/bin/rustic-scheduled",
-    type   = "template"
-  }
-  "rustic/launchd/me.jpellis.rustic-backup.plist" = {
-    target = "~/Library/LaunchAgents/me.jpellis.rustic-backup.plist",
-    type   = "symbolic",
-    if     = "dotter.macos"
-  }
-  "rustic/launchd/me.jpellis.rustic-check.plist"  = {
-    target = "~/Library/LaunchAgents/me.jpellis.rustic-check.plist",
-    type   = "symbolic",
-    if     = "dotter.macos"
-  }
-  "rustic/launchd/me.jpellis.rustic-prune.plist"  = {
-    target = "~/Library/LaunchAgents/me.jpellis.rustic-prune.plist",
-    type   = "symbolic",
-    if     = "dotter.macos"
-  }
+  "rustic/bin/rustic-scheduled" = { target = "~/.local/bin/rustic-scheduled", type = "template" }
+  "rustic/launchd/me.jpellis.rustic-backup.plist" = { target = "~/Library/LaunchAgents/me.jpellis.rustic-backup.plist", type = "symbolic", if = "dotter.macos" }
+  "rustic/launchd/me.jpellis.rustic-check.plist" = { target = "~/Library/LaunchAgents/me.jpellis.rustic-check.plist", type = "symbolic", if = "dotter.macos" }
+  "rustic/launchd/me.jpellis.rustic-prune.plist" = { target = "~/Library/LaunchAgents/me.jpellis.rustic-prune.plist", type = "symbolic", if = "dotter.macos" }
 
-  "rustic/systemd/rustic-backup.service" = {
-    target = "~/.local/share/systemd/user/rustic-backup.service",
-    type   = "template",
-    if     = "dotter.linux"
-  }
-  "rustic/systemd/rustic-backup.timer"   = {
-    target = "~/.local/share/systemd/user/rustic-backup.timer",
-    type   = "symbolic",
-    if     = "dotter.linux"
-  }
-  "rustic/systemd/rustic-check.service"  = {
-    target = "~/.local/share/systemd/user/rustic-check.service",
-    type   = "template",
-    if     = "dotter.linux"
-  }
-  "rustic/systemd/rustic-check.timer"    = {
-    target = "~/.local/share/systemd/user/rustic-check.timer",
-    type   = "symbolic",
-    if     = "dotter.linux"
-  }
-  "rustic/systemd/rustic-prune.service"  = {
-    target = "~/.local/share/systemd/user/rustic-prune.service",
-    type   = "template",
-    if     = "dotter.linux"
-  }
-  "rustic/systemd/rustic-prune.timer"    = {
-    target = "~/.local/share/systemd/user/rustic-prune.timer",
-    type   = "symbolic",
-    if     = "dotter.linux"
-  }
+  "rustic/systemd/rustic-backup.service" = { target = "~/.local/share/systemd/user/rustic-backup.service", type = "template", if = "dotter.linux" }
+  "rustic/systemd/rustic-backup.timer" = { target = "~/.local/share/systemd/user/rustic-backup.timer", type = "symbolic", if = "dotter.linux" }
+  "rustic/systemd/rustic-check.service" = { target = "~/.local/share/systemd/user/rustic-check.service", type = "template", if = "dotter.linux" }
+  "rustic/systemd/rustic-check.timer" = { target = "~/.local/share/systemd/user/rustic-check.timer", type = "symbolic", if = "dotter.linux" }
+  "rustic/systemd/rustic-prune.service" = { target = "~/.local/share/systemd/user/rustic-prune.service", type = "template", if = "dotter.linux" }
+  "rustic/systemd/rustic-prune.timer" = { target = "~/.local/share/systemd/user/rustic-prune.timer", type = "symbolic", if = "dotter.linux" }
 
 ## rustic resolves its config through the platform's native directory and
 ## ignores XDG_CONFIG_HOME on macOS, where the search path is
@@ -228,45 +157,26 @@
 ## backstop against enabling the wrong one, not a licence to enable both.
 [rustic-linux]
   [rustic-linux.files]
-  "rustic/rustic.toml" = {
-    target = "~/.config/rustic/rustic.toml",
-    type   = "template",
-    if     = "dotter.linux"
-  }
+  "rustic/rustic.toml" = { target = "~/.config/rustic/rustic.toml", type = "template", if = "dotter.linux" }
 
 [rustic-macos]
   [rustic-macos.files]
-  "rustic/rustic.toml" = {
-    target = "~/Library/Application Support/rustic/rustic.toml",
-    type   = "template",
-    if     = "dotter.macos"
-  }
+  "rustic/rustic.toml" = { target = "~/Library/Application Support/rustic/rustic.toml", type = "template", if = "dotter.macos" }
 
 [sheldon]
   [sheldon.files]
 
 [syncthing]
+
   ## Syncthing reads .stignore only from a folder root and never replicates it
   ## between devices, so each machine needs its own copy. Deploying through
   ## dotter puts one reviewed version in git and lands it identically on every
   ## machine, which the older .stignore-sync scheme could not guarantee.
   [syncthing.files]
-  "syncthing/documents.stignore"  = {
-    target = "~/Documents/.stignore",
-    type   = "template"
-  }
-  "syncthing/university.stignore" = {
-    target = "~/University/.stignore",
-    type   = "template"
-  }
-  "syncthing/claude.stignore"     = {
-    target = "~/.claude/.stignore",
-    type   = "template"
-  }
-  "syncthing/src.stignore"        = {
-    target = "~/src/.stignore",
-    type   = "template"
-  }
+  "syncthing/documents.stignore" = { target = "~/Documents/.stignore", type = "template" }
+  "syncthing/university.stignore" = { target = "~/University/.stignore", type = "template" }
+  "syncthing/claude.stignore" = { target = "~/.claude/.stignore", type = "template" }
+  "syncthing/src.stignore" = { target = "~/src/.stignore", type = "template" }
 
 ## VSCode owns these files at runtime, so they deploy as symlinks and can never
 ## use dotter templating: the editor rewrites them in place and would overwrite
@@ -290,29 +200,13 @@
 ## backstop against enabling the wrong one, not a licence to enable both.
 [vscode-linux]
   [vscode-linux.files]
-  "vscode/keybindings.jsonc" = {
-    target = "~/.config/Code - Insiders/User/keybindings.json",
-    type   = "symbolic",
-    if     = "dotter.linux"
-  }
-  "vscode/settings.jsonc"    = {
-    target = "~/.config/Code - Insiders/User/settings.json",
-    type   = "symbolic",
-    if     = "dotter.linux"
-  }
+  "vscode/keybindings.jsonc" = { target = "~/.config/Code - Insiders/User/keybindings.json", type = "symbolic", if = "dotter.linux" }
+  "vscode/settings.jsonc" = { target = "~/.config/Code - Insiders/User/settings.json", type = "symbolic", if = "dotter.linux" }
 
 [vscode-macos]
   [vscode-macos.files]
-  "vscode/keybindings.jsonc" = {
-    target = "~/Library/Application Support/Code - Insiders/User/keybindings.json",
-    type   = "symbolic",
-    if     = "dotter.macos"
-  }
-  "vscode/settings.jsonc"    = {
-    target = "~/Library/Application Support/Code - Insiders/User/settings.json",
-    type   = "symbolic",
-    if     = "dotter.macos"
-  }
+  "vscode/keybindings.jsonc" = { target = "~/Library/Application Support/Code - Insiders/User/keybindings.json", type = "symbolic", if = "dotter.macos" }
+  "vscode/settings.jsonc" = { target = "~/Library/Application Support/Code - Insiders/User/settings.json", type = "symbolic", if = "dotter.macos" }
 
 [windows-terminal]
   [windows-terminal.files]
@@ -320,14 +214,11 @@
 
 [zsh]
   [zsh.files]
-  "zsh/zshenv"                 = "~/.zshenv"
-  "zsh/zshrc"                  = "~/.config/zsh/.zshrc"
-  "zsh/zstyles"                = "~/.config/zsh/zstyles"
-  "zsh/conf.d"                 = "~/.config/zsh/conf.d"
-  "zsh/site-functions"         = "~/.local/share/zsh/site-functions"
-  "zsh/sheldon.toml"           = {
-    target = "~/.config/sheldon/plugins.toml",
-    type   = "symbolic"
-  }
+  "zsh/zshenv" = "~/.zshenv"
+  "zsh/zshrc" = "~/.config/zsh/.zshrc"
+  "zsh/zstyles" = "~/.config/zsh/zstyles"
+  "zsh/conf.d" = "~/.config/zsh/conf.d"
+  "zsh/site-functions" = "~/.local/share/zsh/site-functions"
+  "zsh/sheldon.toml" = { target = "~/.config/sheldon/plugins.toml", type = "symbolic" }
   "zsh/sheldon-update.service" = "~/.config/systemd/user/sheldon-update.service"
-  "zsh/sheldon-update.timer"   = "~/.config/systemd/user/sheldon-update.timer"
+  "zsh/sheldon-update.timer" = "~/.config/systemd/user/sheldon-update.timer"

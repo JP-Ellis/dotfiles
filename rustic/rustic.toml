@@ -4,7 +4,7 @@
 # MARK: Repository
 
 [repository]
-repository    = "{{rustic-repository}}"
+repository = "{{rustic-repository}}"
 # The password is deliberately untracked, and rustic does not expand `~`, so the
 # path is templated. On a new machine, write the password here and chmod 600
 # before the first backup.
@@ -32,10 +32,10 @@ filter-hosts = ["{{rustic-host}}"]
 # MARK: Retention
 
 [forget]
-keep-last           = 12
-keep-within-hourly  = "2 days"
-keep-within-daily   = "28 days"
-keep-within-weekly  = "1 year"
+keep-last = 12
+keep-within-hourly = "2 days"
+keep-within-daily = "28 days"
+keep-within-weekly = "1 year"
 keep-within-monthly = "7 years"
 
 # MARK: Backup
@@ -45,7 +45,7 @@ keep-within-monthly = "7 years"
 # (~/.gitignore, ~/.local/.gitignore, and others). Those files drive rustic and
 # other sync tools, and mostly sit outside any git repository, so no-require-git
 # is what makes them apply. Both settings are load-bearing.
-git-ignore     = true
+git-ignore = true
 no-require-git = true
 
 # Backups run every 20 minutes; an unchanged tree records no new snapshot.
@@ -54,8 +54,8 @@ skip-if-unchanged = true
 exclude-if-present = ["CACHEDIR.TAG", ".nobackup"]
 
   [[backup.snapshots]]
-  name    = "{{rustic-host}}"
+  name = "{{rustic-host}}"
   # Pinned so this machine keeps one snapshot group no matter what gethostname()
   # reports. macOS in particular alternates between its FQDN and an mDNS name.
-  host    = "{{rustic-host}}"
+  host = "{{rustic-host}}"
   sources = ["{{rustic-home}}"]
