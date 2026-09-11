@@ -20,4 +20,5 @@ IOWeight=100
 
 Restart=no
 # Retention comes from the [forget] table in rustic.toml, scoped to this host.
-ExecStart=%h/.local/share/mise/shims/rustic forget --prune
+# Conflicts covers this machine. The lock in rustic-scheduled covers the others.
+ExecStart=%h/.local/bin/rustic-scheduled forget --prune
