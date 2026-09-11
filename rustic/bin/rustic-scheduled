@@ -1,10 +1,10 @@
 #!/bin/sh
-# Runs a rustic command under the three constraints launchd cannot express on
-# its own: skip while the repository is unreachable, never overlap another
-# rustic job, and back off to hourly while on battery.
+# Runs a rustic command under the constraints the schedulers cannot express on
+# their own: skip while the repository is unreachable, never overlap another
+# rustic job on any machine, and back off to hourly while on battery.
 #
-# Invoked by the me.jpellis.rustic-* LaunchAgents with the rustic subcommand and
-# its arguments, e.g. `rustic-scheduled backup`.
+# Invoked by the me.jpellis.rustic-* LaunchAgents and the rustic-*.service units
+# with the rustic subcommand and its arguments, e.g. `rustic-scheduled backup`.
 
 set -eu
 
@@ -12,16 +12,27 @@ repository="{{rustic-repository}}"
 rustic="$HOME/.local/share/mise/shims/rustic"
 
 state_dir="$HOME/.local/state/rustic"
-lock_dir="$state_dir/scheduled.lock"
 stamp="$state_dir/last-backup"
 
-# On AC the LaunchAgent's own 20 minute interval governs. On battery a backup
-# runs only once this many seconds have passed since the last successful one.
+# Every machine backs up to one repository, so the lock sits in the repository
+# and not under $HOME. Deriving the path from the repository puts it on the same
+# NAS directory for every machine, whatever each one mounts the share as.
+lock_dir="$repository/.scheduled.lock"
+
+# On AC the scheduler's own 20 minute interval governs. On battery a backup runs
+# only once this many seconds have passed since the last successful one.
 battery_interval=3600
 
-# A lock left behind by a hard kill would otherwise stop every rustic job
-# permanently, so it ages out.
+# A lock left behind by a hard kill, or by a machine that left the LAN mid-run,
+# would otherwise stop every rustic job on every machine permanently, so it ages
+# out. This compares a local clock against an mtime from the NAS, so the
+# machines and the NAS need their clocks in sync.
 lock_max_age=21600
+
+# GNU and BSD stat spell this differently.
+mtime() {
+  stat -c %Y "$1" 2>/dev/null || stat -f %m "$1" 2>/dev/null || echo 0
+}
 
 mkdir -p "$state_dir"
 
@@ -31,28 +42,37 @@ mkdir -p "$state_dir"
 
 now=$(date +%s)
 
-# One lock across backup, prune and check, since prune and check rewrite the
-# index and a backup underneath them produces spurious errors.
+# MARK: Lock
+
+# One lock across backup, prune and check on every machine, since prune and
+# check rewrite the index and a backup underneath them produces spurious errors.
 if [ -d "$lock_dir" ]; then
-  lock_mtime=$(stat -f %m "$lock_dir" 2>/dev/null || echo "$now")
-  if [ $((now - lock_mtime)) -lt "$lock_max_age" ]; then
+  if [ $((now - $(mtime "$lock_dir"))) -lt "$lock_max_age" ]; then
     exit 0
   fi
-  rmdir "$lock_dir" 2>/dev/null || true
+  rm -rf "$lock_dir"
 fi
 
+# mkdir is a single atomic NFS operation, which is what makes it usable as the
+# lock across machines.
 mkdir "$lock_dir" 2>/dev/null || exit 0
 # shellcheck disable=SC2064 # lock_dir is fixed here; expand it now, not at exit.
-trap "rmdir '$lock_dir' 2>/dev/null || true" EXIT INT TERM
+trap "rm -rf '$lock_dir' 2>/dev/null || true" EXIT INT TERM
 
-if [ "${1:-}" = "backup" ] && ! pmset -g ps | grep -q 'AC Power'; then
-  if [ -f "$stamp" ]; then
-    stamp_mtime=$(stat -f %m "$stamp" 2>/dev/null || echo 0)
-    if [ $((now - stamp_mtime)) -lt "$battery_interval" ]; then
-      exit 0
-    fi
+# Names the holder so a lock that outlives its run traces back to a machine.
+echo "$(hostname) $$ $(date -u +%Y-%m-%dT%H:%M:%SZ)" >"$lock_dir/owner" 2>/dev/null || true
+
+# MARK: Battery
+
+# pmset is macOS only; elsewhere the machine counts as being on mains.
+if [ "${1:-}" = "backup" ] && command -v pmset >/dev/null 2>&1 &&
+  ! pmset -g ps | grep -q 'AC Power'; then
+  if [ -f "$stamp" ] && [ $((now - $(mtime "$stamp"))) -lt "$battery_interval" ]; then
+    exit 0
   fi
 fi
+
+# MARK: Run
 
 "$rustic" "$@"
 

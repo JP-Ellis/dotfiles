@@ -22,4 +22,5 @@ Restart=no
 # would pull the whole repository back over NFS, so a random tenth is read each
 # run instead, which covers the repository over a couple of months and surfaces
 # bit rot long before a restore needs the data.
-ExecStart=%h/.local/share/mise/shims/rustic check --read-data --read-data-subset 10%%
+# Conflicts covers this machine. The lock in rustic-scheduled covers the others.
+ExecStart=%h/.local/bin/rustic-scheduled check --read-data --read-data-subset 10%%

@@ -19,4 +19,6 @@ IOSchedulingPriority=7
 IOWeight=100
 
 Restart=no
-ExecStart=%h/.local/share/mise/shims/rustic backup
+# Run through rustic-scheduled for the repository-wide lock, which keeps this
+# clear of a prune or check running on another machine.
+ExecStart=%h/.local/bin/rustic-scheduled backup
