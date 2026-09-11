@@ -15,10 +15,10 @@ gpg-connect-agent updatestartuptty /bye &>/dev/null
 ## A per-session file under a lock directory lets multiple concurrent SSH
 ## sessions coexist: the flag persists until every session has exited.
 if [[ -n $SSH_CONNECTION ]]; then
-    _pinentry_ssh_dir="${XDG_RUNTIME_DIR:-$HOME/.cache}/pinentry-ssh"
-    _pinentry_ssh_flag="$_pinentry_ssh_dir/$$"
-    mkdir -p "$_pinentry_ssh_dir"
-    touch "$_pinentry_ssh_flag"
-    trap 'rm -f "$_pinentry_ssh_flag"; rmdir "$_pinentry_ssh_dir" 2>/dev/null' EXIT
-    unset _pinentry_ssh_dir _pinentry_ssh_flag
+  _pinentry_ssh_dir="${XDG_RUNTIME_DIR:-$HOME/.cache}/pinentry-ssh"
+  _pinentry_ssh_flag="$_pinentry_ssh_dir/$$"
+  mkdir -p "$_pinentry_ssh_dir"
+  touch "$_pinentry_ssh_flag"
+  trap 'rm -f "$_pinentry_ssh_flag"; rmdir "$_pinentry_ssh_dir" 2>/dev/null' EXIT
+  unset _pinentry_ssh_dir _pinentry_ssh_flag
 fi

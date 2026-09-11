@@ -1,7 +1,7 @@
 # shellcheck shell=zsh
 
 ## ls substitution
-if ((${+commands[eza]})); then
+if _has eza; then
   alias ls='eza --group-directories-first --git --binary'
   alias li='ls --git-ignore'
   alias l='ls --oneline --all'
@@ -32,9 +32,9 @@ fi
 alias wclaude='CLAUDE_CONFIG_DIR="${HOME}/.claude-work" claude'
 
 ## Docker/Podman — interactive shells only (not in profile)
-if (( $+commands[podman] )) && ! (( $+commands[docker] )); then
+if _has podman && ! _has docker; then
   alias docker=podman
 fi
-if (( $+commands[podman-compose] )) && ! (( $+commands[docker-compose] )); then
+if _has podman-compose && ! _has docker-compose; then
   alias docker-compose=podman-compose
 fi

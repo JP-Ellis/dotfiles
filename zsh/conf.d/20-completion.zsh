@@ -13,7 +13,7 @@ _compinit_load() {
     compinit -C -d "$dump"
   else
     compinit -d "$dump"
-    touch "$dump"  # ensure mtime is refreshed even if nothing changed
+    touch "$dump" # ensure mtime is refreshed even if nothing changed
   fi
   # Byte-compile the dump for faster sourcing on the next rebuild
   [[ ! -f "${dump}.zwc" || $dump -nt "${dump}.zwc" ]] && zcompile "$dump"
@@ -41,18 +41,19 @@ DEJA_CYCLE_KEY=''
 ## ignore list (which includes `_*`) as a buffer-modifying widget, which would
 ## clear the ghost before the cycle runs.
 _deja_cycle_list() {
-  (( $+widgets[deja-cycle] )) || return
+  _has_widget deja-cycle || return
   zle deja-cycle
   local -i n=${#_DEJA_ALTERNATIVES}
-  (( n < 2 )) && return
-  local -i i; local out=""
-  for (( i = 1; i <= n; i++ )); do
-    if (( i == _DEJA_ALT_INDEX )); then
+  ((n < 2)) && return
+  local -i i
+  local out=""
+  for ((i = 1; i <= n; i++)); do
+    if ((i == _DEJA_ALT_INDEX)); then
       out+="▸ ${_DEJA_ALTERNATIVES[i]}"
     else
       out+="  ${_DEJA_ALTERNATIVES[i]}"
     fi
-    (( i < n )) && out+=$'\n'
+    ((i < n)) && out+=$'\n'
   done
   zle -M "$out"
 }

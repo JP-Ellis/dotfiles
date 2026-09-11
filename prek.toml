@@ -94,9 +94,7 @@ hooks = [
 repo = "https://github.com/scop/pre-commit-shfmt"
 rev = "v3.13.1-1"
 hooks = [
-  # shfmt has no zsh parser: it reads `commands[foo-bar]` as arithmetic and
-  # rewrites the subscript to `foo - bar`.
-  { id = "shfmt", exclude = { glob = ["**/*.zsh", "zsh/**"] } },
+  { id = "shfmt" },
 ]
 
 [[repos]]
