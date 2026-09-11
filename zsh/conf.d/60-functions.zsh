@@ -2,9 +2,7 @@
 
 ## xdg-open shim — Linux only, only if `open` is not already provided
 zstyle -s ':config:os' type _fn_os
-if [[ "$_fn_os" == 'linux' ]] && \
-   (( $+commands[xdg-open] )) && \
-   ! (( $+commands[open] )); then
+if [[ "$_fn_os" == 'linux' ]] && _has xdg-open && ! _has open; then
   open() {
     local arg
     for arg in "$@"; do
@@ -20,7 +18,7 @@ mkcd() {
 }
 
 ## bat-enhanced help — shows --help / -h output with syntax highlighting
-if (( $+commands[bat] )); then
+if _has bat; then
   alias bat-help='bat -pl help'
 
   help() {
@@ -29,10 +27,10 @@ if (( $+commands[bat] )); then
       return 1
     fi
     case "$1" in
-      --help)
-        echo "Usage: help <command>" >&2
-        return 0
-        ;;
+    --help)
+      echo "Usage: help <command>" >&2
+      return 0
+      ;;
     esac
 
     if "$@" --help >/dev/null 2>&1; then
