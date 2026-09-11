@@ -161,9 +161,11 @@ These instructions are based on [AWS CDK Best Practices](https://docs.aws.amazon
 from dataclasses import dataclass
 from aws_cdk import Stack, StackProps
 
+
 @dataclass
 class MyStackProps(StackProps):
     """Props for MyStack."""
+
     vpc_id: str
     database_name: str
     api_key_secret_arn: str
@@ -188,6 +190,7 @@ from constructs import Construct
 # Constants
 DEFAULT_TIMEOUT: Final = Duration.seconds(30)
 DEFAULT_MEMORY: Final = 512
+
 
 class MyStack(Stack):
     """Stack for my service."""
@@ -353,6 +356,7 @@ def create_bucket(
 import aws_cdk as cdk
 from aws_cdk.assertions import Template, Match
 
+
 def test_stack_creates_lambda():
     """Test that stack creates Lambda function."""
     app = cdk.App()
@@ -429,9 +433,11 @@ except:
 app = cdk.App()
 bucket = s3.Bucket(app, "MyBucket")  # Wrong!
 
+
 # ❌ Don't use mutable default arguments
 def __init__(self, tags: dict = {}):
     pass
+
 
 # ❌ Don't mix application and infrastructure code
 def __init__(self, scope, id, **kwargs):
@@ -456,9 +462,11 @@ except ValueError as e:
 app = cdk.App()
 stack = MyStack(app, "MyStack")
 
+
 # ✅ Use immutable defaults
 def __init__(self, tags: dict | None = None):
     self.tags = tags or {}
+
 
 # ✅ Keep infrastructure separate
 def __init__(self, scope, id, api_url: str, **kwargs):
@@ -490,6 +498,7 @@ def __init__(self, scope, id, api_url: str, **kwargs):
 ```python
 #!/usr/bin/env python3
 """CDK app entry point."""
+
 from __future__ import annotations
 
 import aws_cdk as cdk
