@@ -3,7 +3,7 @@
 ## zsh-patina syntax highlighting.
 ##
 ## MUST load last — after:
-##   - zsh-autosuggestions  (loaded via sheldon defer template)
+##   - deja                 (loaded via sheldon defer template)
 ##   - fzf-tab              (loaded via sheldon defer template)
 ##   - compinit             (deferred in 20-completion.zsh)
 ##

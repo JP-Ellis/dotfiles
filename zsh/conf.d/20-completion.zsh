@@ -30,8 +30,34 @@ zstyle ':completion:*' substitute 1
 zstyle ':completion:*' use-compctl true
 zstyle ':completion:*' verbose true
 
-## zsh-autosuggestions — strategy: try history first, fall back to completion
-ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+## deja — predictive inline suggestions; the plugin itself is loaded via sheldon.
+## Its default cycle key is Tab, which would shadow fzf-tab. Cycling is bound
+## to Shift+Tab below through a wrapper that also lists the candidates under
+## the prompt, since deja-cycle only repaints the ghost text. Emptying the
+## variable keeps deja from binding any key itself.
+DEJA_CYCLE_KEY=''
+
+## The leading underscore matters: deja wraps every widget not matching its
+## ignore list (which includes `_*`) as a buffer-modifying widget, which would
+## clear the ghost before the cycle runs.
+_deja_cycle_list() {
+  (( $+widgets[deja-cycle] )) || return
+  zle deja-cycle
+  local -i n=${#_DEJA_ALTERNATIVES}
+  (( n < 2 )) && return
+  local -i i; local out=""
+  for (( i = 1; i <= n; i++ )); do
+    if (( i == _DEJA_ALT_INDEX )); then
+      out+="▸ ${_DEJA_ALTERNATIVES[i]}"
+    else
+      out+="  ${_DEJA_ALTERNATIVES[i]}"
+    fi
+    (( i < n )) && out+=$'\n'
+  done
+  zle -M "$out"
+}
+zle -N _deja_cycle_list
+bindkey '^[[Z' _deja_cycle_list
 
 ## fzf-tab — replaces zsh's default tab completion menu with fzf.
 ## Only configured if fzf is available; the plugin itself is loaded via sheldon.
