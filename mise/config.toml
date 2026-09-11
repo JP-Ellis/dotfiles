@@ -92,7 +92,7 @@
 
 # LLM and AI tools
 "aqua:anthropics/claude-code" = "2.1.269"
-"github:rtk-ai/rtk" = "v0.48.0"
+"github:rtk-ai/rtk" = "v0.49.0"
 "github:ggml-org/llama.cpp" = { version = "latest", version_prefix = "b" }
 
 # Terminal sessions
