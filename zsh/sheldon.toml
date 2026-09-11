@@ -37,15 +37,20 @@ defer = """
   [plugins.fzf-tab]
   # Replaces the default zsh completion menu with fzf.
   # Requires fzf in PATH (provided by mise).
-  # Must load after compinit and before zsh-autosuggestions.
+  # Must load after compinit and before deja.
   # hooks.pre queues compinit via zsh-defer immediately before fzf-tab in the
-  # defer queue, ensuring the correct order: compinit → fzf-tab → autosuggestions.
+  # defer queue, ensuring the correct order: compinit → fzf-tab → deja.
   github = "Aloxaf/fzf-tab"
   apply  = ["defer"]
 
     [plugins.fzf-tab.hooks]
     pre = "zsh-defer -c '_compinit_load'"
 
-  [plugins.zsh-autosuggestions]
-  github = "zsh-users/zsh-autosuggestions"
+  [plugins.deja]
+  # Predictive inline ghost text, replacing zsh-autosuggestions (deja refuses
+  # to run alongside it). Requires the `deja` binary in PATH (provided by mise).
+  # The plugin file sources ~/.local/share/deja/init.zsh, generated on first run.
+  # Tab is left to fzf-tab: DEJA_CYCLE_KEY is set in conf.d/20-completion.zsh.
+  github = "Giammarco-Ferranti/deja"
+  use    = ["deja.plugin.zsh"]
   apply  = ["defer"]

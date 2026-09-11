@@ -21,12 +21,13 @@
 "github:endevco/aube"            = "2.2.13"
 
 # Shell and navigation
-"aqua:direnv/direnv"     = "2.37.1"
-"aqua:junegunn/fzf"      = "0.74.3"
-"aqua:starship/starship" = "1.26.0"
-"cargo:sheldon"          = "0.8.5"
-"cargo:zoxide"           = "0.10.0"
-"cargo:zsh-patina"       = "1.10.0"
+"aqua:direnv/direnv"             = "2.37.1"
+"aqua:junegunn/fzf"              = "0.74.3"
+"aqua:starship/starship"         = "1.26.0"
+"cargo:sheldon"                  = "0.8.5"
+"cargo:zoxide"                   = "0.10.0"
+"cargo:zsh-patina"               = "1.10.0"
+"github:Giammarco-Ferranti/deja" = "0.4.2"
 
 # Git and repo workflows
 "aqua:cli/cli"                    = "2.100.0"
