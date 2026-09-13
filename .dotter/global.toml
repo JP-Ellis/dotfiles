@@ -16,6 +16,7 @@
 
 [bin]
   [bin.files]
+  "bin/bot-prs" = "~/.local/bin/bot-prs"
   "bin/gpg-agent-launchd" = { target = "~/.local/bin/gpg-agent-launchd", type = "symbolic", if = "dotter.macos" }
   "bin/gpg-refresh" = "~/.local/bin/gpg-refresh"
   "bin/pinentry-auto" = "~/.local/bin/pinentry-auto"
