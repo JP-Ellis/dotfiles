@@ -120,9 +120,11 @@ fi
 # mise — runtime and tool manager
 ########################################
 
+# Every tool in mise/config.toml is pinned to an exact version, so the config
+# already names the desired state; `mise install` brings the machine to it.
 if check_command "mise"; then
   mise self-update -y
-  mise upgrade
+  mise install
 fi
 
 ########################################
