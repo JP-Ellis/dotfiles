@@ -13,6 +13,7 @@ selected.
 from __future__ import annotations
 
 import argparse
+import base64
 import json
 import random
 import re
@@ -79,11 +80,22 @@ BUMP_SEVERITY = (
     "rollback",
 )
 
+# Search pages are fetched in parallel by computing the cursor for each offset.
+# GitHub's search cursors are base64 of "cursor:<offset>", which is undocumented
+# but has been stable for years. Small pages keep each request well under
+# GitHub's ~10 s GraphQL deadline, which larger pages hit when run concurrently.
+# The search API returns at most 1000 results.
+PAGE_SIZE = 25
+SEARCH_LIMIT = 1000
+FETCH_WORKERS = 16
+FETCH_RETRIES = 2
+TIMED_OUT = re.compile(r"couldn't respond to your request in time|timeout", re.IGNORECASE)
+
 GRAPHQL = """
-query($q: String!, $after: String) {
+query($q: String!, $first: Int!, $after: String) {
   viewer { login }
-  search(query: $q, type: ISSUE, first: 25, after: $after) {
-    pageInfo { hasNextPage endCursor }
+  search(query: $q, type: ISSUE, first: $first, after: $after) {
+    issueCount
     nodes {
       ... on PullRequest {
         number
@@ -145,8 +157,12 @@ def gh(*args: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(["gh", *args], capture_output=True, text=True, check=False)
 
 
+def cursor(offset: int) -> str:
+    return base64.b64encode(f"cursor:{offset}".encode()).decode()
+
+
 def fetch(
-    owners: tuple[str, ...], progress: Callable[[int], None]
+    owners: tuple[str, ...], progress: Callable[[int, int], None]
 ) -> tuple[str, list[dict]]:
     """Return the viewer's login and every open bot pull request."""
     query = " ".join(
@@ -157,28 +173,59 @@ def fetch(
             "archived:false",
             *(f"author:{bot}" for bot in BOT_AUTHORS),
             *(f"owner:{owner}" for owner in owners),
+            # A fixed order keeps pages disjoint while they are fetched at once.
+            "sort:created-asc",
         ]
     )
 
-    viewer = ""
-    nodes: list[dict] = []
-    after: str | None = None
-    while True:
-        cmd = ["api", "graphql", "-f", f"query={GRAPHQL}", "-f", f"q={query}"]
-        if after:
-            cmd += ["-f", f"after={after}"]
-        result = gh(*cmd)
-        if result.returncode != 0:
-            console.print(f"[red]gh api graphql failed:[/red] {result.stderr.strip()}")
-            sys.exit(1)
-        data = json.loads(result.stdout)["data"]
-        viewer = data["viewer"]["login"]
-        nodes += [node for node in data["search"]["nodes"] if node]
-        progress(len(nodes))
-        page = data["search"]["pageInfo"]
-        if not page["hasNextPage"]:
-            return viewer, nodes
-        after = page["endCursor"]
+    def page(offset: int) -> dict:
+        cmd = [
+            "api",
+            "graphql",
+            "-f",
+            f"query={GRAPHQL}",
+            "-f",
+            f"q={query}",
+            "-F",
+            f"first={PAGE_SIZE}",
+        ]
+        if offset:
+            cmd += ["-f", f"after={cursor(offset)}"]
+        for _attempt in range(FETCH_RETRIES + 1):
+            result = gh(*cmd)
+            if result.returncode == 0:
+                return json.loads(result.stdout)["data"]
+            if not TIMED_OUT.search(result.stderr):
+                break
+        console.print(f"[red]gh api graphql failed:[/red] {result.stderr.strip()}")
+        sys.exit(1)
+
+    first = page(0)
+    viewer = first["viewer"]["login"]
+    total = first["search"]["issueCount"]
+    if total > SEARCH_LIMIT:
+        console.print(
+            f"[yellow]{total} matching pull requests, but GitHub search only"
+            f" returns the first {SEARCH_LIMIT}.[/yellow]"
+        )
+        total = SEARCH_LIMIT
+
+    by_url: dict[str, dict] = {}
+
+    def collect(data: dict) -> None:
+        for node in data["search"]["nodes"]:
+            if node:
+                by_url[node["url"]] = node
+        progress(len(by_url), total)
+
+    collect(first)
+    with ThreadPoolExecutor(max_workers=FETCH_WORKERS) as pool:
+        futures = [
+            pool.submit(page, offset) for offset in range(PAGE_SIZE, total, PAGE_SIZE)
+        ]
+        for future in as_completed(futures):
+            collect(future.result())
+    return viewer, list(by_url.values())
 
 
 # MARK: Classification
@@ -314,7 +361,7 @@ STYLE = questionary.Style(
 
 KEYS = (
     ("↑ ↓ / k j", "move"),
-    ("space", "tick or untick"),
+    ("space", "tick or untick, then move down"),
     ("a", "tick or untick everything"),
     ("i", "invert every tick"),
     ("n", "untick everything"),
@@ -371,6 +418,26 @@ def customise(
     @bindings.add("n", eager=True)
     def _untick_all(_event):
         control.selected_options.clear()
+
+    @bindings.add(" ", eager=True)
+    def _toggle_and_advance(_event):
+        """Tick or untick, then step to the next row so a run of rows can be
+        toggled by holding space. Stops on the last row instead of wrapping."""
+        value = control.get_pointed_at().value
+        if value in control.selected_options:
+            control.selected_options.remove(value)
+        else:
+            control.selected_options.append(value)
+
+        rows_below = range(control.pointed_at + 1, len(control.choices))
+        control.pointed_at = next(
+            (
+                i
+                for i in rows_below
+                if not isinstance(control.choices[i], questionary.Separator)
+            ),
+            control.pointed_at,
+        )
 
     @bindings.add("o", eager=True)
     def _open(_event):
@@ -744,7 +811,9 @@ def main() -> int:
     with console.status("Searching for bot pull requests…") as status:
         viewer, nodes = fetch(
             owners,
-            lambda count: status.update(f"Found {count} bot pull requests…"),
+            lambda count, total: status.update(
+                f"Found {count} of {total} bot pull requests…"
+            ),
         )
     prs = sorted(
         (build(node, viewer) for node in nodes),
