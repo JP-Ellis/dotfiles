@@ -79,3 +79,43 @@ bootstrap_gpg_agent() {
 }
 
 bootstrap_gpg_agent
+
+# MARK: macOS rustic launcher
+# Builds the app the rustic LaunchAgents start, then reloads the agents so an
+# edited plist takes effect without a logout. The ad-hoc signature ties macOS
+# privacy grants to this exact build, so the app is rebuilt only when its
+# sources change; each rebuild prompts for them again.
+
+build_rustic_launcher() {
+  local src app domain job plist
+  src="$repo_root/rustic/launcher"
+  app="$HOME/Applications/RusticScheduled.app"
+  domain="gui/$(id -u)"
+
+  [ "$(uname -s)" = "Darwin" ] || return 0
+  [ -f "$HOME/Library/LaunchAgents/me.jpellis.rustic-backup.plist" ] || return 0
+
+  if ! command -v rustc >/dev/null 2>&1; then
+    echo "post_deploy: rustc not found; skipping $app" >&2
+    return 0
+  fi
+
+  if ! cmp -s "$src/main.rs" "$app/Contents/Resources/main.rs" ||
+    ! cmp -s "$src/Info.plist" "$app/Contents/Info.plist"; then
+    rm -rf "$app"
+    mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
+    cp "$src/Info.plist" "$app/Contents/Info.plist"
+    cp "$src/main.rs" "$app/Contents/Resources/main.rs"
+    rustc --edition 2024 -C opt-level=2 -o "$app/Contents/MacOS/rustic-scheduled" "$src/main.rs"
+    codesign --force --sign - "$app"
+    echo "post_deploy: rebuilt $app; approve its privacy prompts on the next run" >&2
+  fi
+
+  for job in backup check prune; do
+    plist="$HOME/Library/LaunchAgents/me.jpellis.rustic-$job.plist"
+    launchctl bootout "$domain/me.jpellis.rustic-$job" 2>/dev/null || true
+    launchctl bootstrap "$domain" "$plist"
+  done
+}
+
+build_rustic_launcher

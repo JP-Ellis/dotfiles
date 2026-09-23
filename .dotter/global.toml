@@ -134,10 +134,14 @@
   ## Both route through the rustic-scheduled wrapper. Its lock lives inside the
   ## repository, so a prune or check on one machine excludes the jobs on every
   ## other. The wrapper also drops the backup to hourly while on battery.
+  ##
+  ## On macOS the LaunchAgents start ~/Applications/RusticScheduled.app, which
+  ## post_deploy.sh builds from rustic/launcher. That app holds the macOS privacy
+  ## grants, so /bin/sh never needs them.
   "rustic/bin/rustic-scheduled" = { target = "~/.local/bin/rustic-scheduled", type = "template" }
-  "rustic/launchd/me.jpellis.rustic-backup.plist" = { target = "~/Library/LaunchAgents/me.jpellis.rustic-backup.plist", type = "symbolic", if = "dotter.macos" }
-  "rustic/launchd/me.jpellis.rustic-check.plist" = { target = "~/Library/LaunchAgents/me.jpellis.rustic-check.plist", type = "symbolic", if = "dotter.macos" }
-  "rustic/launchd/me.jpellis.rustic-prune.plist" = { target = "~/Library/LaunchAgents/me.jpellis.rustic-prune.plist", type = "symbolic", if = "dotter.macos" }
+  "rustic/launchd/me.jpellis.rustic-backup.plist" = { target = "~/Library/LaunchAgents/me.jpellis.rustic-backup.plist", type = "template", if = "dotter.macos" }
+  "rustic/launchd/me.jpellis.rustic-check.plist" = { target = "~/Library/LaunchAgents/me.jpellis.rustic-check.plist", type = "template", if = "dotter.macos" }
+  "rustic/launchd/me.jpellis.rustic-prune.plist" = { target = "~/Library/LaunchAgents/me.jpellis.rustic-prune.plist", type = "template", if = "dotter.macos" }
 
   "rustic/systemd/rustic-backup.service" = { target = "~/.local/share/systemd/user/rustic-backup.service", type = "template", if = "dotter.linux" }
   "rustic/systemd/rustic-backup.timer" = { target = "~/.local/share/systemd/user/rustic-backup.timer", type = "symbolic", if = "dotter.linux" }
