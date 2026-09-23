@@ -81,6 +81,7 @@
   [git.files]
   "git/attributes" = "~/.config/git/attributes"
   "git/config" = "~/.config/git/config"
+  "git/prune-merged" = { target = "~/.config/git/prune-merged", type = "symbolic" }
 
   [git.variables]
   signingKey = "josh@jpellis.me"
