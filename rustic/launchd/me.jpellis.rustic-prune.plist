@@ -7,9 +7,9 @@
 
   <key>ProgramArguments</key>
   <array>
-    <string>/bin/sh</string>
-    <string>-c</string>
-    <string>exec /bin/sh "$HOME/.local/bin/rustic-scheduled" forget --prune</string>
+    <string>{{rustic-home}}/Applications/RusticScheduled.app/Contents/MacOS/rustic-scheduled</string>
+    <string>forget</string>
+    <string>--prune</string>
   </array>
 
   <!-- Retention comes from the [forget] table in rustic.toml, scoped to this

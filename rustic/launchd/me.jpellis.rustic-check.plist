@@ -10,9 +10,11 @@
        over the network each week. -->
   <key>ProgramArguments</key>
   <array>
-    <string>/bin/sh</string>
-    <string>-c</string>
-    <string>exec /bin/sh "$HOME/.local/bin/rustic-scheduled" check --read-data --read-data-subset 10%</string>
+    <string>{{rustic-home}}/Applications/RusticScheduled.app/Contents/MacOS/rustic-scheduled</string>
+    <string>check</string>
+    <string>--read-data</string>
+    <string>--read-data-subset</string>
+    <string>10%</string>
   </array>
 
   <!-- Sunday, offset from the nightly prune. -->

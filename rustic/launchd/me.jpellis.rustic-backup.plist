@@ -5,14 +5,13 @@
   <key>Label</key>
   <string>me.jpellis.rustic-backup</string>
 
-  <!-- Wrapped in a shell so $HOME resolves; launchd does not expand it in
-       ProgramArguments. The wrapper supplies what launchd cannot: the
-       repository guard, the cross-job lock, and the battery back-off. -->
+  <!-- The launcher holds the privacy grants and runs rustic-scheduled,
+       which supplies what launchd cannot: the repository guard, the
+       cross-job lock, and the battery back-off. -->
   <key>ProgramArguments</key>
   <array>
-    <string>/bin/sh</string>
-    <string>-c</string>
-    <string>exec /bin/sh "$HOME/.local/bin/rustic-scheduled" backup</string>
+    <string>{{rustic-home}}/Applications/RusticScheduled.app/Contents/MacOS/rustic-scheduled</string>
+    <string>backup</string>
   </array>
 
   <!-- Fires every 20 minutes. On battery the wrapper drops this to hourly. -->
