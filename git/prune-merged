@@ -1,0 +1,79 @@
+#!/bin/sh
+# reference-transaction hook. When a transaction removes refs/remotes/<remote>/<name>,
+# delete each local branch tracking it whose work landed in every dmb-required branch.
+# Reads git-dmb's config: branch.<b>.dmb-required, branch.<b>.dmb-excluded, remote.<r>.dmb-enabled.
+[ "$1" = committed ] || exit 0
+[ -z "$PRUNE_MERGED_ACTIVE" ] || exit 0
+# Deleting a packed ref runs the hook twice: once inside the packed-refs transaction, with
+# packed-refs.lock still held, then again for the outer transaction. Act on the outer one.
+[ -e "$(git rev-parse --git-common-dir)/packed-refs.lock" ] && exit 0
+pruned=$(awk '$2 ~ /^0+$/ && $3 ~ /^refs\/remotes\// {print $3}' | tr '\n' ' ')
+[ -n "$pruned" ] || exit 0
+export PRUNE_MERGED_ACTIVE=1
+
+is_pruned() {
+  case " $pruned " in *" $1 "*) return 0 ;; esac
+  return 1
+}
+candidates=$(git for-each-ref --format='%(refname:short) %(upstream)' refs/heads |
+  while read -r branch upstream; do
+    is_pruned "$upstream" && echo "$branch $upstream"
+  done)
+[ -n "$candidates" ] || exit 0
+
+required=$(git config --get-regexp '^branch\..*\.dmb-required$' |
+  awk '$2 == "true" {sub(/^branch\./, "", $1); sub(/\.dmb-required$/, "", $1); print $1}')
+if [ -z "$required" ]; then
+  echo "prune-merged: no merge targets configured; run 'git dmb --configure' to clean up merged branches" >&2
+  exit 0
+fi
+
+checked_out=$(git worktree list --porcelain | sed -n 's|^branch refs/heads/||p')
+
+# Merged, rebased, or squashed: no commit or combined patch is missing from the target.
+landed_in() {
+  git merge-base --is-ancestor "$1" "$2" && return 0
+  # Every git failure returns 1: an unverified branch is kept.
+  picks=$(git cherry "$2" "$1") || return 1
+  printf '%s\n' "$picks" | grep -q '^+' || return 0
+  base=$(git merge-base "$2" "$1") || return 1
+  squashed=$(git commit-tree "$1^{tree}" -p "$base" -m squashed) || return 1
+  picks=$(git cherry "$2" "$squashed") || return 1
+  ! printf '%s\n' "$picks" | grep -q '^+'
+}
+
+fetched=
+echo "$candidates" | while read -r branch upstream; do
+  remote=$(git config "branch.$branch.remote")
+  [ "$(git config --bool "remote.$remote.dmb-enabled")" = true ] || continue
+  [ "$(git config --bool "branch.$branch.dmb-excluded")" = true ] && continue
+  printf '%s\n' "$required" | grep -qxF "$branch" && continue
+
+  # fetch --prune commits the prune before updating refs/remotes, so those targets are stale.
+  # Fetch fresh copies into a private namespace: touching refs/remotes breaks the outer fetch.
+  if [ "$fetched" != "$remote" ]; then
+    refspecs=
+    for target in $required; do
+      refspecs="$refspecs +refs/heads/$target:refs/prune-merged/$target"
+    done
+    # shellcheck disable=SC2086 # one word per refspec
+    if ! git fetch --quiet --no-prune --no-write-fetch-head --refmap= "$remote" $refspecs; then
+      echo "prune-merged: kept '$branch': could not fetch" $required "from $remote" >&2
+      continue
+    fi
+    fetched=$remote
+  fi
+
+  unmerged=
+  for target in $required; do
+    landed_in "$branch" "refs/prune-merged/$target" || unmerged="$unmerged $remote/$target"
+  done
+  if [ -n "$unmerged" ]; then
+    echo "prune-merged: kept '$branch': $upstream was deleted, but it has work not in$unmerged" >&2
+  elif printf '%s\n' "$checked_out" | grep -qxF "$branch"; then
+    echo "prune-merged: kept '$branch': merged, but checked out in a worktree" >&2
+  else
+    git branch -D "$branch" >&2
+  fi
+done
+git for-each-ref --format='delete %(refname)' refs/prune-merged/ | git update-ref --stdin
