@@ -54,8 +54,13 @@ if [ -d "$lock_dir" ]; then
 fi
 
 # mkdir is a single atomic NFS operation, which is what makes it usable as the
-# lock across machines.
-mkdir "$lock_dir" 2>/dev/null || exit 0
+# lock across machines. Losing the race to another machine is a skip. Any other
+# failure, such as a macOS privacy denial on the share, is reported instead.
+if ! err=$(mkdir "$lock_dir" 2>&1); then
+  [ -d "$lock_dir" ] && exit 0
+  echo "rustic-scheduled: cannot take the lock: $err" >&2
+  exit 1
+fi
 # shellcheck disable=SC2064 # lock_dir is fixed here; expand it now, not at exit.
 trap "rm -rf '$lock_dir' 2>/dev/null || true" EXIT INT TERM
 
