@@ -76,7 +76,7 @@
 "pipx:yamlfix" = "1.19.1"
 
 # Language servers and language-specific linters
-"aqua:astral-sh/ruff" = "0.16.8"
+"aqua:astral-sh/ruff" = "0.16.9"
 "aqua:astral-sh/ty" = "0.0.84"
 "npm:typescript" = "7.0.2"
 "npm:typescript-language-server" = "6.0.0"
