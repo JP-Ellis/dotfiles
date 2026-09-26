@@ -71,7 +71,7 @@
 "cargo:typos-cli" = "1.50.2"
 "github:rvben/rumdl" = "0.2.77"
 "npm:eslint" = "10.11.0"
-"npm:prettier" = "3.9.8"
+"npm:prettier" = "3.9.9"
 "pipx:hatch" = "1.18.1"
 "pipx:yamlfix" = "1.19.1"
 
