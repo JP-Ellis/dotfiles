@@ -79,7 +79,7 @@
 "aqua:astral-sh/ruff" = "0.16.9"
 "aqua:astral-sh/ty" = "0.0.84"
 "npm:typescript" = "7.0.2"
-"npm:typescript-language-server" = "6.0.0"
+"npm:typescript-language-server" = "6.0.1"
 
 # Cloud and platform CLIs
 "aqua:aws/aws-cli" = "2.37.4"
