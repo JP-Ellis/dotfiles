@@ -102,6 +102,9 @@
 "cargo:dotter" = "0.13.5"
 "cargo:rustic-rs" = "0.11.4"
 
+# Secrets
+"cargo:rbw" = "1.15.0"
+
 [settings]
 experimental = true
 
