@@ -1,42 +1,10 @@
 // Deployed by dotter from ~/.dotfiles/syncthing/src.stignore. Edit there, not here.
 // Syncthing takes the FIRST matching line, so order decides.
 
-// MARK: Syncthing
-.stversions
+// MARK: Package sources and builds, re-fetched by makepkg
+/JP-Ellis/PKGBUILD/**/*.tar.gz
+/JP-Ellis/PKGBUILD/**/*.tar.xz
+/JP-Ellis/PKGBUILD/**/*.tar.zst
 
-// MARK: Rust
-target
-
-// MARK: Node
-node_modules
-bower_components
-.next
-
-// MARK: Python
-.venv
-__pycache__
-.pytest_cache
-.ruff_cache
-.mypy_cache
-.ipynb_checkpoints
-
-// MARK: Generic build output
-dist
-
-// MARK: Editor and browser scratch
-*~
-.*.swp
-*.part
-*.crdownload
-
-// MARK: OS artefacts
-.DS_Store
-.Spotlight-V100
-.Trashes
-._*
-desktop.ini
-ehthumbs.db
-Thumbs.db
-
-// MARK: Package build artefacts
-PKGBUILD/**/*.pkg.tar.zst
+// MARK: Regenerable files, shared with rustic
+{{include_template "ignore/regenerable.ignore"}}
