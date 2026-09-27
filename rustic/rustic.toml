@@ -41,12 +41,13 @@ keep-within-monthly = "7 years"
 # MARK: Backup
 
 [backup]
-# Exclusions are expressed as .gitignore-syntax files spread through the tree
-# (~/.gitignore, ~/.local/.gitignore, and others). Those files drive rustic and
-# other sync tools, and mostly sit outside any git repository, so no-require-git
-# is what makes them apply. Both settings are load-bearing.
-git-ignore = true
-no-require-git = true
+# Exclusions live in ~/.rusticignore, deployed from rustic/rusticignore, which
+# shares its list of regenerable files with the Syncthing folders. Repository
+# .gitignore files stay out: they drop .env files, data directories and other
+# local state that no remote holds. An unrecognised key here is ignored in
+# silence, so the spelling of custom-ignorefiles is load-bearing.
+git-ignore = false
+custom-ignorefiles = [".rusticignore"]
 
 # Backups run every 20 minutes; an unchanged tree records no new snapshot.
 skip-if-unchanged = true

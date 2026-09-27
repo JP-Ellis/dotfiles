@@ -140,6 +140,7 @@
   ## post_deploy.sh builds from rustic/launcher. That app holds the macOS privacy
   ## grants, so /bin/sh never needs them.
   "rustic/bin/rustic-scheduled" = { target = "~/.local/bin/rustic-scheduled", type = "template" }
+  "rustic/rusticignore" = { target = "~/.rusticignore", type = "template" }
   "rustic/launchd/me.jpellis.rustic-backup.plist" = { target = "~/Library/LaunchAgents/me.jpellis.rustic-backup.plist", type = "template", if = "dotter.macos" }
   "rustic/launchd/me.jpellis.rustic-check.plist" = { target = "~/Library/LaunchAgents/me.jpellis.rustic-check.plist", type = "template", if = "dotter.macos" }
   "rustic/launchd/me.jpellis.rustic-prune.plist" = { target = "~/Library/LaunchAgents/me.jpellis.rustic-prune.plist", type = "template", if = "dotter.macos" }
