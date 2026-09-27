@@ -179,6 +179,9 @@
   ## between devices, so each machine needs its own copy. Deploying through
   ## dotter puts one reviewed version in git and lands it identically on every
   ## machine, which the older .stignore-sync scheme could not guarantee.
+  ##
+  ## Each template splices in ignore/regenerable.ignore, the list it shares with
+  ## ~/.rusticignore.
   [syncthing.files]
   "syncthing/documents.stignore" = { target = "~/Documents/.stignore", type = "template" }
   "syncthing/university.stignore" = { target = "~/University/.stignore", type = "template" }
