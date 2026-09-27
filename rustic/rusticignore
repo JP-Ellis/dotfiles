@@ -1,0 +1,46 @@
+# Deployed by dotter from ~/.dotfiles/rustic/rusticignore. Edit there, not here.
+# rustic reads this with gitignore semantics: a leading / anchors a pattern to
+# the home directory, and the last matching line wins.
+#
+# Repository .gitignore files do not apply to backups. They drop local state
+# that only lives on this machine, such as .env files and data directories.
+
+# MARK: Caches and scratch
+/.cache
+/.thumbnails
+/Downloads
+/tmp
+
+# MARK: Trash
+/.Trash
+/.local/share/Trash
+
+# MARK: Toolchains, reinstalled by rustup and cargo
+/.local/share/rustup/*
+!/.local/share/rustup/settings.toml
+/.local/share/cargo/*
+!/.local/share/cargo/credentials
+
+# MARK: Games and containers
+/.local/share/Steam
+/.local/share/containers/storage
+/.factorio/temp
+
+# MARK: Applications which sync settings independently
+/.config/Code
+/.config/Code - Insiders
+/.config/BraveSoftware
+{{#if dotter.macos}}
+/Library/Caches
+/Library/Application Support/Code
+/Library/Application Support/Code - Insiders
+/Library/Application Support/BraveSoftware
+{{/if}}
+
+# MARK: Package sources and builds, re-fetched by makepkg
+/src/JP-Ellis/PKGBUILD/**/*.tar.gz
+/src/JP-Ellis/PKGBUILD/**/*.tar.xz
+/src/JP-Ellis/PKGBUILD/**/*.tar.zst
+
+# MARK: Regenerable files, shared with Syncthing
+{{include_template "ignore/regenerable.ignore"}}

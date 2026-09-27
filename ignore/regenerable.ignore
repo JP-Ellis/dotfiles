@@ -1,0 +1,48 @@
+{{!--
+  Regenerable files: build output, caches, environments and scratch. Syncthing
+  never replicates them and rustic never backs them up.
+
+  Spliced into ~/.rusticignore and every .stignore through include_template, so
+  each line must mean the same in gitignore and Syncthing syntax. Only bare,
+  unanchored names and globs qualify, and never a `!` negation: Syncthing takes
+  the first matching line where gitignore takes the last. Comments live in this
+  handlebars block because the two formats share no comment syntax.
+
+  Rustic also skips any directory holding CACHEDIR.TAG. Syncthing has no
+  equivalent, so tagged caches are still named here.
+--}}
+.stversions
+
+target
+
+node_modules
+bower_components
+.next
+dist
+
+.venv*
+.hatch
+.tox
+.nox
+.direnv
+__pycache__
+.pytest_cache
+.ruff_cache
+.mypy_cache
+.ipynb_checkpoints
+
+.esphome
+.pio
+
+*~
+.*.swp
+*.part
+*.crdownload
+
+.DS_Store
+.Spotlight-V100
+.Trashes
+._*
+desktop.ini
+ehthumbs.db
+Thumbs.db
