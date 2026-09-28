@@ -16,7 +16,7 @@
 
 # Core package/runtime tools
 "aqua:cargo-bins/cargo-binstall" = "1.24.0"
-"cargo:mise" = "2026.9.15"
+"cargo:mise" = "2026.9.16"
 "cargo:uv" = "0.12.19"
 "github:endevco/aube" = "2.5.1"
 
