@@ -1,9 +1,9 @@
 [default]
   [default.variables]
   app-browser = "brave"
-  app-editor = "vim"
+  app-editor = "nvim"
   app-pager = "less"
-  app-visual = "code-insiders -w"
+  app-visual = "nvim"
   email = "josh@jpellis.me"
   nproc = 12
   tmpdir = "/tmp/josh"
