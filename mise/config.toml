@@ -113,4 +113,5 @@ experimental = true
   binstall_quickinstall = true
 
   [settings.python]
+  compile = false
   uv_venv_auto = "create|source"
