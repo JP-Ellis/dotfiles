@@ -55,7 +55,7 @@
 	command = ~/.config/git/prune-merged
 
 [branch]
-  autoSetupMerge = always
+  autoSetupMerge = inherit
   autoSetupRebase = always
 
 [init]
