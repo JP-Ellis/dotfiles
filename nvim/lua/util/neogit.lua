@@ -28,9 +28,46 @@ function M.reword(commit)
   end
 end
 
---- Install M.reword as the Rebase popup's reword. Runs after neogit.setup().
+--- Open the forge's pull request page for the current branch, built from the
+--- `git_services` template of the push remote.
+---
+--- Neogit's own action reads the upstream remote, which is `.` for a branch
+--- tracking a local branch: `git remote get-url .` returns nothing and the
+--- action errors silently. A pull request comes from the pushed branch anyway.
+function M.open_pull_request()
+  local config = require("neogit.config")
+  local git = require("neogit.lib.git")
+  local notification = require("neogit.lib.notification")
+  local util = require("neogit.lib.util")
+
+  local remote = git.branch.pushRemote() or git.branch.pushDefault() or git.branch.upstream_remote()
+  if remote == "." then
+    local remotes = git.remote.list()
+    remote = (#remotes == 1 and remotes[1]) or (vim.tbl_contains(remotes, "origin") and "origin") or nil
+  end
+  local url = remote and git.remote.get_url(remote)[1]
+  if not url then
+    notification.warn("No push remote to open a pull request on")
+    return
+  end
+
+  for host, service in pairs(config.values.git_services) do
+    if url:match(util.pattern_escape(host)) and service.pull_request ~= "" then
+      local values = git.remote.parse(url)
+      values.branch_name = git.branch.current()
+      local uri = util.format(service.pull_request, values)
+      notification.info(("Opening %q in your browser."):format(uri))
+      vim.ui.open(uri)
+      return
+    end
+  end
+  notification.warn(("No pull request URL template for %s"):format(url))
+end
+
+--- Install the overrides into Neogit's popups. Runs after neogit.setup().
 function M.setup()
   require("neogit.lib.git.rebase").reword = M.reword
+  require("neogit.popups.branch.actions").open_pull_request = M.open_pull_request
 end
 
 return M

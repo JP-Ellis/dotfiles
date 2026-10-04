@@ -13,6 +13,7 @@ return {
       -- Neogit's rebase reword goes through an `amend! <sha>` commit, whose
       -- summary the commit-msg hook rejects for having no type. util.neogit
       -- swaps in a reword that runs the hook on the message that is kept.
+      -- It also swaps in a pull request action that reads the push remote.
       require("util.neogit").setup()
     end,
     opts = {
@@ -28,6 +29,13 @@ return {
           ["p"] = "PushPopup",
           ["P"] = false,
           ["F"] = "PullPopup",
+        },
+      },
+      git_services = {
+        ["git.jpellis.me"] = {
+          pull_request = "https://${host}/${owner}/${repository}/compare/${branch_name}",
+          commit = "https://${host}/${owner}/${repository}/commit/${oid}",
+          tree = "https://${host}/${owner}/${repository}/src/branch/${branch_name}",
         },
       },
       integrations = {
