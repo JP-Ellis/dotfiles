@@ -71,7 +71,7 @@
 "cargo:tokei" = "15.0.0"
 "aqua:crate-ci/typos" = "1.50.3"
 "github:rvben/rumdl" = "0.2.78"
-"npm:eslint" = "10.11.0"
+"npm:eslint" = "10.12.0"
 "npm:prettier" = "3.9.9"
 "pipx:hatch" = "1.18.1"
 "pipx:yamlfix" = "1.19.1"
