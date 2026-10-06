@@ -20,10 +20,49 @@
 !/.local/share/rustup/settings.toml
 /.local/share/cargo/*
 !/.local/share/cargo/credentials
+# Pre-XDG RUSTUP_HOME, superseded by ~/.local/share/rustup
+/.rustup
+
+# MARK: Tools and package stores, reinstalled by their managers
+/.local/share/mise/installs
+/.local/share/mise/downloads
+/.local/share/uv/python
+/.local/share/uv/tools
+/.local/share/hatch/env
+/.local/share/pnpm/store
+/.local/share/aube/store
+/.local/share/gem/specs
+/.local/share/nvim/mason
+/.local/share/nvim/lazy
+/.local/share/prek/tests
+/.config/emacs/.local/straight
+/.config/emacs/.local/cache
+/.bundle/cache
+/.conan2/p
+/.m2/repository
+/.pub-cache
+/.dotnet/tools
+/.drift/bin
+/.pact/plugins
+/.sonarlint/storage
+/.codex/.tmp
+/.npm/_cacache
+/.local/share/NuGet/http-cache
+/.vscode/extensions
+/.vscode-insiders/extensions
+/.vscode-server/extensions
+/.vscode-server/cli
+/.vscode-server-insiders/extensions
+/.vscode-server-insiders/cli
+/.antigravity/extensions
+
+# MARK: Syncthing index, rebuilt by a rescan
+/.local/state/syncthing/index-*
 
 # MARK: Games and containers
 /.local/share/Steam
 /.local/share/containers/storage
+/.local/share/containers/podman/machine
 /.factorio/temp
 
 # MARK: Applications which sync settings independently
@@ -35,6 +74,75 @@
 /Library/Application Support/Code
 /Library/Application Support/Code - Insiders
 /Library/Application Support/BraveSoftware
+{{/if}}
+
+# MARK: Chromium and Electron caches, at any depth inside an application directory
+/.config/**/Cache
+/.config/**/Code Cache
+/.config/**/GPUCache
+/.config/**/DawnCache
+/.config/**/DawnGraphiteCache
+/.config/**/DawnWebGPUCache
+/.config/**/GraphiteDawnCache
+/.config/**/GrShaderCache
+/.config/**/ShaderCache
+/.config/**/CachedData
+/.config/**/Crashpad
+/.config/**/Service Worker
+/.config/**/component_crx_cache
+/.config/**/optimization_guide_model_store
+/.config/**/Safe Browsing
+{{#if dotter.macos}}
+/Library/Application Support/**/Cache
+/Library/Application Support/**/Code Cache
+/Library/Application Support/**/GPUCache
+/Library/Application Support/**/DawnCache
+/Library/Application Support/**/DawnGraphiteCache
+/Library/Application Support/**/DawnWebGPUCache
+/Library/Application Support/**/GraphiteDawnCache
+/Library/Application Support/**/GrShaderCache
+/Library/Application Support/**/ShaderCache
+/Library/Application Support/**/CachedData
+/Library/Application Support/**/Crashpad
+/Library/Application Support/**/Service Worker
+/Library/Application Support/**/component_crx_cache
+/Library/Application Support/**/optimization_guide_model_store
+/Library/Application Support/**/Safe Browsing
+{{/if}}
+
+# MARK: Linux application caches and downloads
+/.local/share/*/WebKitCache
+/.local/share/GitKrakenCLI/versions
+/.local/share/sheldon/repos
+/.local/share/zed/node
+/.local/share/zed/external_agents
+/.config/obsidian/IndexedDB
+/.config/Signal/update-cache
+/.config/discord/0.*
+
+{{#if dotter.macos}}
+# MARK: macOS application caches and downloads
+/Library/Logs
+/Library/Application Support/Claude/vm_bundles
+/Library/Application Support/Claude/claude-code-vm
+/Library/Application Support/Claude/claude-code
+/Library/Application Support/Steam
+/Library/Application Support/obsidian/IndexedDB
+/Library/Application Support/OneDrive/settings/ListSync
+/Library/Application Support/Signal/update-cache
+/Library/Application Support/Spotify/PersistentCache
+/Library/Application Support/whisper-cpp
+/Library/Application Support/Zed/node
+/Library/Application Support/Zed/external_agents
+/Library/Application Support/GitKrakenCLI/versions
+/Library/Application Support/zoom.us/CefPlugin
+/Library/Application Support/zoom.us/asr
+/Library/Application Support/discord/0.*
+/Library/Application Support/virtualenv
+/Library/Application Support/com.apple.wallpaper/aerials
+/Library/Containers/com.apple.geod
+/Library/Containers/com.apple.mediaanalysisd
+/Library/Group Containers/UBF8T346G9.Office/SolutionPackages
 {{/if}}
 
 # MARK: Package sources and builds, re-fetched by makepkg
