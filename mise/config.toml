@@ -38,7 +38,7 @@
 "cargo:forgejo-cli" = "0.6.0"
 "aqua:tummychow/git-absorb" = "0.9.0"
 "aqua:altsem/gitu" = "0.43.0"
-"aqua:j178/prek" = "0.5.4"
+"aqua:j178/prek" = "0.5.5"
 "pipx:git-delete-merged-branches" = "7.6.1"
 
 # Everyday text, search, and data tools
