@@ -43,7 +43,7 @@
 
 # Everyday text, search, and data tools
 "aqua:biomejs/biome" = "2.5.9"
-"aqua:dathere/qsv" = "23.0.1"
+"aqua:dathere/qsv" = "24.0.0"
 "aqua:jqlang/jq" = "1.8.2"
 "aqua:mikefarah/yq" = "4.54.1"
 "aqua:sharkdp/bat" = "0.26.1"
