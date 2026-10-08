@@ -26,7 +26,7 @@
 "aqua:starship/starship" = "1.26.0"
 "aqua:rossmacarthur/sheldon" = "0.8.5"
 "aqua:ajeetdsouza/zoxide" = "0.10.0"
-"github:michel-kraemer/zsh-patina" = "1.10.0"
+"github:michel-kraemer/zsh-patina" = "1.11.0"
 "github:Giammarco-Ferranti/deja" = "0.4.2"
 
 # Git and repo workflows
