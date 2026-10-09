@@ -89,7 +89,7 @@
 "vfox:mise-plugins/vfox-gcloud" = "581.0.0"
 
 # Editor CLI for quick edits across repos
-"aqua:neovim/neovim" = "0.12.5"
+"aqua:neovim/neovim" = "0.12.6"
 
 # LLM and AI tools
 "aqua:anthropics/claude-code" = "2.1.295"
