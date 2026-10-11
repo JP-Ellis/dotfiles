@@ -22,7 +22,7 @@
 
 # Shell and navigation
 "aqua:direnv/direnv" = "2.38.2"
-"aqua:junegunn/fzf" = "0.74.4"
+"aqua:junegunn/fzf" = "0.74.5"
 "aqua:starship/starship" = "1.26.0"
 "aqua:rossmacarthur/sheldon" = "0.8.5"
 "aqua:ajeetdsouza/zoxide" = "0.10.0"
