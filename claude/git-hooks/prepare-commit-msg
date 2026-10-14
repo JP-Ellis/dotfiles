@@ -35,6 +35,13 @@ chain() {
   exec "$local_hook" "$@"
 }
 
+# Replayed commits keep the trailer they were written with. Git exports no
+# variable for a rebase or cherry-pick, so detect them by their state files.
+git_dir=$(git rev-parse --git-dir)
+for state in rebase-merge rebase-apply CHERRY_PICK_HEAD REVERT_HEAD; do
+  [ -e "$git_dir/$state" ] && chain "$@"
+done
+
 model=$(claude_model) || chain "$@"
 
 # Claude may write the placeholder through literally when it does not resolve
