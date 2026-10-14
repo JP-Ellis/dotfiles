@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-RTK abbreviates command output through a hook, so do not pipe that output through `grep`. Use `rtk proxy` only when you need the untrimmed version. Redirect a slow command to a file in the scratchpad, then search the file. Never re-run a slow command to filter it.
+RTK abbreviates command output through a hook, so do not pipe that output through `grep`. Use `rtk bypass` only when you need the untrimmed version. Redirect a slow command to a file in the scratchpad, then search the file. Never re-run a slow command to filter it.
 
 ## Writing
 
