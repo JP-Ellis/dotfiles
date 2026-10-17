@@ -35,7 +35,7 @@
 "aqua:orhun/git-cliff" = "2.14.2"
 "aqua:axodotdev/cargo-dist" = "0.33.0"
 "aqua:crate-ci/committed" = "1.1.11"
-"cargo:forgejo-cli" = "0.6.0"
+"cargo:forgejo-cli" = "0.7.0"
 "aqua:tummychow/git-absorb" = "0.9.0"
 "aqua:altsem/gitu" = "0.43.0"
 "aqua:j178/prek" = "0.5.5"
