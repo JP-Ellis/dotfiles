@@ -40,27 +40,49 @@ mkdir -p "$state_dir"
 # and skipping is the right outcome there rather than failing every 20 minutes.
 [ -e "$repository/config" ] || exit 0
 
-now=$(date +%s)
-
 # MARK: Lock
 
 # One lock across backup, prune and check on every machine, since prune and
 # check rewrite the index and a backup underneath them produces spurious errors.
-if [ -d "$lock_dir" ]; then
-  if [ $((now - $(mtime "$lock_dir"))) -lt "$lock_max_age" ]; then
-    exit 0
-  fi
-  rm -rf "$lock_dir"
+#
+# A backup that finds the lock taken skips, since another follows in 20 minutes.
+# A prune or check runs daily or weekly, so it waits for the lock instead, and
+# fails loudly if the wait runs out. Three machines share the repository, and a
+# silent skip let prunes lapse for days.
+if [ "${1:-}" = "backup" ]; then
+  lock_wait=0
+else
+  lock_wait=14400
 fi
+waited=0
 
-# mkdir is a single atomic NFS operation, which is what makes it usable as the
-# lock across machines. Losing the race to another machine is a skip. Any other
-# failure, such as a macOS privacy denial on the share, is reported instead.
-if ! err=$(mkdir "$lock_dir" 2>&1); then
-  [ -d "$lock_dir" ] && exit 0
-  echo "rustic-scheduled: cannot take the lock: $err" >&2
-  exit 1
-fi
+while :; do
+  # mkdir is a single atomic NFS operation, which is what makes it usable as
+  # the lock across machines. Any failure other than the lock already existing,
+  # such as a macOS privacy denial on the share, is reported instead.
+  if err=$(mkdir "$lock_dir" 2>&1); then
+    break
+  fi
+  if [ ! -d "$lock_dir" ]; then
+    echo "rustic-scheduled: cannot take the lock: $err" >&2
+    exit 1
+  fi
+
+  if [ $(($(date +%s) - $(mtime "$lock_dir"))) -ge "$lock_max_age" ]; then
+    echo "rustic-scheduled: removing a stale lock: $(cat "$lock_dir/owner" 2>/dev/null)" >&2
+    rm -rf "$lock_dir"
+    continue
+  fi
+
+  if [ "$waited" -ge "$lock_wait" ]; then
+    [ "$lock_wait" -eq 0 ] && exit 0
+    echo "rustic-scheduled: gave up after ${waited}s waiting for the lock held by $(cat "$lock_dir/owner" 2>/dev/null)" >&2
+    exit 1
+  fi
+  sleep 60
+  waited=$((waited + 60))
+done
+now=$(date +%s)
 # shellcheck disable=SC2064 # lock_dir is fixed here; expand it now, not at exit.
 trap "rm -rf '$lock_dir' 2>/dev/null || true" EXIT INT TERM
 
