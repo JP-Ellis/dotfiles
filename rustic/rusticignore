@@ -10,6 +10,8 @@
 /.thumbnails
 /Downloads
 /tmp
+# Rotating copies of ~/.claude.json, rewritten throughout every session.
+/.claude/backups
 
 # MARK: Trash
 /.Trash
@@ -140,9 +142,15 @@
 /Library/Application Support/discord/0.*
 /Library/Application Support/virtualenv
 /Library/Application Support/com.apple.wallpaper/aerials
-/Library/Containers/com.apple.geod
-/Library/Containers/com.apple.mediaanalysisd
 /Library/Group Containers/UBF8T346G9.Office/SolutionPackages
+# Spotlight's index, rebuilt by macOS.
+/Library/Metadata/CoreSpotlight
+
+# MARK: macOS app sandboxes
+# Without Full Disk Access for RusticScheduled.app, macOS lets rustic read some
+# containers in one run and denies them in the next. Each flip rewrites those
+# trees in full, which bloats both the repository and the local tree cache.
+/Library/Containers
 {{/if}}
 
 # MARK: Package sources and builds, re-fetched by makepkg
