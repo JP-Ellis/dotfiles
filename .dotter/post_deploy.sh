@@ -113,6 +113,12 @@ build_rustic_launcher() {
 
   for job in backup check prune; do
     plist="$HOME/Library/LaunchAgents/me.jpellis.rustic-$job.plist"
+    # bootout kills a running job, and a prune cut off mid-repack damages the
+    # repository, so a running job keeps its old plist until the next deploy.
+    if launchctl print "$domain/me.jpellis.rustic-$job" 2>/dev/null | grep -q 'state = running'; then
+      echo "post_deploy: me.jpellis.rustic-$job is running; not reloading it" >&2
+      continue
+    fi
     launchctl bootout "$domain/me.jpellis.rustic-$job" 2>/dev/null || true
     launchctl bootstrap "$domain" "$plist"
   done
