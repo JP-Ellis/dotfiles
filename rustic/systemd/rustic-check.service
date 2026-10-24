@@ -2,8 +2,9 @@
 Description=rustic integrity check (home)
 ConditionPathExists={{rustic-repository}}/config
 # A backup writing packs and index files underneath a check produces spurious
-# errors, so the two are kept apart.
-Conflicts=rustic-backup.service
+# errors. The lock in rustic-scheduled keeps the two apart on every machine.
+# Conflicts= is avoided: systemd applies it both ways, so a backup timer firing
+# mid-check would stop the check.
 After=rustic-backup.service rustic-prune.service
 
 [Service]
@@ -22,5 +23,4 @@ Restart=no
 # would pull the whole repository back over NFS, so a random tenth is read each
 # run instead, which covers the repository over a couple of months and surfaces
 # bit rot long before a restore needs the data.
-# Conflicts covers this machine. The lock in rustic-scheduled covers the others.
 ExecStart=%h/.local/bin/rustic-scheduled check --read-data --read-data-subset 10%%
