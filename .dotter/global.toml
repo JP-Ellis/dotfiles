@@ -129,6 +129,8 @@
   rustic-home = "/home/josh"
   rustic-host = "jpellis-desktop"
   rustic-repository = "/mnt/nas/rustic"
+  ## Every rustic-host sharing the repository. The Linux check covers them all.
+  rustic-all-hosts = ["jpellis-desktop", "jpellis-media", "smartbear-macbook"]
 
   [rustic.files]
   ## Scheduling is per-platform: systemd timers on Linux, LaunchAgents on macOS.
