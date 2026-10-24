@@ -24,7 +24,10 @@ Restart=no
 # run instead, which covers the repository over a couple of months and surfaces
 # bit rot long before a restore needs the data.
 #
-# The snapshot filter in rustic.toml scopes commands to this host. A check here
-# covers every host's trees instead, since the macOS NAS client is too slow for
-# a full check.
-ExecStart=%h/.local/bin/rustic-scheduled check --read-data --read-data-subset 10%%{{#each rustic-all-hosts}} --filter-host {{this}}{{/each}}
+# The snapshot filter in rustic.toml scopes commands to this host. Naming a
+# profile with no file loads no config at all, so the check covers every host's
+# trees, including hosts added later, at the cost of a "using no config file"
+# warning. The repository settings then come from the command line. macOS
+# keeps the host-scoped check, since its NAS client is too slow to walk every
+# host.
+ExecStart=%h/.local/bin/rustic-scheduled -P unfiltered -r {{rustic-repository}} -p {{rustic-home}}/.config/rustic/password check --read-data --read-data-subset 10%%
