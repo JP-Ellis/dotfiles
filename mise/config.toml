@@ -73,7 +73,7 @@
 "github:rvben/rumdl" = "0.3.0"
 "npm:eslint" = "10.13.0"
 "npm:prettier" = "3.9.10"
-"pipx:hatch" = "1.18.1"
+"pipx:hatch" = "1.18.2"
 "pipx:yamlfix" = "1.19.1"
 
 # Language servers and language-specific linters
