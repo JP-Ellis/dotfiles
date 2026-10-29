@@ -37,7 +37,7 @@
 "aqua:crate-ci/committed" = "1.1.11"
 "cargo:forgejo-cli" = "0.7.0"
 "aqua:tummychow/git-absorb" = "0.9.0"
-"aqua:altsem/gitu" = "0.43.0"
+"aqua:altsem/gitu" = "0.44.0"
 "aqua:j178/prek" = "0.5.7"
 "pipx:git-delete-merged-branches" = "7.7.0"
 
