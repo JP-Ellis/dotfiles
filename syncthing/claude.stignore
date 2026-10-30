@@ -4,6 +4,8 @@
 
 // MARK: Never sync, regardless of what follows
 .credentials.json
+// Remote Control records the live session per machine; sharing it crosses hosts.
+bridge-pointer.json
 
 // MARK: Session state that replicates
 !/projects
