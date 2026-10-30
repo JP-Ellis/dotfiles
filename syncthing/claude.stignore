@@ -14,8 +14,6 @@ bridge-pointer.json
 !/file-history/**
 !/session-env
 !/session-env/**
-!/sessions
-!/sessions/**
 
 // MARK: Everything else stays on this machine
 **
