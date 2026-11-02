@@ -18,7 +18,7 @@
 "aqua:cargo-bins/cargo-binstall" = "1.26.2"
 "aqua:jdx/mise" = "2026.10.25"
 "aqua:astral-sh/uv" = "0.13.6"
-"github:endevco/aube" = "2.8.5"
+"github:endevco/aube" = "2.9.0"
 
 # Shell and navigation
 "aqua:direnv/direnv" = "2.38.2"
