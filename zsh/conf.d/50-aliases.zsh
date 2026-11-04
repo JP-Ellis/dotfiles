@@ -28,6 +28,11 @@ else
   alias sl=ls
 fi
 
+## find substitution
+if _has bfs; then
+  alias find=bfs
+fi
+
 ## Claude Code — work account uses isolated config dir
 alias wclaude='CLAUDE_CONFIG_DIR="${HOME}/.claude-work" claude'
 
