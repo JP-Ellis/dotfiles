@@ -34,7 +34,7 @@
 "aqua:git-lfs/git-lfs" = "3.8.1"
 "aqua:orhun/git-cliff" = "2.14.2"
 "aqua:axodotdev/cargo-dist" = "0.34.0"
-"aqua:crate-ci/committed" = "1.1.11"
+"aqua:crate-ci/committed" = "1.1.12"
 "cargo:forgejo-cli" = "0.7.0"
 "aqua:tummychow/git-absorb" = "0.9.0"
 "aqua:altsem/gitu" = "0.44.0"
