@@ -98,7 +98,7 @@
 "github:ggml-org/llama.cpp" = { version = "latest", version_prefix = "b" }
 
 # Terminal sessions
-"github:neurosnap/zmx" = "0.8.1"
+"github:neurosnap/zmx" = "1.0.1"
 
 # Backups and storage
 "aqua:SuperCuber/dotter" = "0.13.5"
