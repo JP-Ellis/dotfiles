@@ -103,14 +103,15 @@ add_path() {
     ;;
   "")
     # Empty path var, initialise it
-    eval export "$1"="$p"
+    eval "export $1=\"\$p\""
     ;;
   *)
-    # Prepend by default, unless specified to append
+    # Prepend by default, unless specified to append. The values stay
+    # quoted inside eval so entries with spaces survive.
     if [ -z "$3" ]; then
-      eval export "$1"="$p:$expanded"
+      eval "export $1=\"\$p:\$expanded\""
     else
-      eval export "$1"="$expanded:$p"
+      eval "export $1=\"\$expanded:\$p\""
     fi
     ;;
   esac
