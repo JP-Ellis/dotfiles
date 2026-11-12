@@ -30,7 +30,7 @@
 "github:Giammarco-Ferranti/deja" = "0.4.2"
 
 # Git and repo workflows
-"aqua:cli/cli" = "2.103.3"
+"aqua:cli/cli" = "2.104.0"
 "aqua:git-lfs/git-lfs" = "3.8.1"
 "aqua:orhun/git-cliff" = "2.14.2"
 "aqua:axodotdev/cargo-dist" = "0.34.0"
