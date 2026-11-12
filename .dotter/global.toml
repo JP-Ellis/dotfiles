@@ -88,6 +88,10 @@
   usernameGithub = "JP-Ellis"
   usernameGitlab = "JP-Ellis"
 
+[ghostty]
+  [ghostty.files]
+  "ghostty/config.ghostty" = "~/.config/ghostty/config.ghostty"
+
 [gpg]
   [gpg.files]
   "gpg/gpg-agent.conf" = "~/.local/share/gnupg/gpg-agent.conf"
