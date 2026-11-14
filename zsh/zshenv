@@ -4,3 +4,7 @@
 ## Sourced for ALL zsh invocations — keep minimal and fast (no subprocesses).
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 export ZDOTDIR="${XDG_CONFIG_HOME}/zsh"
+
+## Rex renders OSC 8 hyperlinks, but tools that detect support by TERM_PROGRAM
+## (Claude Code included) don't recognise it.
+[[ $TERM_PROGRAM == rex ]] && export FORCE_HYPERLINK=1
