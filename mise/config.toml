@@ -66,7 +66,7 @@
 "aqua:rhysd/actionlint" = "1.7.12"
 "aqua:tombi-toml/tombi" = "1.11.2"
 "aqua:trufflesecurity/trufflehog" = "3.99.9"
-"github:bnjbvr/cargo-machete" = "0.10.0"
+"github:bnjbvr/cargo-machete" = "0.10.1"
 "aqua:nextest-rs/nextest/cargo-nextest" = "0.9.146"
 "aqua:casey/just" = "1.59.0"
 "cargo:tokei" = "15.0.0"
