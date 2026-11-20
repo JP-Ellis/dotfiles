@@ -1,0 +1,251 @@
+tap "d12frosted/emacs-plus", trusted: true
+tap "jp-ellis/local", trusted: true
+tap "macos-fuse-t/cask"
+# Library for manipulating PNG images
+brew "libpng"
+# Record and share terminal sessions
+brew "asciinema"
+# Spell checker with better logic than ispell
+brew "aspell"
+# Tool for generating GNU Standards-compliant Makefiles
+brew "automake"
+# Bourne-Again SHell, a UNIX command interpreter
+brew "bash"
+# Implementation of the DNS protocols
+brew "bind"
+# Parser generator
+brew "bison"
+# Software library to render fonts
+brew "freetype"
+# Vector graphics library with cross-device output support
+brew "cairo"
+# CD/DVD/Blu-ray premastering and recording software
+brew "cdrtools"
+# Formatting tools for C, C++, Obj-C, Java, JavaScript, TypeScript
+brew "clang-format"
+# Cross-platform make
+brew "cmake"
+# Secure runtime for JavaScript and TypeScript
+brew "deno"
+# USB programmer
+brew "dfu-util"
+# Tool for managing dock items
+brew "dockutil"
+# .NET Core
+brew "dotnet"
+# Maintain consistent coding style between multiple editors
+brew "editorconfig"
+# Perl lib for reading and writing EXIF metadata
+brew "exiftool"
+# Efficient Duplicate File Finder
+brew "fclones"
+# Generic library support script
+brew "libtool"
+# GNU debugger
+brew "gdb"
+# Automatic updates of GeoIP2 and GeoIP Legacy databases
+brew "geoipupdate"
+# Distributed revision control system
+brew "git"
+# Command-line option parsing utility
+brew "gnu-getopt"
+# GNU Privacy Guard (OpenPGP)
+brew "gnupg"
+# Command-driven, interactive function plotting
+brew "gnuplot"
+# Graph visualization software from AT&T and Bell Labs
+brew "graphviz"
+# Improved top (interactive process viewer)
+brew "htop"
+# Website copier/offline browser
+brew "httrack"
+# Run local Kubernetes cluster in Docker
+brew "kind"
+# Portable Foreign Function Interface library
+brew "libffi"
+# C library of Git core methods that is re-entrant and linkable
+brew "libgit2"
+# Implementation of the file(1) command
+brew "libmagic"
+# Postgres C API library
+brew "libpq"
+# C99 library which implements a VT220 or xterm terminal emulator
+brew "libvterm"
+# C library for reading, creating, and modifying zip archives
+brew "libzip"
+# Next-gen compiler infrastructure
+brew "llvm"
+# Development kit for the Java programming language
+brew "openjdk"
+# Java-based project management
+brew "maven"
+# Matroska media files manipulation tools
+brew "mkvtoolnix"
+# SMTP client that can be used as an SMTP plugin for Mutt
+brew "msmtp"
+# Open source relational database management system
+brew "mysql-client"
+# NCurses Disk Usage
+brew "ncdu"
+# Small build system for use with gyp or CMake
+brew "ninja"
+# Development kit for the Java programming language
+brew "openjdk@17"
+# OpenShift command-line interface tools
+brew "openshift-cli"
+# 7-Zip (high compression file archiver) implementation
+brew "p7zip"
+# General-purpose scripting language
+brew "php"
+# Pinentry for GPG on Mac
+brew "pinentry-mac"
+# Paste PNG into files
+brew "pngpaste"
+# PNG image optimizing utility
+brew "pngquant"
+# Tool for managing OCI containers and pods
+brew "podman"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.14"
+# Alternative to docker-compose using podman
+brew "podman-compose"
+# PDF rendering library (based on the xpdf-3.0 code base)
+brew "poppler"
+# Command-line shell and scripting language
+brew "powershell"
+# Command-line tool for managing long-running shell commands
+brew "pueue"
+# Generic machine emulator and virtualizer
+brew "qemu"
+# Tools for and transforming and inspecting PDF files
+brew "qpdf"
+# QR Code generation
+brew "qrencode"
+# Generate C-based recognizers from regular expressions
+brew "re2c"
+# Perl-powered file rename script with many helpful built-ins
+brew "rename"
+# Utility that provides fast incremental file transfer
+brew "rsync"
+# Powerful, clean, object-oriented scripting language
+brew "ruby@3.0"
+# Powerful, clean, object-oriented scripting language
+brew "ruby@3.3"
+# Fast and accurate code counter with complexity and COCOMO estimates
+brew "scc"
+# Database of common MIME types
+brew "shared-mime-info"
+# Static analysis and lint tool, for (ba)sh scripts
+brew "shellcheck"
+# Autoformat shell script source code
+brew "shfmt"
+# SMART hard drive monitoring
+brew "smartmontools"
+# TOML toolkit written in Rust
+brew "taplo"
+# User interface to the TELNET protocol
+brew "telnet"
+# Enables extra languages support for Tesseract
+brew "tesseract-lang"
+# Incremental parsing library
+brew "tree-sitter@0.25"
+# Vi 'workalike' with many additional features
+brew "vim"
+# Executes a program periodically, showing output fullscreen
+brew "watch"
+# Internet file retriever
+brew "wget"
+# Port of OpenAI's Whisper model in C/C++
+brew "whisper.cpp"
+# Feature-rich command-line audio/video downloader
+brew "yt-dlp"
+# In terminal graphical metrics for your *nix system
+brew "zenith"
+# Programming language designed for robustness, optimality, and clarity
+brew "zig"
+# GNU Emacs text editor
+brew "d12frosted/emacs-plus/emacs-plus@31", args: ["with-compress-install"], trusted: true
+# AV1 encoder (SVT-AV1-Tritium fork with HDR, PSYEX and Essential features)
+brew "jp-ellis/local/svt-av1-tritium", trusted: true
+# FFmpeg (ffmpeg-full feature set) linked against SVT-AV1-Tritium
+brew "jp-ellis/local/ffmpeg-tritium", trusted: true
+# Simple hotkey-daemon for macOS.
+brew "koekeishiya/formulae/skhd"
+# A tiling window manager for macOS based on binary space partitioning.
+brew "koekeishiya/formulae/yabai"
+# Android SDK component
+cask "android-platform-tools"
+# Multi-track audio editor and recorder
+cask "audacity"
+# Display management tool
+cask "betterdisplay"
+# Web browser focusing on privacy
+cask "brave-browser"
+# Anthropic's official Claude AI desktop app
+cask "claude"
+# Browser for SQLite databases
+cask "db-browser-for-sqlite"
+# Universal database tool and SQL client
+cask "dbeaver-community"
+# Voice and text chat software
+cask "discord"
+# Online diagram software
+cask "drawio"
+# Web browser
+cask "firefox"
+cask "font-architects-daughter"
+cask "font-birthstone"
+cask "font-eb-garamond"
+cask "font-fira-code"
+cask "font-fira-code-nerd-font"
+cask "font-inter"
+cask "font-monaspace"
+cask "font-noto-color-emoji"
+cask "font-noto-emoji"
+cask "font-noto-sans"
+cask "font-open-sans"
+# LibFUSE implementation that doesn't use kernel extensions
+cask "macos-fuse-t/cask/fuse-t", trusted: true
+# SSHFS implementation based on FUSE-T
+cask "macos-fuse-t/cask/fuse-t-sshfs", trusted: true
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
+# Web browser
+cask "google-chrome"
+# Vector graphics editor
+cask "inkscape"
+# Open-source keystroke visualiser
+cask "keycastr"
+# Full TeX Live distribution without GUI applications
+cask "mactex-no-gui"
+# Cross-platform MQTT 5.0 Desktop Client
+cask "mqttx"
+# Open-source software for live streaming and screen recording
+cask "obs"
+# Knowledge base that works on top of a local folder of plain text Markdown files
+cask "obsidian"
+# Verify system files structure, run miscellaneous maintenance and more
+cask "onyx"
+# Client program for the OpenVPN Access Server
+cask "openvpn-connect"
+cask "powershell"
+# Toolbox companion for QMK Firmware
+cask "qmk-toolbox"
+# Instant messaging application focusing on security
+cask "signal"
+# Control your Sonos system
+cask "sonos"
+# Music streaming service
+cask "spotify"
+# Video game digital distribution service
+cask "steam"
+# Virtual machines UI using QEMU
+cask "utm"
+# Open-source code editor
+cask "visual-studio-code@insiders"
+# Connect to Windows
+cask "windows-app"
+# Network protocol analyzer
+cask "wireshark-app"
+# Multiplayer code editor
+cask "zed"
