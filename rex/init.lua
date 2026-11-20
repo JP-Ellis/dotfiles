@@ -1,0 +1,1 @@
+-- Rex configuration. Rex defaults apply; no key bindings are overridden.

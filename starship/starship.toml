@@ -1,0 +1,9 @@
+[direnv]
+disabled = false
+
+[gcloud]
+detect_env_vars = [
+  "CLOUDSDK_CONFIG",
+  "CLOUDSDK_CORE_ACCOUNT",
+  "CLOUDSDK_CORE_PROJECT",
+]

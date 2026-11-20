@@ -48,6 +48,7 @@
   "doom/init.el" = "~/.config/doom/init.el"
   "doom/packages.el" = "~/.config/doom/packages.el"
   "doom/packages.org" = "~/.config/doom/packages.org"
+  "doom/emacs-plus-build.yml" = { target = "~/.config/emacs-plus/build.yml", type = "symbolic", if = "dotter.macos" }
 
 [fonts]
   [fonts.files]
@@ -77,10 +78,18 @@
   "general/environment.d/90-sqlite.conf" = "~/.config/environment.d/90-sqlite.conf"
   "general/environment.d/90-texlive.conf" = "~/.config/environment.d/90-texlive.conf"
 
+[gh]
+
+  ## gh rewrites config.yml on `gh alias set`, so it deploys as a symlink.
+  ## hosts.yml holds credentials and stays out of the repository.
+  [gh.files]
+  "gh/config.yml" = { target = "~/.config/gh/config.yml", type = "symbolic" }
+
 [git]
   [git.files]
   "git/attributes" = "~/.config/git/attributes"
   "git/config" = "~/.config/git/config"
+  "git/ignore" = "~/.config/git/ignore"
   "git/prune-merged" = { target = "~/.config/git/prune-merged", type = "symbolic" }
 
   [git.variables]
@@ -95,6 +104,7 @@
 [gpg]
   [gpg.files]
   "gpg/gpg-agent.conf" = "~/.local/share/gnupg/gpg-agent.conf"
+  "gpg/gpg.conf" = "~/.local/share/gnupg/gpg.conf"
   "gpg/sshcontrol" = "~/.local/share/gnupg/sshcontrol"
 
   ## Service manager integration: systemd user units on Linux, a LaunchAgent on
@@ -114,14 +124,36 @@
   [mise.files]
   "mise/config.toml" = "~/.config/mise/config.toml"
 
+[msmtp]
+  [msmtp.files]
+  "msmtp/msmtprc" = { target = "~/.msmtprc", type = "template" }
+
 [nodejs]
   [nodejs.files]
   "nodejs/environment.d/90-nodejs.conf" = "~/.config/environment.d/90-nodejs.conf"
+
+## Shims that run podman under the docker names. Enable only on machines
+## without Docker itself.
+[podman]
+  [podman.files]
+  "podman/docker" = "~/.local/bin/docker"
+  "podman/docker-compose" = "~/.local/bin/docker-compose"
+
+## powershell/profile.ps1 is the Windows profile and is not deployed by dotter.
+[powershell]
+  [powershell.files]
+  "powershell/profile.unix.ps1" = { target = "~/.config/powershell/profile.ps1", type = "symbolic", if = "dotter.unix" }
 
 [python]
   [python.files]
   "python/environment.d/90-python.conf" = "~/.config/environment.d/90-python.conf"
   "python/hatch.toml" = "~/.config/hatch/config.toml"
+
+## init.lua carries key bindings only. The app's fonts, layout and themes live
+## in the com.superlogical.rex preferences domain; rex/defaults.sh writes those.
+[rex]
+  [rex.files]
+  "rex/init.lua" = "~/.config/rex/init.lua"
 
 [rustic]
 
@@ -177,6 +209,18 @@
 [sheldon]
   [sheldon.files]
 
+[shellcheck]
+  [shellcheck.files]
+  "shellcheck/shellcheckrc" = "~/.config/shellcheckrc"
+
+[skhd]
+  [skhd.files]
+  "skhd/skhdrc" = { target = "~/.config/skhd/skhdrc", type = "symbolic", if = "dotter.macos" }
+
+[starship]
+  [starship.files]
+  "starship/starship.toml" = "~/.config/starship.toml"
+
 [syncthing]
 
   ## Syncthing reads .stignore only from a folder root and never replicates it
@@ -226,12 +270,16 @@
   [windows-terminal.files]
   "windows-terminal/settings.json" = "~/scoop/apps/windows-terminal/current/settings/settings.json"
 
+[yabai]
+  [yabai.files]
+  "yabai/yabairc" = { target = "~/.config/yabai/yabairc", type = "symbolic", if = "dotter.macos" }
+
 [zsh]
   [zsh.files]
   "zsh/zshenv" = "~/.zshenv"
   "zsh/zshrc" = "~/.config/zsh/.zshrc"
   "zsh/zstyles" = "~/.config/zsh/zstyles"
-  "zsh/conf.d" = "~/.config/zsh/conf.d"
+  "zsh/conf.d" = { target = "~/.config/zsh/conf.d", type = "symbolic", recurse = false }
   "zsh/site-functions" = "~/.local/share/zsh/site-functions"
   "zsh/sheldon.toml" = { target = "~/.config/sheldon/plugins.toml", type = "symbolic" }
   "zsh/sheldon-update.service" = "~/.config/systemd/user/sheldon-update.service"

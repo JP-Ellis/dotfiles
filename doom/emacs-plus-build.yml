@@ -1,0 +1,7 @@
+---
+# Use a community icon (see community/registry.json for available options)
+icon: modern-doom3
+
+# Apply community patches
+# patches:
+#   - patch-name-from-registry
