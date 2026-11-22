@@ -1,3 +1,8 @@
+## The left prompt holds only the directory and the prompt character; every
+## other module renders on the right.
+format = """$directory$character"""
+right_format = """$all"""
+
 [direnv]
 disabled = false
 
@@ -7,3 +12,9 @@ detect_env_vars = [
   "CLOUDSDK_CORE_ACCOUNT",
   "CLOUDSDK_CORE_PROJECT",
 ]
+
+[python]
+version_format = "v${major}.${minor}"
+
+[time]
+disabled = false
