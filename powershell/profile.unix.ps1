@@ -3,7 +3,7 @@
 ## Load Brew
 ################################################################################
 if (Test-Path /opt/homebrew/bin/brew) {
-    & /opt/homebrew/bin/brew shellenv | Invoke-Expression
+    . ([scriptblock]::Create((& /opt/homebrew/bin/brew shellenv | Out-String)))
     [System.Environment]::SetEnvironmentVariable("DYLD_FALLBACK_LIBRARY_PATH", "$env:HOMEBREW_PREFIX/lib")
 }
 
@@ -39,16 +39,17 @@ function Add-Path {
         [switch]$append
     )
 
-    $path = $path.TrimEnd('\')
+    $path = $path.TrimEnd('/')
+    $sep = [System.IO.Path]::PathSeparator
     $expanded = [System.Environment]::GetEnvironmentVariable($pathVar)
 
     if ($expanded -notlike "*$path*") {
         if ($expanded) {
             if ($append) {
-                $newPath = "$expanded;$path"
+                $newPath = "$expanded$sep$path"
             }
             else {
-                $newPath = "$path;$expanded"
+                $newPath = "$path$sep$expanded"
             }
         }
         else {
@@ -80,7 +81,10 @@ foreach ($dir in $dirs) {
 ## If podman is installed and docker is not, alias docker to podman
 if ((Get-Command podman -ErrorAction SilentlyContinue) -and -not (Get-Command docker -ErrorAction SilentlyContinue)) {
     Set-Alias docker podman
-    [System.Environment]::SetEnvironmentVariable("DOCKER_HOST", (& podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}'))
+    ## Only macOS runs podman inside a machine; Linux talks to the native socket.
+    if ($IsMacOS) {
+        [System.Environment]::SetEnvironmentVariable("DOCKER_HOST", (& podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}'))
+    }
 }
 if ((Get-Command podman-compose -ErrorAction SilentlyContinue) -and -not (Get-Command docker-compose -ErrorAction SilentlyContinue)) {
     Set-Alias docker-compose podman-compose
@@ -103,5 +107,5 @@ if (Get-Command gh -ErrorAction SilentlyContinue) {
 
 # Load starship
 if (Get-Command starship -ErrorAction SilentlyContinue) {
-    & starship init powershell | Invoke-Expression
+    . ([scriptblock]::Create((& starship init powershell --print-full-init | Out-String)))
 }
