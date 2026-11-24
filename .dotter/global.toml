@@ -34,6 +34,7 @@
   "claude/rules" = "~/.claude/rules"
   "claude/settings.json" = { target = "~/.claude/settings.json", type = "symbolic" }
   "claude/skills/secondary-review" = "~/.claude/skills/secondary-review"
+  "claude/skills/tracking-sync" = "~/.claude/skills/tracking-sync"
   "claude/skills/diataxis/SKILL.md" = "~/.claude/skills/diataxis/SKILL.md"
   "claude/skills/diataxis/evals" = "~/.claude/skills/diataxis/evals"
   "claude/skills/diataxis/references" = "~/.claude/skills/diataxis/references"
