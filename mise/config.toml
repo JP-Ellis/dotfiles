@@ -80,7 +80,7 @@
 
 # Language servers and language-specific linters
 "aqua:astral-sh/ruff" = "0.17.6"
-"aqua:astral-sh/ty" = "0.0.108"
+"aqua:astral-sh/ty" = "0.0.109"
 "npm:typescript" = "7.0.2"
 "npm:typescript-language-server" = "6.1.0"
 
