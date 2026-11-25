@@ -217,9 +217,6 @@
   [rustic-macos.files]
   "rustic/rustic.toml" = { target = "~/Library/Application Support/rustic/rustic.toml", type = "template", if = "dotter.macos" }
 
-[sheldon]
-  [sheldon.files]
-
 [shellcheck]
   [shellcheck.files]
   "shellcheck/shellcheckrc" = "~/.config/shellcheckrc"
