@@ -16,6 +16,7 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "opus",
   "skillOverrides": {
     "cloudflare": "user-invocable-only",
     "cloudflare-email-service": "user-invocable-only",
@@ -55,7 +56,7 @@
   },
   "allowManagedMcpServersOnly": false,
   "enabledPlugins": {
-    "code-review@claude-plugins-official": true,
+    "code-review@claude-plugins-official": false,
     "code-simplifier@claude-plugins-official": false,
     "feature-dev@claude-plugins-official": false,
     "playwright@claude-plugins-official": false,
@@ -64,9 +65,9 @@
     "superpowers@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
     "ruby-lsp@claude-plugins-official": true,
-    "datadog@claude-plugins-official": true,
+    "datadog@claude-plugins-official": false,
     "slack@claude-plugins-official": false,
-    "github@claude-plugins-official": true
+    "github@claude-plugins-official": false
   },
   "effortLevel": "medium",
   "awaySummaryEnabled": false,
