@@ -1,0 +1,25 @@
+#!/bin/bash
+# Blocks while the pueue queue is active: a task is running, or a task is
+# queued in a group that is not paused. Runs under systemd-inhibit, so the
+# lock is held for exactly that span.
+set -u
+
+readonly POLL_SECONDS=30
+
+# Stashed and paused tasks need a manual action to start, so they do not count.
+# shellcheck disable=SC2016 # $groups and $status are jq variables
+readonly ACTIVE_FILTER='
+  .groups as $groups
+  | any(.tasks[];
+      (.status | if type == "object" then keys[0] else . end) as $status
+      | $status == "Running"
+        or ($status == "Queued" and $groups[.group].status == "Running"))
+'
+
+queue_is_active() {
+  pueue status --json 2>/dev/null | jq -e "$ACTIVE_FILTER" >/dev/null 2>&1
+}
+
+while queue_is_active; do
+  sleep "$POLL_SECONDS"
+done

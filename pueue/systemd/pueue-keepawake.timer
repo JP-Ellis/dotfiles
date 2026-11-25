@@ -1,0 +1,10 @@
+[Unit]
+Description=Check for an active pueue queue to hold a sleep inhibitor
+
+[Timer]
+OnStartupSec=1min
+OnUnitActiveSec=2min
+AccuracySec=30s
+
+[Install]
+WantedBy=timers.target
