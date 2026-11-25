@@ -150,6 +150,16 @@
   "python/environment.d/90-python.conf" = "~/.config/environment.d/90-python.conf"
   "python/hatch.toml" = "~/.config/hatch/config.toml"
 
+## Holds a systemd sleep inhibitor while the pueue queue is active. The timer
+## starts the service every two minutes; the service exits at once when no task
+## is running or queued, and otherwise keeps the lock until the queue drains.
+## Enable pueue-keepawake.timer once per machine after the first deploy.
+[pueue]
+  [pueue.files]
+  "pueue/bin/pueue-active-wait" = { target = "~/.local/bin/pueue-active-wait", type = "symbolic", if = "dotter.linux" }
+  "pueue/systemd/pueue-keepawake.service" = { target = "~/.local/share/systemd/user/pueue-keepawake.service", type = "symbolic", if = "dotter.linux" }
+  "pueue/systemd/pueue-keepawake.timer" = { target = "~/.local/share/systemd/user/pueue-keepawake.timer", type = "symbolic", if = "dotter.linux" }
+
 ## init.lua carries key bindings only. The app's fonts, layout and themes live
 ## in the com.superlogical.rex preferences domain; rex/defaults.sh writes those.
 [rex]

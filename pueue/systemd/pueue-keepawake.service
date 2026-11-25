@@ -1,0 +1,8 @@
+[Unit]
+Description=Hold a sleep inhibitor while the pueue queue is active
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/systemd-inhibit --what=sleep:idle --mode=block \
+    --who=pueue-keepawake --why="Active pueue queue" \
+    %h/.local/bin/pueue-active-wait
